@@ -2,7 +2,7 @@ import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {HeartIcon, CommentIcon} from '../SVG';
 
-const Feed = ({image, postTitle}) => {
+const Feed = ({image, postTitle, userProfilePic}) => {
   return (
     <TouchableOpacity style={styles.container}>
       <View style={styles.innerContainer}>
@@ -33,7 +33,7 @@ const Feed = ({image, postTitle}) => {
           <View style={styles.userInfo}>
             <Image
               source={{
-                uri: 'http://thenewcode.com/assets/images/thumbnails/sarah-parmenter.jpeg',
+                uri: userProfilePic,
               }}
               style={styles.userProfile}
               resizeMode="cover"
