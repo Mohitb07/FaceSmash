@@ -7,15 +7,17 @@
  */
 
 import React from 'react';
-import {StatusBar, StyleSheet, Text} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import Navigation, {navigationRef} from './src/Navigation/Root';
+import Context from './src/Context/auth';
 
 const App = () => {
   return (
-    <NavigationContainer ref={navigationRef}>
-      <Navigation />
-    </NavigationContainer>
+    <Context>
+      <NavigationContainer ref={navigationRef}>
+        <Navigation />
+      </NavigationContainer>
+    </Context>
   );
 };
 
