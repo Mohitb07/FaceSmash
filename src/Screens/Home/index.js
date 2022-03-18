@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   View,
   Text,
@@ -8,10 +8,16 @@ import {
   ScrollView,
 } from 'react-native';
 import Feed from '../../components/Feed';
+import {AuthContext} from '../../Context/auth';
 
 import {SearchIcon} from '../../SVG';
 
 const Home = ({navigation}) => {
+  const {isLoggedIn, setLoginState} = useContext(AuthContext);
+  const onLogoutAttempt = () => {
+    setLoginState(false);
+    navigation.navigate('Login');
+  };
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -30,6 +36,11 @@ const Home = ({navigation}) => {
                 <Text style={styles.email}>@sajon.co</Text>
               </View>
             </View>
+            {isLoggedIn && (
+              <TouchableOpacity onPress={onLogoutAttempt}>
+                <Text style={{color: 'white'}}>Log Out</Text>
+              </TouchableOpacity>
+            )}
             <View style={styles.rightHeader}>
               <TouchableOpacity style={styles.searchIcon}>
                 <SearchIcon />
