@@ -3,6 +3,7 @@ import React, {createRef} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from '../../Screens/Home';
 import Login from '../../Screens/Login';
+import GetStarted from '../../Screens/GetStarted';
 
 const RootStack = createNativeStackNavigator();
 export const navigationRef = createRef();
@@ -26,6 +27,11 @@ const Root = () => {
         </>
       ) : (
         <>
+          <RootStack.Screen
+            name="Get Started"
+            component={GetStarted}
+            options={{headerShown: false}}
+          />
           <RootStack.Screen
             name="Login"
             component={Login}
