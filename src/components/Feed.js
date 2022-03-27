@@ -4,7 +4,7 @@ import {HeartIcon, CommentIcon} from '../SVG';
 
 const Feed = ({image, postTitle, userProfilePic}) => {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity delayPressIn={150} style={styles.container}>
       <View style={styles.innerContainer}>
         {image && (
           <View style={styles.imageContainer}>
