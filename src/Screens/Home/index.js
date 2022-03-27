@@ -23,7 +23,9 @@ const Home = ({navigation}) => {
       <View style={styles.container}>
         <View style={styles.innerContainer}>
           <View style={styles.headerContainer}>
-            <View style={styles.leftHeader}>
+            <TouchableOpacity
+              style={styles.leftHeader}
+              onPress={() => navigation.navigate('Profile')}>
               <Image
                 source={{
                   uri: 'https://i.imgur.com/QOLjDoo.jpeg',
@@ -35,7 +37,7 @@ const Home = ({navigation}) => {
                 <Text style={styles.usernameText}>Sajon Islam</Text>
                 <Text style={styles.email}>@sajon.co</Text>
               </View>
-            </View>
+            </TouchableOpacity>
             {isLoggedIn && (
               <TouchableOpacity onPress={onLogoutAttempt}>
                 <Text style={{color: 'white'}}>Log Out</Text>
@@ -90,7 +92,7 @@ const styles = StyleSheet.create({
   headerContainer: {
     height: 40,
     flexDirection: 'row',
-    // backgroundColor: 'red',
+    backgroundColor: 'red',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
