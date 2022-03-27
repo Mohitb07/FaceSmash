@@ -4,6 +4,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from '../../Screens/Home';
 import Login from '../../Screens/Login';
 import GetStarted from '../../Screens/GetStarted';
+import MyProfile from '../../Screens/Profile';
 
 const RootStack = createNativeStackNavigator();
 export const navigationRef = createRef();
@@ -40,6 +41,11 @@ const Root = () => {
           <RootStack.Screen
             name="Home"
             component={Home}
+            options={{headerShown: false}}
+          />
+          <RootStack.Screen
+            name="Profile"
+            component={MyProfile}
             options={{headerShown: false}}
           />
         </>
