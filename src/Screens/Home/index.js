@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
   headerContainer: {
     height: 40,
     flexDirection: 'row',
-    backgroundColor: 'red',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
