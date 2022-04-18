@@ -11,13 +11,9 @@ import Feed from '../../components/Feed';
 import {AuthContext} from '../../Context/auth';
 
 import {SearchIcon} from '../../SVG';
+import {Button} from 'native-base';
 
 const Home = ({navigation}) => {
-  const {isLoggedIn, setLoginState} = useContext(AuthContext);
-  const onLogoutAttempt = () => {
-    setLoginState(false);
-    navigation.navigate('Login');
-  };
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -28,7 +24,7 @@ const Home = ({navigation}) => {
               onPress={() => navigation.navigate('Profile')}>
               <Image
                 source={{
-                  uri: 'https://i.imgur.com/QOLjDoo.jpeg',
+                  uri: 'https://monteluke.com.au/wp-content/gallery/linkedin-profile-pictures/9.JPG',
                 }}
                 style={styles.image}
                 resizeMode="cover"
@@ -38,11 +34,7 @@ const Home = ({navigation}) => {
                 <Text style={styles.email}>@sajon.co</Text>
               </View>
             </TouchableOpacity>
-            {isLoggedIn && (
-              <TouchableOpacity onPress={onLogoutAttempt}>
-                <Text style={{color: 'white'}}>Log Out</Text>
-              </TouchableOpacity>
-            )}
+
             <View style={styles.rightHeader}>
               <TouchableOpacity style={styles.searchIcon}>
                 <SearchIcon />
