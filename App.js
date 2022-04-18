@@ -10,14 +10,18 @@ import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import Navigation, {navigationRef} from './src/Navigation/Root';
 import Context from './src/Context/auth';
+import {NativeBaseProvider} from 'native-base';
+import {theme} from './src/theme';
 
 const App = () => {
   return (
-    <Context>
-      <NavigationContainer ref={navigationRef}>
-        <Navigation />
-      </NavigationContainer>
-    </Context>
+    <NativeBaseProvider theme={theme}>
+      <Context>
+        <NavigationContainer ref={navigationRef}>
+          <Navigation />
+        </NavigationContainer>
+      </Context>
+    </NativeBaseProvider>
   );
 };
 
