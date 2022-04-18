@@ -1,35 +1,142 @@
-import {View, Text, Image, StyleSheet} from 'react-native';
-import React from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
+import React, {useContext} from 'react';
+import Feed from '../../components/Feed';
+import {
+  VerificationIcon,
+  GearIcon,
+  LogoutIcon,
+  PrivacyIcon,
+  DocumentIcon,
+} from '../../SVG';
+import {
+  Actionsheet,
+  Text as NText,
+  Box,
+  useDisclose,
+  Button,
+} from 'native-base';
+import {AuthContext} from '../../Context/auth';
 
-const MyProfile = () => {
+const MyProfile = ({navigation}) => {
+  const {isOpen, onOpen, onClose} = useDisclose();
+  const {isLoggedIn, setLoginState} = useContext(AuthContext);
+  const onLogoutAttempt = () => {
+    setLoginState(false);
+    navigation.navigate('Login');
+  };
   return (
-    <View style={styles.container}>
-      <View style={styles.userInfo}>
-        <Image
-          style={styles.profilePic}
-          source={{uri: 'https://i.imgur.com/QOLjDoo.jpeg'}}
-        />
-        <Text style={styles.textFullName}>Sajon Islam 🎯</Text>
-        <Text style={styles.email}>@sajon.co</Text>
-      </View>
-      <View style={styles.connections}>
-        <View>
-          <Text style={styles.text}>204</Text>
-          <Text style={(styles.text, {color: '#747474'})}>Following</Text>
+    <ScrollView>
+      <View style={styles.container}>
+        <TouchableOpacity style={styles.gear} onPress={onOpen}>
+          <GearIcon />
+        </TouchableOpacity>
+        <View style={styles.userInfo}>
+          <Image
+            style={styles.profilePic}
+            source={{
+              uri: 'https://monteluke.com.au/wp-content/gallery/linkedin-profile-pictures/9.JPG',
+            }}
+          />
+          <View style={styles.fullNameContainer}>
+            <Text style={styles.textFullName}>Sajon Islam</Text>
+            <VerificationIcon style={{marginLeft: 5}} />
+          </View>
+          <Text style={styles.email}>@sajon.co</Text>
         </View>
-        <View>
-          <Text style={styles.text}>2.5M</Text>
-          <Text style={(styles.text, {color: '#747474'})}>Followers</Text>
+        <View style={styles.connections}>
+          <View>
+            <Text style={styles.text}>204</Text>
+            <Text style={(styles.text, {color: '#747474'})}>Following</Text>
+          </View>
+          <View>
+            <Text style={styles.text}>2.5M</Text>
+            <Text style={(styles.text, {color: '#747474'})}>Followers</Text>
+          </View>
+          <View>
+            <Text style={styles.text}>26</Text>
+            <Text style={(styles.text, {color: '#747474'})}>Close Friends</Text>
+          </View>
         </View>
+        <View style={styles.bioContainer}>
+          <Text style={styles.bio}>Inspiring Designers Globally 🌎</Text>
+        </View>
+
+        <View style={styles.btnContainer}>
+          <TouchableOpacity style={styles.btnPost}>
+            <Text style={styles.btnText}>Post</Text>
+            <Text style={styles.btnBadge}>50</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.btnPost, styles.btnVideo]}>
+            <Text style={[styles.btnText, {color: '#171719'}]}>Videos</Text>
+            <Text style={styles.btnBadge}>50</Text>
+          </TouchableOpacity>
+        </View>
+        <Text style={styles.activityLabel}>Recent Activity</Text>
         <View>
-          <Text style={styles.text}>26</Text>
-          <Text style={(styles.text, {color: '#747474'})}>Close Friends</Text>
+          <Feed
+            userProfilePic="https://i.imgur.com/QOLjDoo.jpeg"
+            postTitle="Fortnite New Season is Here"
+            image="https://cdn.vox-cdn.com/thumbor/Dut2NNiJhzjhcNIzF1tq3UMm6po=/0x0:1920x1080/1200x800/filters:focal(804x128:1110x434)/cdn.vox-cdn.com/uploads/chorus_image/image/70383739/S8_KeyArt.0.jpg"
+          />
+          <Feed
+            userProfilePic="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80"
+            postTitle="Last of us Part II "
+            image="https://www.denofgeek.com/wp-content/uploads/2020/06/The-Last-of-Us-Part-2-1.jpg?fit=1280%2C720"
+          />
+          <Feed
+            userProfilePic="https://monteluke.com.au/wp-content/gallery/linkedin-profile-pictures/9.JPG"
+            postTitle="Without Image post"
+          />
         </View>
       </View>
-      <View style={styles.bioContainer}>
-        <Text style={styles.bio}>Inspiring Designers Globally 🌎</Text>
-      </View>
-    </View>
+      <Actionsheet isOpen={isOpen} onClose={onClose}>
+        <Actionsheet.Content>
+          <Box w="100%" h={60} px={4} justifyContent="center">
+            <NText
+              fontSize="20"
+              color="gray.500"
+              _dark={{
+                color: 'gray.300',
+              }}>
+              Personal Settings
+            </NText>
+          </Box>
+          <Actionsheet.Item>
+            <TouchableOpacity style={styles.btnLogout}>
+              <DocumentIcon style={{marginRight: 5}} />
+              <Text style={{color: 'white', fontWeight: '600'}}>
+                Settings and Privacy
+              </Text>
+            </TouchableOpacity>
+          </Actionsheet.Item>
+          <Actionsheet.Item>
+            <TouchableOpacity style={styles.btnLogout}>
+              <PrivacyIcon style={{marginRight: 5}} />
+              <Text style={{color: 'white', fontWeight: '600'}}>
+                Settings and Privacy
+              </Text>
+            </TouchableOpacity>
+          </Actionsheet.Item>
+          {isLoggedIn && (
+            <Actionsheet.Item>
+              <TouchableOpacity
+                style={styles.btnLogout}
+                onPress={onLogoutAttempt}>
+                <LogoutIcon style={{marginRight: 5}} />
+                <Text style={{color: 'red', fontWeight: '600'}}>Log Out</Text>
+              </TouchableOpacity>
+            </Actionsheet.Item>
+          )}
+        </Actionsheet.Content>
+      </Actionsheet>
+    </ScrollView>
   );
 };
 
@@ -38,7 +145,7 @@ export default MyProfile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#141414',
+    backgroundColor: '#1D1F20',
     paddingHorizontal: 20,
   },
   profilePic: {
@@ -71,6 +178,7 @@ const styles = StyleSheet.create({
   text: {
     color: '#F2F2F2',
     fontSize: 18,
+    textAlign: 'center',
   },
   bioContainer: {
     marginTop: 20,
@@ -78,5 +186,59 @@ const styles = StyleSheet.create({
   bio: {
     color: '#F2F2F2',
     fontSize: 15,
+  },
+  btnPost: {
+    // backgroundColor: '#',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 15,
+    marginTop: 20,
+    width: '50%',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    borderColor: '#171719',
+    borderWidth: 5,
+    alignItems: 'center',
+  },
+  btnVideo: {
+    backgroundColor: '#FECE00',
+  },
+  btnText: {
+    color: 'white',
+    fontSize: 15,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+  btnBadge: {
+    backgroundColor: '#171719',
+    color: '#FECE00',
+    fontSize: 10,
+    paddingHorizontal: 5,
+    paddingVertical: 2,
+    borderRadius: 15,
+    marginLeft: 5,
+    fontWeight: 'bold',
+  },
+  btnContainer: {
+    flexDirection: 'row',
+  },
+  activityLabel: {
+    color: '#F2F2F2',
+    fontSize: 25,
+    fontWeight: 'bold',
+    marginTop: 20,
+  },
+  fullNameContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  gear: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+  },
+  btnLogout: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
