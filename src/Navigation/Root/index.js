@@ -5,6 +5,7 @@ import Home from '../../Screens/Home';
 import Login from '../../Screens/Login';
 import GetStarted from '../../Screens/GetStarted';
 import MyProfile from '../../Screens/Profile';
+import BottomTab from '../BottomNavigation';
 
 const RootStack = createNativeStackNavigator();
 export const navigationRef = createRef();
@@ -28,6 +29,11 @@ const Root = () => {
         </>
       ) : (
         <>
+          {/* <RootStack.Screen
+            name="Root"
+            component={BottomTab}
+            options={{headerShown: false}}
+          /> */}
           <RootStack.Screen
             name="Get Started"
             component={GetStarted}
@@ -46,7 +52,13 @@ const Root = () => {
           <RootStack.Screen
             name="Profile"
             component={MyProfile}
-            options={{headerShown: false}}
+            options={{
+              headerShown: true,
+              headerTitle: '',
+              headerTransparent: true,
+              headerBackTitleVisible: false,
+              headerTintColor: '#fff',
+            }}
           />
         </>
       )}
