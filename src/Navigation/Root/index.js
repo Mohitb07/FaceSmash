@@ -1,17 +1,21 @@
-import {View, Text} from 'react-native';
-import React, {createRef} from 'react';
+import {TouchableOpacity} from 'react-native';
+import React, {createRef, useContext} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from '../../Screens/Home';
 import Login from '../../Screens/Login';
 import GetStarted from '../../Screens/GetStarted';
 import MyProfile from '../../Screens/Profile';
-import BottomTab from '../BottomNavigation';
+
+import {GearIcon} from '../../SVG';
+import {BottomSheetContext} from '../../Context/BottomSheet';
 
 const RootStack = createNativeStackNavigator();
 export const navigationRef = createRef();
 
 const Root = () => {
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const {onOpen} = useContext(BottomSheetContext);
+
   return (
     <RootStack.Navigator>
       {isLoggedIn ? (
@@ -58,6 +62,11 @@ const Root = () => {
               headerTransparent: true,
               headerBackTitleVisible: false,
               headerTintColor: '#fff',
+              headerRight: () => (
+                <TouchableOpacity onPress={onOpen}>
+                  <GearIcon />
+                </TouchableOpacity>
+              ),
             }}
           />
         </>

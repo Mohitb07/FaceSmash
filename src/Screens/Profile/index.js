@@ -23,10 +23,11 @@ import {
   Button,
 } from 'native-base';
 import {AuthContext} from '../../Context/auth';
+import {BottomSheetContext} from '../../Context/BottomSheet';
 
 const MyProfile = ({navigation}) => {
-  const {isOpen, onOpen, onClose} = useDisclose();
   const {isLoggedIn, setLoginState} = useContext(AuthContext);
+  const {isOpen, onClose} = useContext(BottomSheetContext);
   const onLogoutAttempt = () => {
     setLoginState(false);
     navigation.navigate('Login');
@@ -34,9 +35,9 @@ const MyProfile = ({navigation}) => {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <TouchableOpacity style={styles.gear} onPress={onOpen}>
+        {/* <TouchableOpacity style={styles.gear} onPress={onOpen}>
           <GearIcon />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <View style={styles.userInfo}>
           <Image
             style={styles.profilePic}
@@ -231,11 +232,6 @@ const styles = StyleSheet.create({
   fullNameContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  gear: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
   },
   btnLogout: {
     flexDirection: 'row',
