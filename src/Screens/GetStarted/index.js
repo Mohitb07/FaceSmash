@@ -24,7 +24,7 @@ const GetStarted = ({navigation}) => {
         </View>
         <TouchableOpacity
           style={styles.btn}
-          onPress={() => navigation.navigate('Login')}>
+          onPress={() => navigation.navigate('Sign Up')}>
           <Text style={styles.btnText}>Get Started</Text>
         </TouchableOpacity>
       </ImageBackground>
