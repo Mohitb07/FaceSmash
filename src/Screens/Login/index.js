@@ -5,16 +5,25 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {UserIcon, LockIcon, FacebookIcon, GoogleIcon} from '../../SVG';
 import {AuthContext} from '../../Context/auth';
 import Label from '../../components/Label';
+import auth from '@react-native-firebase/auth';
 
 const Login = ({navigation}) => {
-  const {setLoginState} = useContext(AuthContext);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
   const onLoginAttempt = () => {
-    setLoginState(true);
-    navigation.navigate('Home');
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(user => {
+        console.log('User logged in!', user);
+      })
+      .catch(err => {
+        console.log('ERROR', err);
+      });
   };
   return (
     <View style={styles.container}>
@@ -27,13 +36,15 @@ const Login = ({navigation}) => {
           </Text>
         </View>
         <View style={styles.inputContainer}>
-          <Label label="Username" required />
+          <Label label="email" required />
           <View style={styles.username}>
             <UserIcon />
             <TextInput
               placeholderTextColor="#BEBEBE"
               style={styles.inputField}
               placeholder="@gmail.com"
+              value={email}
+              onChangeText={text => setEmail(text)}
             />
           </View>
           <Label label="Password" required />
@@ -43,6 +54,9 @@ const Login = ({navigation}) => {
               placeholderTextColor="#BEBEBE"
               style={styles.inputField}
               placeholder="password"
+              secureTextEntry
+              value={password}
+              onChangeText={text => setPassword(text)}
             />
           </View>
           <Text style={styles.forgotPasswordText}>Forgot password ?</Text>
@@ -67,7 +81,11 @@ const Login = ({navigation}) => {
         </View>
         <View style={styles.signupTextContainer}>
           <Text style={styles.text}>I don't have an account</Text>
-          <Text style={styles.signupText}>Sign Up</Text>
+          <Text
+            onPress={() => navigation.navigate('Sign Up')}
+            style={styles.signupText}>
+            Sign Up
+          </Text>
         </View>
       </View>
     </View>
