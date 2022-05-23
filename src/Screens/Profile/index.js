@@ -24,14 +24,22 @@ import {
 } from 'native-base';
 import {AuthContext} from '../../Context/auth';
 import {BottomSheetContext} from '../../Context/BottomSheet';
+import auth from '@react-native-firebase/auth';
 
 const MyProfile = ({navigation}) => {
-  const {isLoggedIn, setLoginState} = useContext(AuthContext);
+  const {authUser, setAuthenticatedUser} = useContext(AuthContext);
   const {isOpen, onClose} = useContext(BottomSheetContext);
   const onLogoutAttempt = () => {
-    setLoginState(false);
-    navigation.navigate('Login');
+    auth()
+      .signOut()
+      .then(() => {
+        setAuthenticatedUser(null);
+        console.log('Signed Out');
+        navigation.navigate('Login');
+      })
+      .catch(err => console.log('SIGN OUT ERROR', err));
   };
+  console.log('authUser', authUser);
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -125,7 +133,7 @@ const MyProfile = ({navigation}) => {
               </Text>
             </TouchableOpacity>
           </Actionsheet.Item>
-          {isLoggedIn && (
+          {!!authUser && (
             <Actionsheet.Item>
               <TouchableOpacity
                 style={styles.btnLogout}
