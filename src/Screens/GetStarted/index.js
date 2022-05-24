@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import React from 'react';
+import Button from '../../components/Button';
 
 const GetStarted = ({navigation}) => {
   return (
@@ -22,11 +23,10 @@ const GetStarted = ({navigation}) => {
             fasdfasdf rqerqwerqwerqwerwerqwerewr lorem ipsum fasdfasdf
           </Text>
         </View>
-        <TouchableOpacity
-          style={styles.btn}
-          onPress={() => navigation.navigate('Sign Up')}>
-          <Text style={styles.btnText}>Get Started</Text>
-        </TouchableOpacity>
+        <Button
+          text="Get Started"
+          onPress={() => navigation.navigate('Login')}
+        />
       </ImageBackground>
     </View>
   );

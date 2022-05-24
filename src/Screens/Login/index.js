@@ -1,19 +1,15 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-} from 'react-native';
-import React, {useContext, useState} from 'react';
-import {UserIcon, LockIcon, FacebookIcon, GoogleIcon} from '../../SVG';
-import {AuthContext} from '../../Context/auth';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {FacebookIcon, GoogleIcon} from '../../SVG';
 import Label from '../../components/Label';
+import Button from '../../components/Button';
 import auth from '@react-native-firebase/auth';
+import StyledTextInput from '../../components/TextInput';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const isDisabled = email.length === 0 || password.length === 0;
 
   const onLoginAttempt = () => {
     auth()
@@ -36,36 +32,26 @@ const Login = ({navigation}) => {
           </Text>
         </View>
         <View style={styles.inputContainer}>
-          <Label label="email" required />
-          <View style={styles.username}>
-            <UserIcon />
-            <TextInput
-              placeholderTextColor="#BEBEBE"
-              style={styles.inputField}
-              placeholder="@gmail.com"
-              value={email}
-              onChangeText={text => setEmail(text)}
-            />
-          </View>
+          <Label label="Email" required />
+          <StyledTextInput
+            placeholder="@gmail.com"
+            value={email}
+            onChangeText={text => setEmail(text)}
+          />
+
           <Label label="Password" required />
-          <View style={[styles.username]}>
-            <LockIcon />
-            <TextInput
-              placeholderTextColor="#BEBEBE"
-              style={styles.inputField}
-              placeholder="password"
-              secureTextEntry
-              value={password}
-              onChangeText={text => setPassword(text)}
-            />
-          </View>
+          <StyledTextInput
+            placeholder="Your Password"
+            value={password}
+            secure={true}
+            onChangeText={text => setPassword(text)}
+          />
+
           <Text style={styles.forgotPasswordText}>Forgot password ?</Text>
         </View>
       </View>
       <View style={styles.footerContainer}>
-        <TouchableOpacity style={styles.btn} onPress={onLoginAttempt}>
-          <Text style={styles.btnText}>Sign In</Text>
-        </TouchableOpacity>
+        <Button disabled={isDisabled} text="Sign In" onPress={onLoginAttempt} />
         <View style={styles.divider}>
           <View style={styles.line}></View>
           <Text style={styles.text}>or Sign in with</Text>
@@ -114,15 +100,6 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginTop: 25,
   },
-  inputField: {
-    flex: 1,
-    borderWidth: 1.3,
-    borderColor: '#252A34',
-    borderRadius: 8,
-    color: '#fff',
-    padding: 10,
-    backgroundColor: '#252A34',
-  },
   username: {
     backgroundColor: 'red',
     flexDirection: 'row',
@@ -135,17 +112,6 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     color: '#0b59a2',
     textAlign: 'right',
-  },
-  btnText: {
-    textAlign: 'center',
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  btn: {
-    backgroundColor: '#0b59a2',
-    padding: 15,
-    borderRadius: 8,
   },
   divider: {
     flexDirection: 'row',

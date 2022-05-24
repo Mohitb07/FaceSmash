@@ -2,125 +2,109 @@ import {
   View,
   Text,
   StyleSheet,
-  TextInput,
+  ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, {useContext, useState} from 'react';
-import {UserIcon, LockIcon, FacebookIcon, GoogleIcon} from '../../SVG';
-import {AuthContext} from '../../Context/auth';
+import React, {useState} from 'react';
+import {FacebookIcon, GoogleIcon} from '../../SVG';
 import Label from '../../components/Label';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
+import Button from '../../components/Button';
+import StyledTextInput from '../../components/TextInput';
+import {useRegister} from '../../hooks/register';
 
 const SignUp = ({navigation}) => {
-  const {setAuthenticatedUser} = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isDisabled, setIsDisabled] = useState(false);
-  const onRegisterAttempt = () => {
-    setIsDisabled(true);
-    auth()
-      .createUserWithEmailAndPassword(email, password)
-      .then(user => {
-        console.log('inside user', user.user.metadata);
-        firestore()
-          .collection('Users')
-          .doc(user.user.uid)
-          .set({
-            email: user.user.email,
-            username: user.user.email.split('@')[0],
-            password: password,
-            uid: user.user.uid,
-            followers: [],
-            followings: [],
-            createdAt: user.user.metadata.creationTime,
-            lastSignIn: user.user.metadata.lastSignInTime,
-          })
-          .then(() => {
-            setIsDisabled(false);
-            console.log('User added!');
-            setAuthenticatedUser(user);
-          });
-      })
-      .catch(error => {
-        setIsDisabled(false);
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
-        }
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [username, setUsername] = useState('');
 
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
-        }
+  const onRegisterAttempt = useRegister();
 
-        console.error(error);
-      });
+  const isDisabled =
+    email.length === 0 ||
+    password.length === 0 ||
+    confirmPassword.length === 0 ||
+    username.length === 0 ||
+    password !== confirmPassword;
+
+  const signUpAttempt = () => {
+    onRegisterAttempt({email, password, username});
   };
+
   return (
-    <View style={styles.container}>
-      <View>
-        <View style={styles.headingContainer}>
-          <Text style={styles.heading}>Welcome Back!</Text>
-          <Text style={styles.subtitle}>
-            We're happy to see. You can Login and continue consulting your
-            problem or read some tips.
-          </Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <Label label="Email" required />
-          <View style={styles.username}>
-            <UserIcon />
-            <TextInput
-              placeholderTextColor="#BEBEBE"
-              style={styles.inputField}
-              placeholder="@gmail.com"
+    <ScrollView>
+      <View style={styles.container}>
+        <View>
+          <View style={styles.headingContainer}>
+            <Text style={styles.heading}>Create an Account</Text>
+            <Text style={styles.subtitle}>
+              We're happy to see. You can Login and continue to use our platform
+              or sign up today .
+            </Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <Label label="Username" required />
+            <StyledTextInput
+              value={username}
+              onChangeText={text => setUsername(text)}
+              placeholder="Your Username"
+            />
+
+            <Label label="Email" required />
+            <StyledTextInput
               value={email}
               onChangeText={text => setEmail(text)}
+              placeholder="@gmail.com"
             />
-          </View>
-          <Label label="Password" required />
-          <View style={[styles.username]}>
-            <LockIcon />
-            <TextInput
-              placeholderTextColor="#BEBEBE"
-              style={styles.inputField}
-              placeholder="password"
-              secureTextEntry
+
+            <Label label="Password" required />
+            <StyledTextInput
+              secure={true}
               value={password}
               onChangeText={text => setPassword(text)}
+              placeholder="Your Password"
+            />
+
+            <Label label="Confirm Password" required />
+            <StyledTextInput
+              secure={true}
+              value={confirmPassword}
+              onChangeText={text => setConfirmPassword(text)}
+              placeholder="Confirm Your Password"
+              error={confirmPassword.length > 0 && password !== confirmPassword}
             />
           </View>
         </View>
+        <View style={styles.footerContainer}>
+          <Button
+            disabled={isDisabled}
+            text="Sign Up"
+            onPress={signUpAttempt}
+          />
+          <View style={styles.divider}>
+            <View style={styles.line}></View>
+            <Text style={styles.text}>or Sign in with</Text>
+            <View style={styles.line}></View>
+          </View>
+          <View style={styles.socialContainer}>
+            <TouchableOpacity style={styles.socialBtn}>
+              <FacebookIcon />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.socialBtn}>
+              <GoogleIcon />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.signupTextContainer}>
+            <Text style={styles.text}>Already have an account ?</Text>
+            <Text
+              onPress={() => navigation.navigate('Login')}
+              style={styles.signupText}>
+              Sign In
+            </Text>
+          </View>
+        </View>
       </View>
-      <View style={styles.footerContainer}>
-        <TouchableOpacity
-          disabled={isDisabled}
-          style={styles.btn}
-          onPress={onRegisterAttempt}>
-          <Text style={styles.btnText}>Sign Up</Text>
-        </TouchableOpacity>
-        <View style={styles.divider}>
-          <View style={styles.line}></View>
-          <Text style={styles.text}>or Sign in with</Text>
-          <View style={styles.line}></View>
-        </View>
-        <View style={styles.socialContainer}>
-          <TouchableOpacity style={styles.socialBtn}>
-            <FacebookIcon />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.socialBtn}>
-            <GoogleIcon />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.signupTextContainer}>
-          <Text style={styles.text}>Already Created ?</Text>
-          <Text
-            onPress={() => navigation.navigate('Login')}
-            style={styles.signupText}>
-            Sign In
-          </Text>
-        </View>
-      </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -144,40 +128,11 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   inputContainer: {
-    marginTop: 25,
-  },
-  inputField: {
-    flex: 1,
-    borderWidth: 1.3,
-    borderColor: '#252A34',
-    borderRadius: 8,
-    color: '#fff',
-    padding: 10,
-    backgroundColor: '#252A34',
-  },
-  username: {
-    backgroundColor: 'red',
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderRadius: 8,
-    backgroundColor: '#252A34',
-    paddingHorizontal: 5,
-    marginBottom: 15,
+    marginVertical: 25,
   },
   forgotPasswordText: {
     color: '#0b59a2',
     textAlign: 'right',
-  },
-  btnText: {
-    textAlign: 'center',
-    fontSize: 15,
-    fontWeight: 'bold',
-    color: '#fff',
-  },
-  btn: {
-    backgroundColor: '#0b59a2',
-    padding: 15,
-    borderRadius: 8,
   },
   divider: {
     flexDirection: 'row',
