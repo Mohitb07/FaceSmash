@@ -165,9 +165,9 @@ export const LockIcon = () => {
         y2="15.603"
         gradientUnits="userSpaceOnUse">
         <Stop offset="0" stopColor="#92a3b0"></Stop>
-        <Stop offset=".099" stopColor="#a3b5c4"></Stop>
-        <Stop offset=".174" stopColor="#aec2d1"></Stop>
-        <Stop offset=".276" stopColor="#b2c6d6"></Stop>
+        <Stop offset="0.099" stopColor="#a3b5c4"></Stop>
+        <Stop offset="0.174" stopColor="#aec2d1"></Stop>
+        <Stop offset="0.276" stopColor="#b2c6d6"></Stop>
       </LinearGradient>
       <Path
         fill="url(#pa6zoXJpYvnL2wKDvc1Jab_aOIgAaBKsm36_gr2)"
