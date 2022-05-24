@@ -56,15 +56,14 @@ const Root = () => {
             component={GetStarted}
             options={{headerShown: false}}
           />
-
-          <RootStack.Screen
-            name="Sign Up"
-            component={Register}
-            options={{headerShown: false}}
-          />
           <RootStack.Screen
             name="Login"
             component={Login}
+            options={{headerShown: false}}
+          />
+          <RootStack.Screen
+            name="Sign Up"
+            component={Register}
             options={{headerShown: false}}
           />
         </>
