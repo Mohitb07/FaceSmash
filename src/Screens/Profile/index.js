@@ -24,20 +24,27 @@ import {
 } from 'native-base';
 import {AuthContext} from '../../Context/auth';
 import {BottomSheetContext} from '../../Context/BottomSheet';
+import auth from '@react-native-firebase/auth';
+import {UserDataContext} from '../../Context/userData';
 
 const MyProfile = ({navigation}) => {
-  const {isLoggedIn, setLoginState} = useContext(AuthContext);
+  const {authUser} = useContext(AuthContext);
+  const {userData} = useContext(UserDataContext);
+
   const {isOpen, onClose} = useContext(BottomSheetContext);
   const onLogoutAttempt = () => {
-    setLoginState(false);
-    navigation.navigate('Login');
+    auth()
+      .signOut()
+      .then(() => {
+        setAuthenticatedUser(null);
+        console.log('Signed Out');
+        navigation.navigate('Login');
+      })
+      .catch(err => console.log('SIGN OUT ERROR', err));
   };
   return (
     <ScrollView>
       <View style={styles.container}>
-        {/* <TouchableOpacity style={styles.gear} onPress={onOpen}>
-          <GearIcon />
-        </TouchableOpacity> */}
         <View style={styles.userInfo}>
           <Image
             style={styles.profilePic}
@@ -46,18 +53,18 @@ const MyProfile = ({navigation}) => {
             }}
           />
           <View style={styles.fullNameContainer}>
-            <Text style={styles.textFullName}>Sajon Islam</Text>
+            <Text style={styles.textFullName}>{userData?.username}</Text>
             <VerificationIcon style={{marginLeft: 5}} />
           </View>
-          <Text style={styles.email}>@sajon.co</Text>
+          <Text style={styles.email}>{userData?.email}</Text>
         </View>
         <View style={styles.connections}>
           <View>
-            <Text style={styles.text}>204</Text>
+            <Text style={styles.text}>{userData?.followings.length}</Text>
             <Text style={(styles.text, {color: '#747474'})}>Following</Text>
           </View>
           <View>
-            <Text style={styles.text}>2.5M</Text>
+            <Text style={styles.text}>{userData?.followers.length}</Text>
             <Text style={(styles.text, {color: '#747474'})}>Followers</Text>
           </View>
           <View>
@@ -125,7 +132,7 @@ const MyProfile = ({navigation}) => {
               </Text>
             </TouchableOpacity>
           </Actionsheet.Item>
-          {isLoggedIn && (
+          {!!authUser && (
             <Actionsheet.Item>
               <TouchableOpacity
                 style={styles.btnLogout}

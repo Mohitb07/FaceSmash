@@ -12,8 +12,11 @@ import {AuthContext} from '../../Context/auth';
 
 import {SearchIcon} from '../../SVG';
 import {Button} from 'native-base';
+import {UserDataContext} from '../../Context/userData';
 
 const Home = ({navigation}) => {
+  const {userData} = useContext(UserDataContext);
+
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -30,8 +33,8 @@ const Home = ({navigation}) => {
                 resizeMode="cover"
               />
               <View style={styles.userInfo}>
-                <Text style={styles.usernameText}>Sajon Islam</Text>
-                <Text style={styles.email}>@sajon.co</Text>
+                <Text style={styles.usernameText}>{userData?.username}</Text>
+                <Text style={styles.email}>{userData?.email}</Text>
               </View>
             </TouchableOpacity>
 

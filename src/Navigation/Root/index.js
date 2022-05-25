@@ -8,46 +8,20 @@ import MyProfile from '../../Screens/Profile';
 
 import {GearIcon} from '../../SVG';
 import {BottomSheetContext} from '../../Context/BottomSheet';
+import {AuthContext} from '../../Context/auth';
+import Register from '../../Screens/Register';
 
 const RootStack = createNativeStackNavigator();
 export const navigationRef = createRef();
 
 const Root = () => {
-  const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const {authUser} = useContext(AuthContext);
   const {onOpen} = useContext(BottomSheetContext);
 
   return (
     <RootStack.Navigator>
-      {isLoggedIn ? (
+      {!!authUser ? (
         <>
-          <RootStack.Screen
-            name="Home"
-            component={Home}
-            options={{headerShown: false}}
-          />
-          <RootStack.Screen
-            name="Login"
-            component={Login}
-            options={{headerShown: false}}
-          />
-        </>
-      ) : (
-        <>
-          {/* <RootStack.Screen
-            name="Root"
-            component={BottomTab}
-            options={{headerShown: false}}
-          /> */}
-          <RootStack.Screen
-            name="Get Started"
-            component={GetStarted}
-            options={{headerShown: false}}
-          />
-          <RootStack.Screen
-            name="Login"
-            component={Login}
-            options={{headerShown: false}}
-          />
           <RootStack.Screen
             name="Home"
             component={Home}
@@ -68,6 +42,29 @@ const Root = () => {
                 </TouchableOpacity>
               ),
             }}
+          />
+        </>
+      ) : (
+        <>
+          {/* <RootStack.Screen
+            name="Root"
+            component={BottomTab}
+            options={{headerShown: false}}
+          /> */}
+          <RootStack.Screen
+            name="Get Started"
+            component={GetStarted}
+            options={{headerShown: false}}
+          />
+          <RootStack.Screen
+            name="Login"
+            component={Login}
+            options={{headerShown: false}}
+          />
+          <RootStack.Screen
+            name="Sign Up"
+            component={Register}
+            options={{headerShown: false}}
           />
         </>
       )}
