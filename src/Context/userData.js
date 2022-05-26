@@ -5,17 +5,15 @@ import {AuthContext} from './auth';
 export const UserDataContext = React.createContext();
 
 const UserDataProvider = props => {
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({});
   const {authUser} = useContext(AuthContext);
 
-  console.log('inside userdata', userData);
-  console.log('inside authUser', authUser);
-
   useEffect(() => {
+    console.log('calling effect');
     async function getData() {
       const user = await firestore()
         .collection('Users')
-        .doc(authUser.uid)
+        .doc(authUser?.uid)
         .get();
       setUserData(user.data());
     }
