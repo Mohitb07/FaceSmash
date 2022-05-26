@@ -20,6 +20,7 @@ export function useRegister() {
             followings: [],
             createdAt: user.user.metadata.creationTime,
             lastSignIn: user.user.metadata.lastSignInTime,
+            profilePic: '',
           })
           .then(() => {
             console.log('User added!');
