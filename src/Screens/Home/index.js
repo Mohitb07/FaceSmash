@@ -27,7 +27,7 @@ const Home = ({navigation}) => {
               onPress={() => navigation.navigate('Profile')}>
               <Image
                 source={{
-                  uri: 'https://monteluke.com.au/wp-content/gallery/linkedin-profile-pictures/9.JPG',
+                  uri: userData?.profilePic,
                 }}
                 style={styles.image}
                 resizeMode="cover"
