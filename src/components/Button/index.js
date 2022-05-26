@@ -1,13 +1,38 @@
-import {Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import React from 'react';
 
-const Button = ({onPress = () => {}, text = '', disabled = false}) => {
+const Button = ({
+  onPress = () => {},
+  text = '',
+  disabled = false,
+  color = '',
+  icon,
+  style: customStyle = {},
+  loader = false,
+}) => {
   return (
     <TouchableOpacity
       disabled={disabled}
-      style={[styles.btn, disabled && styles.disabled]}
+      style={[
+        styles.btn,
+        color && {backgroundColor: color},
+        disabled && styles.disabled,
+        customStyle,
+      ]}
       onPress={onPress}>
-      <Text style={[styles.btnText, disabled && styles.disabled]}>{text}</Text>
+      {icon && icon}
+      {loader ? (
+        <ActivityIndicator />
+      ) : (
+        <Text style={[styles.btnText, disabled && styles.disabled]}>
+          {text}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };
@@ -22,6 +47,9 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   btn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#0b59a2',
     padding: 15,
     borderRadius: 8,
