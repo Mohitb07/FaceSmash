@@ -10,6 +10,7 @@ import {GearIcon} from '../../SVG';
 import {BottomSheetContext} from '../../Context/BottomSheet';
 import {AuthContext} from '../../Context/auth';
 import Register from '../../Screens/Register';
+import UpdateProfile from '../../Screens/Profile/Update';
 
 const RootStack = createNativeStackNavigator();
 export const navigationRef = createRef();
@@ -41,6 +42,17 @@ const Root = () => {
                   <GearIcon />
                 </TouchableOpacity>
               ),
+            }}
+          />
+          <RootStack.Screen
+            name="Update Profile"
+            component={UpdateProfile}
+            options={{
+              headerShown: true,
+              headerTransparent: true,
+              headerTitle: 'Update Profile',
+              headerTintColor: '#fff',
+              headerTitleAlign: 'center',
             }}
           />
         </>
