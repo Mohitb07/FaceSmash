@@ -4,12 +4,15 @@ import Button from '../../../components/Button';
 import {GallaryIcon, CameraIcon} from '../../../SVG';
 import * as ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
-import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from '../../../Context/auth';
+import {UserDataContext} from '../../../Context/userData';
+import Header from '../../../components/Header';
+import {COLORS} from '../../../constants/theme';
 
 const UpdateProfile = ({navigation}) => {
   const [image, setImage] = useState(null);
   const {authUser} = useContext(AuthContext);
+  const {updateUserData} = useContext(UserDataContext);
   const [loading, setLoading] = useState(false);
 
   const disabled = !image;
@@ -50,20 +53,7 @@ const UpdateProfile = ({navigation}) => {
           .getDownloadURL()
           .then(url => {
             console.log('UPLOADED IMAGE URL', url);
-            firestore()
-              .collection('Users')
-              .doc(authUser.uid)
-              .update({
-                profilePic: url,
-              })
-              .then(() => {
-                setLoading(false);
-                console.log('USER UPDATED ');
-                navigation.navigate('Profile');
-              })
-              .catch(error => {
-                console.log('ERROR UPDATING USER', error);
-              });
+            updateUserData(url, navigation, setLoading);
           })
           .catch(err => {
             console.log('image download error', err);
@@ -75,45 +65,69 @@ const UpdateProfile = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.userInfo}>
-        <Image
-          style={styles.profilePic}
-          source={{
-            uri: image
-              ? image
-              : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG3eLpTAMWO-mtILepXLwg68-IChyGcXJgog&usqp=CAU',
-          }}
-        />
-        <View style={styles.fullNameContainer}>
-          <Text style={styles.textFullName}>Mohit Bisht</Text>
-        </View>
-        <Text style={styles.email}>bmohit980@gmail.com</Text>
+    <>
+      <Header
+        label="Update Profile"
+        showBackButton
+        onPress={handleUploadImage}
+        rightSection
+        disabled={disabled}
+        loading={loading}
+        navigation={navigation}
+      />
+      <View style={styles.container}>
+        <View style={styles.userInfo}>
+          <Image
+            style={styles.profilePic}
+            source={{
+              uri: image
+                ? image
+                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG3eLpTAMWO-mtILepXLwg68-IChyGcXJgog&usqp=CAU',
+            }}
+          />
+          <View style={styles.fullNameContainer}>
+            <Text style={styles.textFullName}>Mohit Bisht</Text>
+          </View>
+          <Text style={styles.email}>bmohit980@gmail.com</Text>
 
-        <View style={styles.btnContainer}>
+          {/* <View style={styles.btnContainer}>
           <Button
-            onPress={handleChooseGallary}
+          onPress={handleChooseGallary}
             style={styles.customBtn}
             text="Choose from gallary"
-          />
+            />
           <Button
-            onPress={handleTakePhoto}
-            style={[styles.customBtn, {marginVertical: 0}]}
-            color="grey"
-            text="Take a picture"
+          onPress={handleTakePhoto}
+          style={[styles.customBtn, {marginVertical: 0}]}
+          color="grey"
+          text="Take a picture"
           />
+        </View> */}
         </View>
-      </View>
 
-      <View>
-        <Button
+        <View>
+          {/* <Button
           loader={loading}
           disabled={disabled}
           onPress={handleUploadImage}
           text="Update"
-        />
+        /> */}
+          <Button
+            onPress={handleChooseGallary}
+            style={styles.customBtn}
+            text="Choose from gallary"
+            color={COLORS.primary}
+            icon={<GallaryIcon />}
+          />
+          <Button
+            onPress={handleTakePhoto}
+            style={[styles.customBtn, {marginVertical: 0}]}
+            text="Take a picture"
+            icon={<CameraIcon />}
+          />
+        </View>
       </View>
-    </View>
+    </>
   );
 };
 
@@ -124,7 +138,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     padding: 15,
-    backgroundColor: '#181920',
+    backgroundColor: COLORS.background,
   },
   userInfo: {
     flex: 1,

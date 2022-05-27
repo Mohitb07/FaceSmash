@@ -20,7 +20,31 @@ const UserDataProvider = props => {
     getData();
   }, [authUser]);
 
-  return <UserDataContext.Provider value={{userData}} {...props} />;
+  const updateUserData = (url, navigation, setLoading) => {
+    firestore()
+      .collection('Users')
+      .doc(authUser.uid)
+      .update({
+        profilePic: url,
+      })
+      .then(async () => {
+        const updatedUser = await firestore()
+          .collection('Users')
+          .doc(authUser.uid)
+          .get();
+        setLoading(false);
+        setUserData(updatedUser.data());
+        navigation.navigate('Profile');
+      })
+      .catch(error => {
+        console.log('ERROR UPDATING USER', error);
+        return null;
+      });
+  };
+
+  return (
+    <UserDataContext.Provider value={{userData, updateUserData}} {...props} />
+  );
 };
 
 export default UserDataProvider;

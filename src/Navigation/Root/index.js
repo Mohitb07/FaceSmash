@@ -6,11 +6,12 @@ import Login from '../../Screens/Login';
 import GetStarted from '../../Screens/GetStarted';
 import MyProfile from '../../Screens/Profile';
 
-import {GearIcon} from '../../SVG';
+import {GearIcon, CheckIcon} from '../../SVG';
 import {BottomSheetContext} from '../../Context/BottomSheet';
 import {AuthContext} from '../../Context/auth';
 import Register from '../../Screens/Register';
 import UpdateProfile from '../../Screens/Profile/Update';
+import RightHeader from '../../components/RightHeader';
 
 const RootStack = createNativeStackNavigator();
 export const navigationRef = createRef();
@@ -38,9 +39,7 @@ const Root = () => {
               headerBackTitleVisible: false,
               headerTintColor: '#fff',
               headerRight: () => (
-                <TouchableOpacity onPress={onOpen}>
-                  <GearIcon />
-                </TouchableOpacity>
+                <RightHeader onOpen={onOpen} icon={<GearIcon />} />
               ),
             }}
           />
@@ -48,11 +47,12 @@ const Root = () => {
             name="Update Profile"
             component={UpdateProfile}
             options={{
-              headerShown: true,
+              headerShown: false,
               headerTransparent: true,
               headerTitle: 'Update Profile',
               headerTintColor: '#fff',
               headerTitleAlign: 'center',
+              headerRight: () => <RightHeader icon={<CheckIcon />} />,
             }}
           />
         </>

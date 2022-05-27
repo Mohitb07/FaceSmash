@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React from 'react';
+import LinearGradient from 'react-native-linear-gradient';
 
 const Button = ({
   onPress = () => {},
@@ -45,12 +46,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: '#fff',
+    marginHorizontal: 10,
   },
   btn: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#0b59a2',
     padding: 15,
     borderRadius: 8,
   },
