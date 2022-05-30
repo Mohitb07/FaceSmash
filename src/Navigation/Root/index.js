@@ -1,6 +1,6 @@
-import {TouchableOpacity} from 'react-native';
 import React, {createRef, useContext} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+
 import Home from '../../Screens/Home';
 import Login from '../../Screens/Login';
 import GetStarted from '../../Screens/GetStarted';
@@ -10,6 +10,7 @@ import {GearIcon, CheckIcon} from '../../SVG';
 import {BottomSheetContext} from '../../Context/BottomSheet';
 import {AuthContext} from '../../Context/auth';
 import Register from '../../Screens/Register';
+import SplashScreen from '../../Screens/Splash';
 import UpdateProfile from '../../Screens/Profile/Update';
 import RightHeader from '../../components/RightHeader';
 
@@ -17,8 +18,13 @@ const RootStack = createNativeStackNavigator();
 export const navigationRef = createRef();
 
 const Root = () => {
-  const {authUser} = useContext(AuthContext);
+  const {authUser, initializing} = useContext(AuthContext);
   const {onOpen} = useContext(BottomSheetContext);
+  console.log('initializing', initializing);
+
+  if (initializing && !!!authUser) {
+    return <SplashScreen />;
+  }
 
   return (
     <RootStack.Navigator>
@@ -58,11 +64,11 @@ const Root = () => {
         </>
       ) : (
         <>
-          {/* <RootStack.Screen
+          <RootStack.Screen
             name="Root"
             component={BottomTab}
             options={{headerShown: false}}
-          /> */}
+          />
           <RootStack.Screen
             name="Get Started"
             component={GetStarted}
