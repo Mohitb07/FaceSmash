@@ -7,12 +7,12 @@ import storage from '@react-native-firebase/storage';
 import {AuthContext} from '../../../Context/auth';
 import {UserDataContext} from '../../../Context/userData';
 import Header from '../../../components/Header';
-import {COLORS} from '../../../constants/theme';
+import {COLORS, FONTS} from '../../../constants/theme';
 
 const UpdateProfile = ({navigation}) => {
   const [image, setImage] = useState(null);
   const {authUser} = useContext(AuthContext);
-  const {updateUserData} = useContext(UserDataContext);
+  const {userData, updateUserData} = useContext(UserDataContext);
   const [loading, setLoading] = useState(false);
 
   const disabled = !image;
@@ -86,42 +86,23 @@ const UpdateProfile = ({navigation}) => {
             }}
           />
           <View style={styles.fullNameContainer}>
-            <Text style={styles.textFullName}>Mohit Bisht</Text>
+            <Text style={styles.textFullName}>{userData?.username}</Text>
           </View>
-          <Text style={styles.email}>bmohit980@gmail.com</Text>
-
-          {/* <View style={styles.btnContainer}>
-          <Button
-          onPress={handleChooseGallary}
-            style={styles.customBtn}
-            text="Choose from gallary"
-            />
-          <Button
-          onPress={handleTakePhoto}
-          style={[styles.customBtn, {marginVertical: 0}]}
-          color="grey"
-          text="Take a picture"
-          />
-        </View> */}
+          <Text style={styles.email}>{userData?.email}</Text>
         </View>
 
         <View>
-          {/* <Button
-          loader={loading}
-          disabled={disabled}
-          onPress={handleUploadImage}
-          text="Update"
-        /> */}
           <Button
             onPress={handleChooseGallary}
             style={styles.customBtn}
             text="Choose from gallary"
-            color={COLORS.primary}
+            color={COLORS.blue}
             icon={<GallaryIcon />}
           />
           <Button
             onPress={handleTakePhoto}
             style={[styles.customBtn, {marginVertical: 0}]}
+            color={COLORS.primary}
             text="Take a picture"
             icon={<CameraIcon />}
           />

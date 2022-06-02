@@ -6,8 +6,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import React from 'react';
-import {ArrowBackIcon, CheckIcon} from 'native-base';
+// import {ArrowBackIcon, CheckIcon} from 'native-base';
 import {COLORS} from '../../constants';
+import {CloseIcon, CheckIcon} from '../../SVG';
 
 const StyledHeader = ({
   label = '',
@@ -21,7 +22,7 @@ const StyledHeader = ({
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        {showBackButton && <ArrowBackIcon />}
+        {showBackButton && <CloseIcon />}
       </TouchableOpacity>
       <Text style={styles.headerText}>{label}</Text>
       {rightSection && (

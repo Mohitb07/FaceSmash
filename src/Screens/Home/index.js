@@ -64,6 +64,7 @@ const Home = ({navigation}) => {
             <Text style={styles.feedsLabel}>Trending</Text>
             {fakeData.posts.map(post => (
               <Feed
+                key={post.uid}
                 userProfilePic={post.userProfile}
                 postTitle={post.title}
                 image={post.image}
