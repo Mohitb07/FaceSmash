@@ -451,18 +451,49 @@ export const CameraIcon = props => (
   </Svg>
 );
 
+// export const CheckIcon = props => (
+//   <Svg
+//     width="28px"
+//     height="28px"
+//     viewBox="0 0 24 24"
+//     xmlns="http://www.w3.org/2000/svg"
+//     {...props}>
+//     <Polyline
+//       fill="none"
+//       stroke="#fff"
+//       strokeWidth={2}
+//       points="6 13 10.2 16.6 18 7"
+//     />
+//   </Svg>
+// );
 export const CheckIcon = props => (
   <Svg
-    width="28px"
-    height="28px"
+    width="24px"
+    height="24px"
     viewBox="0 0 24 24"
+    fill="#fff"
     xmlns="http://www.w3.org/2000/svg"
     {...props}>
-    <Polyline
-      fill="none"
-      stroke="#fff"
-      strokeWidth={2}
-      points="6 13 10.2 16.6 18 7"
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M19.8198 6.19526C20.0601 6.45561 20.0601 6.87772 19.8198 7.13807L9.9736 17.8047C9.73328 18.0651 9.34364 18.0651 9.10332 17.8047L4.18024 12.4714C3.93992 12.2111 3.93992 11.7889 4.18024 11.5286C4.42056 11.2682 4.8102 11.2682 5.05053 11.5286L9.53846 16.3905L18.9495 6.19526C19.1898 5.93491 19.5794 5.93491 19.8198 6.19526Z"
+      fill="#fff"
     />
+  </Svg>
+);
+
+export const CloseIcon = props => (
+  <Svg
+    width="24px"
+    height="24px"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="#fff"
+    {...props}>
+    <Rect x={0} fill="none" width={24} height={24} />
+    <G>
+      <Path d="M17.705 7.705l-1.41-1.41L12 10.59 7.705 6.295l-1.41 1.41L10.59 12l-4.295 4.295 1.41 1.41L12 13.41l4.295 4.295 1.41-1.41L13.41 12l4.295-4.295z" />
+    </G>
   </Svg>
 );
