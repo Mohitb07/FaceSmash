@@ -10,9 +10,10 @@ import {GearIcon, CheckIcon} from '../../SVG';
 import {BottomSheetContext} from '../../Context/BottomSheet';
 import {AuthContext} from '../../Context/auth';
 import Register from '../../Screens/Register';
-import SplashScreen from '../../Screens/Splash';
 import UpdateProfile from '../../Screens/Profile/Update';
 import RightHeader from '../../components/RightHeader';
+import Loader from '../../components/Loader';
+// import BottomTab from '../BottomNavigation';
 
 const RootStack = createNativeStackNavigator();
 export const navigationRef = createRef();
@@ -20,10 +21,9 @@ export const navigationRef = createRef();
 const Root = () => {
   const {authUser, initializing} = useContext(AuthContext);
   const {onOpen} = useContext(BottomSheetContext);
-  console.log('initializing', initializing);
 
-  if (initializing && !!!authUser) {
-    return <SplashScreen />;
+  if (initializing) {
+    return <Loader />;
   }
 
   return (
@@ -64,11 +64,6 @@ const Root = () => {
         </>
       ) : (
         <>
-          <RootStack.Screen
-            name="Root"
-            component={BottomTab}
-            options={{headerShown: false}}
-          />
           <RootStack.Screen
             name="Get Started"
             component={GetStarted}
