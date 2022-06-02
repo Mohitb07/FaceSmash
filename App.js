@@ -14,6 +14,7 @@ import UserDataContext from './src/Context/userData';
 import BottomSheetProvider from './src/Context/BottomSheet';
 import {NativeBaseProvider} from 'native-base';
 import {theme} from './src/theme';
+import 'react-native-gesture-handler';
 
 const App = () => {
   return (

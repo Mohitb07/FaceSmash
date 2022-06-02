@@ -11,6 +11,7 @@ import Label from '../../components/Label';
 import Button from '../../components/Button';
 import StyledTextInput from '../../components/TextInput';
 import {useRegister} from '../../hooks/register';
+import {COLORS} from '../../constants';
 
 const SignUp = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -29,6 +30,7 @@ const SignUp = ({navigation}) => {
 
   const signUpAttempt = () => {
     onRegisterAttempt({email, password, username});
+    navigation.navigate('Update Profile');
   };
 
   return (
@@ -80,6 +82,7 @@ const SignUp = ({navigation}) => {
             disabled={isDisabled}
             text="Sign Up"
             onPress={signUpAttempt}
+            color={COLORS.primary}
           />
           <View style={styles.divider}>
             <View style={styles.line}></View>

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   View,
   Text,
@@ -6,19 +6,35 @@ import {
   Image,
   TouchableOpacity,
   ScrollView,
+  RefreshControl,
 } from 'react-native';
 import Feed from '../../components/Feed';
-import {AuthContext} from '../../Context/auth';
+import fakeData from '../../assets/fakeData.json';
 
 import {SearchIcon} from '../../SVG';
-import {Button} from 'native-base';
 import {UserDataContext} from '../../Context/userData';
+
+const wait = timeout => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
 
 const Home = ({navigation}) => {
   const {userData} = useContext(UserDataContext);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
+
+  console.log('fake fdata', fakeData);
 
   return (
-    <ScrollView>
+    <ScrollView
+      contentContainerStyle={styles.scrollView}
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }>
       <View style={styles.container}>
         <View style={styles.innerContainer}>
           <View style={styles.headerContainer}>
@@ -27,7 +43,7 @@ const Home = ({navigation}) => {
               onPress={() => navigation.navigate('Profile')}>
               <Image
                 source={{
-                  uri: 'https://monteluke.com.au/wp-content/gallery/linkedin-profile-pictures/9.JPG',
+                  uri: userData?.profilePic,
                 }}
                 style={styles.image}
                 resizeMode="cover"
@@ -46,25 +62,14 @@ const Home = ({navigation}) => {
           </View>
           <View style={styles.feedsContainer}>
             <Text style={styles.feedsLabel}>Trending</Text>
-            <Feed
-              userProfilePic="https://i.imgur.com/QOLjDoo.jpeg"
-              postTitle="Fortnite New Season is Here"
-              image="https://cdn.vox-cdn.com/thumbor/Dut2NNiJhzjhcNIzF1tq3UMm6po=/0x0:1920x1080/1200x800/filters:focal(804x128:1110x434)/cdn.vox-cdn.com/uploads/chorus_image/image/70383739/S8_KeyArt.0.jpg"
-            />
-            <Feed
-              userProfilePic="http://thenewcode.com/assets/images/thumbnails/sarah-parmenter.jpeg"
-              postTitle="Witcher 4 ?"
-              image="https://www.pcgamesn.com/wp-content/uploads/legacy/Witcher_3_fps.jpg"
-            />
-            <Feed
-              userProfilePic="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80"
-              postTitle="Last of us Part II "
-              image="https://www.denofgeek.com/wp-content/uploads/2020/06/The-Last-of-Us-Part-2-1.jpg?fit=1280%2C720"
-            />
-            <Feed
-              userProfilePic="https://monteluke.com.au/wp-content/gallery/linkedin-profile-pictures/9.JPG"
-              postTitle="Without Image post"
-            />
+            {fakeData.posts.map(post => (
+              <Feed
+                key={post.uid}
+                userProfilePic={post.userProfile}
+                postTitle={post.title}
+                image={post.image}
+              />
+            ))}
           </View>
         </View>
       </View>
@@ -78,6 +83,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#141414',
     paddingHorizontal: 20,
+  },
+  scrollView: {
+    // flex: 1,
   },
   innerContainer: {
     flex: 1,
@@ -118,7 +126,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   feedsContainer: {
-    // backgroundColor: 'red',
     flex: 1,
     paddingVertical: 20,
   },

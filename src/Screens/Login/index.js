@@ -5,6 +5,7 @@ import Label from '../../components/Label';
 import Button from '../../components/Button';
 import auth from '@react-native-firebase/auth';
 import StyledTextInput from '../../components/TextInput';
+import {COLORS} from '../../constants';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -51,7 +52,12 @@ const Login = ({navigation}) => {
         </View>
       </View>
       <View style={styles.footerContainer}>
-        <Button disabled={isDisabled} text="Sign In" onPress={onLoginAttempt} />
+        <Button
+          color={COLORS.primary}
+          disabled={isDisabled}
+          text="Sign In"
+          onPress={onLoginAttempt}
+        />
         <View style={styles.divider}>
           <View style={styles.line}></View>
           <Text style={styles.text}>or Sign in with</Text>

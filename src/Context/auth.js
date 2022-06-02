@@ -12,8 +12,11 @@ function AuthProvider({children}) {
     if (initializing) setInitializing(false);
   }
 
+  let subscriber;
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    setTimeout(() => {
+      subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    }, 3000);
     return subscriber;
   }, []);
 
@@ -27,7 +30,9 @@ function AuthProvider({children}) {
     console.log('user is authenticated');
   }
   return (
-    <AuthContext.Provider value={{authUser}}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{authUser, initializing}}>
+      {children}
+    </AuthContext.Provider>
   );
 }
 

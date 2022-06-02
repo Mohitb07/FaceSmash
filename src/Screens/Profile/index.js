@@ -49,7 +49,7 @@ const MyProfile = ({navigation}) => {
           <Image
             style={styles.profilePic}
             source={{
-              uri: 'https://monteluke.com.au/wp-content/gallery/linkedin-profile-pictures/9.JPG',
+              uri: userData?.profilePic,
             }}
           />
           <View style={styles.fullNameContainer}>
@@ -77,7 +77,9 @@ const MyProfile = ({navigation}) => {
         </View>
 
         <View style={styles.btnContainer}>
-          <TouchableOpacity style={styles.btnPost}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Update Profile')}
+            style={styles.btnPost}>
             <Text style={styles.btnText}>Post</Text>
             <Text style={styles.btnBadge}>50</Text>
           </TouchableOpacity>

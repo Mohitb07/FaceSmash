@@ -11,6 +11,9 @@ import Svg, {
   LinearGradient,
   Stop,
   Line,
+  Polygon,
+  Ellipse,
+  Polyline,
 } from 'react-native-svg';
 import {View} from 'react-native';
 
@@ -399,5 +402,98 @@ export const HomeIcon = props => (
       d="M13.3758 3.47015C12.5655 2.84328 11.4345 2.84328 10.6242 3.47015L3.87424 8.69205C3.32286 9.11861 3 9.77686 3 10.4745V18.7474C3 19.9915 4.00736 21 5.25 21H8.25C9.49264 21 10.5 19.9915 10.5 18.7474V16.4948C10.5 15.6655 11.1716 14.9931 12 14.9931C12.8284 14.9931 13.5 15.6655 13.5 16.4948V18.7474C13.5 19.9915 14.5074 21 15.75 21H18.75C19.9926 21 21 19.9915 21 18.7474V10.4745C21 9.77686 20.6771 9.11861 20.1258 8.69205L13.3758 3.47015Z"
       fill="#3A52EE"
     />
+  </Svg>
+);
+
+export const GallaryIcon = props => (
+  <Svg
+    width="24px"
+    height="24px"
+    viewBox="0 0 512 512"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="#fff"
+    {...props}>
+    <Path d="M464 64H48C21.49 64 0 85.49 0 112v288c0 26.51 21.49 48 48 48h416c26.51 0 48-21.49 48-48V112c0-26.51-21.49-48-48-48zm-6 336H54a6 6 0 0 1-6-6V118a6 6 0 0 1 6-6h404a6 6 0 0 1 6 6v276a6 6 0 0 1-6 6zM128 152c-22.091 0-40 17.909-40 40s17.909 40 40 40 40-17.909 40-40-17.909-40-40-40zM96 352h320v-80l-87.515-87.515c-4.686-4.686-12.284-4.686-16.971 0L192 304l-39.515-39.515c-4.686-4.686-12.284-4.686-16.971 0L96 304v48z" />
+  </Svg>
+);
+
+export const CameraIcon = props => (
+  <Svg
+    width="24px"
+    height="24px"
+    viewBox="0 -4.2 30.002 30.002"
+    id="_08_-_Camera"
+    data-name="08 - Camera"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="#fff"
+    {...props}>
+    <Path
+      id="Path_230"
+      data-name="Path 230"
+      d="M31,11a3,3,0,0,0-3-3H4a3,3,0,0,0-3,3V23.8a3,3,0,0,0,3,3H28a3,3,0,0,0,3-3V11Zm-2,0V23.8a1,1,0,0,1-1,1H4a1,1,0,0,1-1-1V11a1,1,0,0,1,1-1H28a1,1,0,0,1,1,1Z"
+      transform="translate(-0.999 -5.199)"
+      fillRule="evenodd"
+    />
+    <Path
+      id="Path_231"
+      data-name="Path 231"
+      d="M29.6,8V7.2a2,2,0,0,0-2-2H24a2,2,0,0,0-2,2V8a2,2,0,0,0,2,2h3.6a2,2,0,0,0,2-2ZM24,7.2V8h3.6V7.2Z"
+      transform="translate(-0.999 -5.199)"
+      fillRule="evenodd"
+    />
+    <Path
+      id="Path_232"
+      data-name="Path 232"
+      d="M16,12.2a5.2,5.2,0,1,0,5.2,5.2A5.2,5.2,0,0,0,16,12.2Zm0,2a3.2,3.2,0,1,1-3.2,3.2A3.2,3.2,0,0,1,16,14.2Z"
+      transform="translate(-0.999 -5.199)"
+      fillRule="evenodd"
+    />
+  </Svg>
+);
+
+// export const CheckIcon = props => (
+//   <Svg
+//     width="28px"
+//     height="28px"
+//     viewBox="0 0 24 24"
+//     xmlns="http://www.w3.org/2000/svg"
+//     {...props}>
+//     <Polyline
+//       fill="none"
+//       stroke="#fff"
+//       strokeWidth={2}
+//       points="6 13 10.2 16.6 18 7"
+//     />
+//   </Svg>
+// );
+export const CheckIcon = props => (
+  <Svg
+    width="24px"
+    height="24px"
+    viewBox="0 0 24 24"
+    fill="#fff"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}>
+    <Path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M19.8198 6.19526C20.0601 6.45561 20.0601 6.87772 19.8198 7.13807L9.9736 17.8047C9.73328 18.0651 9.34364 18.0651 9.10332 17.8047L4.18024 12.4714C3.93992 12.2111 3.93992 11.7889 4.18024 11.5286C4.42056 11.2682 4.8102 11.2682 5.05053 11.5286L9.53846 16.3905L18.9495 6.19526C19.1898 5.93491 19.5794 5.93491 19.8198 6.19526Z"
+      fill="#fff"
+    />
+  </Svg>
+);
+
+export const CloseIcon = props => (
+  <Svg
+    width="24px"
+    height="24px"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="#fff"
+    {...props}>
+    <Rect x={0} fill="none" width={24} height={24} />
+    <G>
+      <Path d="M17.705 7.705l-1.41-1.41L12 10.59 7.705 6.295l-1.41 1.41L10.59 12l-4.295 4.295 1.41 1.41L12 13.41l4.295 4.295 1.41-1.41L13.41 12l4.295-4.295z" />
+    </G>
   </Svg>
 );

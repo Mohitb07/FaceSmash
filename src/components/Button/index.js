@@ -1,13 +1,39 @@
-import {Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native';
 import React from 'react';
+import LinearGradient from 'react-native-linear-gradient';
 
-const Button = ({onPress = () => {}, text = '', disabled = false}) => {
+const Button = ({
+  onPress = () => {},
+  text = '',
+  disabled = false,
+  color = '',
+  icon,
+  style: customStyle = {},
+  loader = false,
+}) => {
   return (
     <TouchableOpacity
       disabled={disabled}
-      style={[styles.btn, disabled && styles.disabled]}
+      style={[
+        styles.btn,
+        color && {backgroundColor: color},
+        disabled && styles.disabled,
+        customStyle,
+      ]}
       onPress={onPress}>
-      <Text style={[styles.btnText, disabled && styles.disabled]}>{text}</Text>
+      {icon && icon}
+      {loader ? (
+        <ActivityIndicator />
+      ) : (
+        <Text style={[styles.btnText, disabled && styles.disabled]}>
+          {text}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };
@@ -20,9 +46,12 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: 'bold',
     color: '#fff',
+    marginHorizontal: 10,
   },
   btn: {
-    backgroundColor: '#0b59a2',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     padding: 15,
     borderRadius: 8,
   },
