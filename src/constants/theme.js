@@ -10,6 +10,7 @@ export const COLORS = {
   lime: '#2AD699',
   lightGreen: '#E7F9EF',
   lightGreen1: '#8EbCA0',
+  neon: '#BAFD05',
 
   white: '#fff',
   white2: '#F9F9F9',
@@ -30,6 +31,8 @@ export const COLORS = {
   transparentDarkGray: 'rgba(20,20,20, 0.9)',
 
   transparent: 'transparent',
+
+  yellow: '#FECE00',
 };
 export const SIZES = {
   // global sizes
