@@ -26,12 +26,13 @@ import {AuthContext} from '../../Context/auth';
 import {BottomSheetContext} from '../../Context/BottomSheet';
 import auth from '@react-native-firebase/auth';
 import {UserDataContext} from '../../Context/userData';
+import {COLORS} from '../../constants';
 
 const MyProfile = ({navigation}) => {
   const {authUser} = useContext(AuthContext);
   const {userData} = useContext(UserDataContext);
 
-  const {isOpen, onClose} = useContext(BottomSheetContext);
+  const {isOpen = false, onClose} = useContext(BottomSheetContext);
   const onLogoutAttempt = () => {
     auth()
       .signOut()
@@ -118,7 +119,7 @@ const MyProfile = ({navigation}) => {
               Personal Settings
             </NText>
           </Box>
-          <Actionsheet.Item>
+          <Actionsheet.Item style={styles.defaultStyle}>
             <TouchableOpacity style={styles.btnLogout}>
               <DocumentIcon style={{marginRight: 5}} />
               <Text style={{color: 'white', fontWeight: '600'}}>
@@ -126,7 +127,7 @@ const MyProfile = ({navigation}) => {
               </Text>
             </TouchableOpacity>
           </Actionsheet.Item>
-          <Actionsheet.Item>
+          <Actionsheet.Item style={styles.defaultStyle}>
             <TouchableOpacity style={styles.btnLogout}>
               <PrivacyIcon style={{marginRight: 5}} />
               <Text style={{color: 'white', fontWeight: '600'}}>
@@ -135,7 +136,7 @@ const MyProfile = ({navigation}) => {
             </TouchableOpacity>
           </Actionsheet.Item>
           {!!authUser && (
-            <Actionsheet.Item>
+            <Actionsheet.Item style={styles.defaultStyle}>
               <TouchableOpacity
                 style={styles.btnLogout}
                 onPress={onLogoutAttempt}>
@@ -211,7 +212,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnVideo: {
-    backgroundColor: '#FECE00',
+    backgroundColor: COLORS.neon,
   },
   btnText: {
     color: 'white',
@@ -220,8 +221,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   btnBadge: {
-    backgroundColor: '#171719',
-    color: '#FECE00',
+    backgroundColor: COLORS.background,
+    color: COLORS.neon,
     fontSize: 10,
     paddingHorizontal: 5,
     paddingVertical: 2,
@@ -245,5 +246,8 @@ const styles = StyleSheet.create({
   btnLogout: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  defaultStyle: {
+    backgroundColor: 'none',
   },
 });
