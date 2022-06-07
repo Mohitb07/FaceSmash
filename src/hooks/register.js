@@ -20,7 +20,8 @@ export function useRegister() {
             followings: [],
             createdAt: user.user.metadata.creationTime,
             lastSignIn: user.user.metadata.lastSignInTime,
-            profilePic: '',
+            profilePic:
+              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG3eLpTAMWO-mtILepXLwg68-IChyGcXJgog&usqp=CAU',
           })
           .then(() => {
             console.log('User added!');
