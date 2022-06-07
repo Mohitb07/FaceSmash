@@ -80,9 +80,7 @@ const UpdateProfile = ({navigation}) => {
           <Image
             style={styles.profilePic}
             source={{
-              uri: image
-                ? image
-                : 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG3eLpTAMWO-mtILepXLwg68-IChyGcXJgog&usqp=CAU',
+              uri: image ? image : userData?.profilePic,
             }}
           />
           <View style={styles.fullNameContainer}>
@@ -91,19 +89,21 @@ const UpdateProfile = ({navigation}) => {
           <Text style={styles.email}>{userData?.email}</Text>
         </View>
 
-        <View>
+        <View style={styles.btnContainer}>
           <Button
             onPress={handleChooseGallary}
             style={styles.customBtn}
-            text="Choose from gallary"
-            color={COLORS.blue}
+            text="Open Gallary"
+            color={COLORS.transparentBlack9}
+            textStyle={styles.customBtnText}
             icon={<GallaryIcon />}
           />
           <Button
             onPress={handleTakePhoto}
             style={[styles.customBtn, {marginVertical: 0}]}
             color={COLORS.primary}
-            text="Take a picture"
+            text="Take Now"
+            textStyle={styles.customBtnText}
             icon={<CameraIcon />}
           />
         </View>
@@ -146,10 +146,18 @@ const styles = StyleSheet.create({
     color: '#747474',
   },
   btnContainer: {
-    marginVertical: 20,
+    // marginVertical: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
   },
   customBtn: {
     borderRadius: 50,
-    marginVertical: 10,
+    marginVertical: 15,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+  },
+  customBtnText: {
+    fontSize: 12,
   },
 });

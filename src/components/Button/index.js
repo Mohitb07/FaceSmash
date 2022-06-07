@@ -14,6 +14,7 @@ const Button = ({
   color = '',
   icon,
   style: customStyle = {},
+  textStyle: customTextStyle = {},
   loader = false,
 }) => {
   return (
@@ -30,7 +31,12 @@ const Button = ({
       {loader ? (
         <ActivityIndicator />
       ) : (
-        <Text style={[styles.btnText, disabled && styles.disabled]}>
+        <Text
+          style={[
+            styles.btnText,
+            disabled && styles.disabled,
+            customTextStyle,
+          ]}>
           {text}
         </Text>
       )}

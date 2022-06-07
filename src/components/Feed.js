@@ -5,7 +5,7 @@ import {HeartIcon, CommentIcon} from '../SVG';
 const Feed = ({image, postTitle, userProfilePic}) => {
   return (
     <TouchableOpacity delayPressIn={150} style={styles.container}>
-      <View style={styles.innerContainer}>
+      <View style={!image && styles.innerContainer}>
         {image && (
           <View style={styles.imageContainer}>
             <Image
@@ -29,18 +29,20 @@ const Feed = ({image, postTitle, userProfilePic}) => {
         </View>
 
         <View style={styles.feedInfo}>
-          <Text style={styles.feedTitle}>{postTitle}</Text>
-          <View style={styles.userInfo}>
-            <Image
-              source={{
-                uri: userProfilePic,
-              }}
-              style={styles.userProfile}
-              resizeMode="cover"
-            />
-            <View>
-              <Text style={styles.usernameText}>Sajon Islam</Text>
-              <Text style={styles.timePosted}>2 min ago</Text>
+          <View style={!image && styles.titleNuser}>
+            <Text style={styles.feedTitle}>{postTitle}</Text>
+            <View style={styles.userInfo}>
+              <Image
+                source={{
+                  uri: userProfilePic,
+                }}
+                style={styles.userProfile}
+                resizeMode="cover"
+              />
+              <View>
+                <Text style={styles.usernameText}>Sajon Islam</Text>
+                <Text style={styles.timePosted}>2 min ago</Text>
+              </View>
             </View>
           </View>
           <Text style={styles.description} numberOfLines={2}>
@@ -60,14 +62,13 @@ export default Feed;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: '#202124',
-    // height: 100,
     maxHeight: 500,
     borderRadius: 25,
     marginTop: 10,
     padding: 20,
   },
   innerContainer: {
-    // maxHeight: 400,
+    flexDirection: 'column-reverse',
   },
   feedInfo: {
     paddingVertical: 5,
@@ -111,5 +112,8 @@ const styles = StyleSheet.create({
   },
   description: {
     color: '#747474',
+  },
+  titleNuser: {
+    flexDirection: 'column-reverse',
   },
 });
