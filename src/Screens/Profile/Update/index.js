@@ -1,7 +1,7 @@
 import {View, Text, StyleSheet, Image} from 'react-native';
 import React, {useState, useContext} from 'react';
 import Button from '../../../components/Button';
-import {GallaryIcon, CameraIcon} from '../../../SVG';
+import {GallaryIcon, CameraIcon, CloseIcon, CheckIcon} from '../../../SVG';
 import * as ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import {AuthContext} from '../../../Context/auth';
@@ -74,6 +74,8 @@ const UpdateProfile = ({navigation}) => {
         disabled={disabled}
         loading={loading}
         navigation={navigation}
+        leftIcon={<CloseIcon />}
+        rightIcon={<CheckIcon />}
       />
       <View style={styles.container}>
         <View style={styles.userInfo}>
