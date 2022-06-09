@@ -4,6 +4,8 @@ const {width, height} = Dimensions.get('window');
 export const COLORS = {
   primary: '#063561',
   background: '#181920',
+  cardBackground: '#202124',
+  mainBackground: '#141414',
   darkGreen: '#229879',
   darkLime: '#1A8871',
   lightLime: '#BBD6C5',
