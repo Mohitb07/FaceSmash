@@ -1,11 +1,19 @@
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
-import {HeartIcon, CommentIcon} from '../SVG';
+import {HeartOutlinIcon, HeartFilledIcon, CommentIcon} from '../SVG';
+import {COLORS} from '../constants';
 
-const Feed = ({image, postTitle, userProfilePic}) => {
+const Feed = ({
+  image,
+  postTitle = '',
+  username = '',
+  userProfilePic,
+  navigation,
+}) => {
   return (
-    <TouchableOpacity delayPressIn={150} style={styles.container}>
-      <View style={!image && styles.innerContainer}>
+    <View style={styles.container}>
+      <View
+        style={[styles.innerContainer, !image && styles.innerContainerReverse]}>
         {image && (
           <View style={styles.imageContainer}>
             <Image
@@ -18,20 +26,32 @@ const Feed = ({image, postTitle, userProfilePic}) => {
           </View>
         )}
 
-        <View
-          style={{
-            flexDirection: 'row',
-            paddingTop: 10,
-            alignItems: 'center',
-          }}>
-          <HeartIcon />
-          <CommentIcon />
+        <View>
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingVertical: 10,
+              alignItems: 'center',
+            }}>
+            <TouchableOpacity>
+              <HeartFilledIcon />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <CommentIcon style={{marginLeft: 4}} />
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.likes}>193 likes</Text>
         </View>
 
         <View style={styles.feedInfo}>
           <View style={!image && styles.titleNuser}>
-            <Text style={styles.feedTitle}>{postTitle}</Text>
-            <View style={styles.userInfo}>
+            <TouchableOpacity>
+              <Text style={styles.feedTitle}>{postTitle}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Profile')}
+              style={styles.userInfo}>
               <Image
                 source={{
                   uri: userProfilePic,
@@ -40,12 +60,13 @@ const Feed = ({image, postTitle, userProfilePic}) => {
                 resizeMode="cover"
               />
               <View>
-                <Text style={styles.usernameText}>Sajon Islam</Text>
+                <Text style={styles.usernameText}>{username}</Text>
                 <Text style={styles.timePosted}>2 min ago</Text>
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
           <Text style={styles.description} numberOfLines={2}>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
@@ -53,7 +74,7 @@ const Feed = ({image, postTitle, userProfilePic}) => {
           </Text>
         </View>
       </View>
-    </TouchableOpacity>
+    </View>
   );
 };
 
@@ -61,22 +82,28 @@ export default Feed;
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: '#202124',
-    maxHeight: 500,
+    backgroundColor: COLORS.cardBackground,
+    // maxHeight: 530,
     borderRadius: 25,
     marginTop: 10,
     padding: 20,
+    paddingBottom: 10,
+    overflow: 'hidden',
   },
   innerContainer: {
+    // backgroundColor: 'red',
+  },
+  innerContainerReverse: {
     flexDirection: 'column-reverse',
   },
   feedInfo: {
-    paddingVertical: 5,
+    paddingVertical: 10,
   },
   feedTitle: {
     fontSize: 20,
     color: '#F2F2F2',
     fontWeight: 'bold',
+    lineHeight: 23,
   },
   usernameText: {
     color: '#F2F2F2',
@@ -108,12 +135,16 @@ const styles = StyleSheet.create({
   },
   userInfo: {
     flexDirection: 'row',
-    paddingVertical: 10,
+    paddingVertical: 11,
   },
   description: {
     color: '#747474',
   },
   titleNuser: {
     flexDirection: 'column-reverse',
+  },
+  likes: {
+    color: COLORS.white,
+    fontWeight: 'bold',
   },
 });
