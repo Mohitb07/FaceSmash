@@ -10,29 +10,24 @@ import React, {useContext} from 'react';
 import Feed from '../../components/Feed';
 import {
   VerificationIcon,
-  GearIcon,
   LogoutIcon,
   PrivacyIcon,
   DocumentIcon,
+  GearIcon,
+  EditIcon,
 } from '../../SVG';
-import {
-  Actionsheet,
-  Text as NText,
-  Box,
-  useDisclose,
-  Button,
-} from 'native-base';
+import {Actionsheet, Text as NText, Box, useDisclose} from 'native-base';
 import {AuthContext} from '../../Context/auth';
-import {BottomSheetContext} from '../../Context/BottomSheet';
 import auth from '@react-native-firebase/auth';
 import {UserDataContext} from '../../Context/userData';
 import {COLORS} from '../../constants';
+import Header from '../../components/Header';
 
 const MyProfile = ({navigation}) => {
   const {authUser} = useContext(AuthContext);
   const {userData} = useContext(UserDataContext);
+  const {isOpen, onOpen, onClose} = useDisclose();
 
-  const {isOpen = false, onClose} = useContext(BottomSheetContext);
   const onLogoutAttempt = () => {
     auth()
       .signOut()
@@ -44,7 +39,16 @@ const MyProfile = ({navigation}) => {
       .catch(err => console.log('SIGN OUT ERROR', err));
   };
   return (
-    <ScrollView>
+    <ScrollView stickyHeaderIndices={[0]} showsVerticalScrollIndicator={false}>
+      <Header
+        showBackButton={true}
+        navigation={navigation}
+        key="profile"
+        rightSection
+        rightIcon={<GearIcon />}
+        onPress={onOpen}
+        bgColor="#1D1F20"
+      />
       <View style={styles.container}>
         <View style={styles.userInfo}>
           <Image
@@ -58,6 +62,14 @@ const MyProfile = ({navigation}) => {
             <VerificationIcon style={{marginLeft: 5}} />
           </View>
           <Text style={styles.email}>{userData?.email}</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Update Profile')}
+            style={styles.editProfile}>
+            <EditIcon />
+            <Text style={[styles.email, {marginLeft: 4, color: COLORS.white}]}>
+              Update profile
+            </Text>
+          </TouchableOpacity>
         </View>
         <View style={styles.connections}>
           <View>
@@ -69,8 +81,8 @@ const MyProfile = ({navigation}) => {
             <Text style={(styles.text, {color: '#747474'})}>Followers</Text>
           </View>
           <View>
-            <Text style={styles.text}>26</Text>
-            <Text style={(styles.text, {color: '#747474'})}>Close Friends</Text>
+            <Text style={styles.text}>0</Text>
+            <Text style={(styles.text, {color: '#747474'})}>Posts</Text>
           </View>
         </View>
         <View style={styles.bioContainer}>
@@ -78,9 +90,7 @@ const MyProfile = ({navigation}) => {
         </View>
 
         <View style={styles.btnContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Update Profile')}
-            style={styles.btnPost}>
+          <TouchableOpacity style={styles.btnPost}>
             <Text style={styles.btnText}>Post</Text>
             <Text style={styles.btnBadge}>50</Text>
           </TouchableOpacity>
@@ -156,7 +166,7 @@ export default MyProfile;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1D1F20',
+    backgroundColor: COLORS.mainBackground,
     paddingHorizontal: 20,
   },
   profilePic: {
@@ -182,9 +192,9 @@ const styles = StyleSheet.create({
   },
   connections: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
+    justifyContent: 'space-between',
     marginTop: 20,
-    alignItems: 'center',
+    padding: 10,
   },
   text: {
     color: '#F2F2F2',
@@ -193,13 +203,13 @@ const styles = StyleSheet.create({
   },
   bioContainer: {
     marginTop: 20,
+    padding: 5,
   },
   bio: {
     color: '#F2F2F2',
     fontSize: 15,
   },
   btnPost: {
-    // backgroundColor: '#',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 15,
@@ -249,5 +259,10 @@ const styles = StyleSheet.create({
   },
   defaultStyle: {
     backgroundColor: 'none',
+  },
+  editProfile: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
   },
 });

@@ -27,10 +27,9 @@ const Home = ({navigation}) => {
     wait(2000).then(() => setRefreshing(false));
   }, []);
 
-  console.log('fake fdata', fakeData);
-
   return (
     <ScrollView
+      showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.scrollView}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -66,8 +65,10 @@ const Home = ({navigation}) => {
               <Feed
                 key={post.uid}
                 userProfilePic={post.userProfile}
+                username={post.username}
                 postTitle={post.title}
                 image={post.image}
+                navigation={navigation}
               />
             ))}
           </View>

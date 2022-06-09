@@ -8,7 +8,7 @@ import {
 import React from 'react';
 // import {ArrowBackIcon, CheckIcon} from 'native-base';
 import {COLORS} from '../../constants';
-import {CloseIcon, CheckIcon} from '../../SVG';
+import {BackIcon} from '../../SVG';
 
 const StyledHeader = ({
   label = '',
@@ -18,16 +18,19 @@ const StyledHeader = ({
   rightSection = false,
   loading = false,
   navigation,
+  rightIcon,
+  leftIcon,
+  bgColor,
 }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, bgColor && {backgroundColor: bgColor}]}>
       <TouchableOpacity onPress={() => navigation.goBack()}>
-        {showBackButton && <CloseIcon />}
+        {showBackButton && leftIcon ? leftIcon : <BackIcon />}
       </TouchableOpacity>
       <Text style={styles.headerText}>{label}</Text>
       {rightSection && (
         <TouchableOpacity disabled={disabled} onPress={onPress}>
-          {loading ? <ActivityIndicator /> : <CheckIcon />}
+          {loading ? <ActivityIndicator /> : rightIcon}
         </TouchableOpacity>
       )}
     </View>

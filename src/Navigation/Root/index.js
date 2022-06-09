@@ -38,28 +38,30 @@ const Root = () => {
           <RootStack.Screen
             name="Profile"
             component={MyProfile}
-            options={{
-              headerShown: true,
-              headerTitle: '',
-              headerTransparent: true,
-              headerBackTitleVisible: false,
-              headerTintColor: '#fff',
-              headerRight: () => (
-                <RightHeader onOpen={onOpen} icon={<GearIcon />} />
-              ),
-            }}
+            options={{headerShown: false}}
+            // options={{
+            //   headerShown: false,
+            //   headerTitle: '',
+            //   headerTransparent: true,
+            //   headerBackTitleVisible: false,
+            //   headerTintColor: '#fff',
+            //   headerRight: () => (
+            //     <RightHeader onOpen={onOpen} icon={<GearIcon />} />
+            //   ),
+            // }}
           />
           <RootStack.Screen
             name="Update Profile"
             component={UpdateProfile}
-            options={{
-              headerShown: false,
-              headerTransparent: true,
-              headerTitle: 'Update Profile',
-              headerTintColor: '#fff',
-              headerTitleAlign: 'center',
-              headerRight: () => <RightHeader icon={<CheckIcon />} />,
-            }}
+            options={{headerShown: false}}
+            // options={{
+            //   headerShown: false,
+            //   headerTransparent: true,
+            //   headerTitle: 'Update Profile',
+            //   headerTintColor: '#fff',
+            //   headerTitleAlign: 'center',
+            //   headerRight: () => <RightHeader icon={<CheckIcon />} />,
+            // }}
           />
         </>
       ) : (
