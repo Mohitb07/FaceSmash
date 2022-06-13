@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import Feed from '../../components/Feed';
 import fakeData from '../../assets/fakeData.json';
+import FloatingButton from '../../components/FloatingButton';
 
 import {SearchIcon} from '../../SVG';
 import {UserDataContext} from '../../Context/userData';
@@ -54,7 +55,9 @@ const Home = ({navigation}) => {
             </TouchableOpacity>
 
             <View style={styles.rightHeader}>
-              <TouchableOpacity style={styles.searchIcon}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('Add Post')}
+                style={styles.searchIcon}>
                 <SearchIcon />
               </TouchableOpacity>
             </View>
