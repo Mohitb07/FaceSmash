@@ -13,7 +13,8 @@ import Register from '../../Screens/Register';
 import UpdateProfile from '../../Screens/Profile/Update';
 import RightHeader from '../../components/RightHeader';
 import Loader from '../../components/Loader';
-// import BottomTab from '../BottomNavigation';
+import AddPost from '../../Screens/AddPost';
+import BottomTab from '../BottomNavigation';
 
 const RootStack = createNativeStackNavigator();
 export const navigationRef = createRef();
@@ -62,6 +63,11 @@ const Root = () => {
             //   headerTitleAlign: 'center',
             //   headerRight: () => <RightHeader icon={<CheckIcon />} />,
             // }}
+          />
+          <RootStack.Screen
+            name="Add Post"
+            component={AddPost}
+            options={{headerShown: false}}
           />
         </>
       ) : (
