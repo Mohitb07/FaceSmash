@@ -1,5 +1,6 @@
 import React from 'react';
 import {BerlinTabBarNavigator, DotSize} from 'rn-slick-bottom-tabs';
+import FloatingButton from '../../components/FloatingButton';
 // import {Ionicons as Icon} from '@expo/vector-icons'
 import TabOne from '../../Screens/Home';
 import TabTwo from '../../Screens/Profile';
@@ -36,38 +37,10 @@ export default () => (
     />
 
     <Tabs.Screen
-      name="Profile"
-      component={TabTwo}
+      component={FloatingButton}
       options={{
         tabBarIcon: ({focused, color}) => <TabBarIcon />,
       }}
     />
-    {/* <Tabs.Screen
-            name="TabThree"
-            component={TabThree}
-            options={{
-                tabBarIcon: ({focused, color}) => (
-                    <TabBarIcon
-                        focused={focused}
-                        tintColor={color}
-                        name="rocket"
-                    />
-                ),
-            }}
-        /> */}
-    {/* 
-        <Tabs.Screen
-            name="FourthTab"
-            component={FourthScreen}
-            options={{
-                tabBarIcon: ({focused, color}) => (
-                    <TabBarIcon
-                        focused={focused}
-                        tintColor={color}
-                        name="ios-notifications"
-                    />
-                ),
-            }}
-        /> */}
   </Tabs.Navigator>
 );
