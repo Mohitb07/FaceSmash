@@ -22,6 +22,7 @@ import auth from '@react-native-firebase/auth';
 import {UserDataContext} from '../../Context/userData';
 import {COLORS} from '../../constants';
 import Header from '../../components/Header';
+import fakeData from '../../assets/fakeData.json';
 
 const MyProfile = ({navigation}) => {
   const {authUser} = useContext(AuthContext);
@@ -63,12 +64,9 @@ const MyProfile = ({navigation}) => {
           </View>
           <Text style={styles.email}>{userData?.email}</Text>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Update Profile')}
-            style={styles.editProfile}>
-            <EditIcon />
-            <Text style={[styles.email, {marginLeft: 4, color: COLORS.white}]}>
-              Update profile
-            </Text>
+            // onPress={() => navigation.navigate('Update Profile')}
+            style={[styles.btnPost, styles.btnBackground, {width: '40%'}]}>
+            <Text style={[styles.btnText, {color: '#171719'}]}>Follow</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.connections}>
@@ -94,27 +92,27 @@ const MyProfile = ({navigation}) => {
             <Text style={styles.btnText}>Post</Text>
             <Text style={styles.btnBadge}>50</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.btnPost, styles.btnVideo]}>
-            <Text style={[styles.btnText, {color: '#171719'}]}>Videos</Text>
-            <Text style={styles.btnBadge}>50</Text>
+          <TouchableOpacity
+            style={[styles.btnPost, styles.btnBackground]}
+            onPress={() => navigation.navigate('Update Profile')}>
+            <EditIcon />
+            <Text style={[styles.btnText, {color: '#171719'}]}>
+              Edit Profile
+            </Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.activityLabel}>Recent Activity</Text>
         <View>
-          <Feed
-            userProfilePic="https://i.imgur.com/QOLjDoo.jpeg"
-            postTitle="Fortnite New Season is Here"
-            image="https://cdn.vox-cdn.com/thumbor/Dut2NNiJhzjhcNIzF1tq3UMm6po=/0x0:1920x1080/1200x800/filters:focal(804x128:1110x434)/cdn.vox-cdn.com/uploads/chorus_image/image/70383739/S8_KeyArt.0.jpg"
-          />
-          <Feed
-            userProfilePic="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8dXNlciUyMHByb2ZpbGV8ZW58MHx8MHx8&w=1000&q=80"
-            postTitle="Last of us Part II "
-            image="https://www.denofgeek.com/wp-content/uploads/2020/06/The-Last-of-Us-Part-2-1.jpg?fit=1280%2C720"
-          />
-          <Feed
-            userProfilePic="https://monteluke.com.au/wp-content/gallery/linkedin-profile-pictures/9.JPG"
-            postTitle="Without Image post"
-          />
+          {fakeData.posts.map(post => (
+            <Feed
+              key={post.uid}
+              userProfilePic={post.userProfile}
+              username={post.username}
+              postTitle={post.title}
+              image={post.image}
+              navigation={navigation}
+            />
+          ))}
         </View>
       </View>
       <Actionsheet isOpen={isOpen} onClose={onClose}>
@@ -221,7 +219,7 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     alignItems: 'center',
   },
-  btnVideo: {
+  btnBackground: {
     backgroundColor: COLORS.neon,
   },
   btnText: {
