@@ -8,17 +8,22 @@ const StyledTextInput = ({
   icon,
   secure = false,
   error = false,
+  multiline = false,
+  numberOfLines = 1,
+  customStyles,
 }) => {
   return (
     <View style={styles.username}>
       {icon}
       <TextInput
         placeholderTextColor="#BEBEBE"
-        style={[styles.inputField, error && styles.error]}
+        style={[styles.inputField, error && styles.error, customStyles]}
         placeholder={placeholder}
         value={value}
         secureTextEntry={secure}
         onChangeText={onChangeText}
+        multiline={multiline}
+        numberOfLines={numberOfLines}
       />
     </View>
   );
