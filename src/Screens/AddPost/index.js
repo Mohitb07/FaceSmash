@@ -10,44 +10,71 @@ import * as ImagePicker from 'react-native-image-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import {AuthContext} from '../../Context/auth';
+import {UserDataContext} from '../../Context/userData';
 
 const AddPost = ({navigation}) => {
   const [textAreaValue, setTextAreaValue] = useState();
   const [title, setTitle] = useState('');
   const {authUser} = useContext(AuthContext);
+  const {userData} = useContext(UserDataContext);
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  console.log('autherUser', userData);
+
   const handlePostCreation = () => {
     setLoading(true);
-    storage()
-      .ref(authUser.uid)
-      .putFile(image)
-      .then(snapshot => {
-        console.log('IMAGE UPLOADED', snapshot);
-        const imageRef = storage().ref(authUser.uid);
-        imageRef
-          .getDownloadURL()
-          .then(url => {
-            console.log('UPLOADED IMAGE URL', url);
-            firestore()
-              .collection('Posts')
-              .add({
-                title: title,
-                description: textAreaValue,
-                image: url,
-              })
-              .then(() => {
-                console.log('POST CREATED');
-              });
-          })
-          .catch(err => {
-            console.log('image download error', err);
-          });
-      })
-      .catch(err => {
-        console.log('IMAGE UPLOAD ERROR', err);
-      });
+    if (image) {
+      storage()
+        .ref(authUser.uid)
+        .putFile(image)
+        .then(snapshot => {
+          console.log('IMAGE UPLOADED', snapshot);
+          const imageRef = storage().ref(authUser.uid);
+          imageRef
+            .getDownloadURL()
+            .then(url => {
+              console.log('UPLOADED IMAGE URL', url);
+              firestore()
+                .collection('Posts')
+                .add({
+                  title: title,
+                  description: textAreaValue,
+                  image: url,
+                  user: authUser.uid,
+                  userProfile: userData.profilePic,
+                })
+                .then(() => {
+                  navigation.navigate('Home');
+                });
+            })
+            .catch(err => {
+              setLoading(false);
+              console.log('image download error', err);
+            });
+        })
+        .catch(err => {
+          setLoading(false);
+          console.log('IMAGE UPLOAD ERROR', err);
+        });
+    } else {
+      firestore()
+        .collection('Posts')
+        .add({
+          title: title,
+          description: textAreaValue,
+          image: null,
+          user: authUser.uid,
+          userProfile: userData.profilePic,
+          likes: 0,
+        })
+        .then(() => {
+          navigation.navigate('Home');
+        })
+        .catch(err => {
+          console.log('error posting', err);
+        });
+    }
   };
 
   const handleChooseGallary = () => {
@@ -69,9 +96,8 @@ const AddPost = ({navigation}) => {
           label="Create Post"
           showBackButton
           onPress={handlePostCreation}
-          // onPress={handleUploadImage}
           rightSection
-          // disabled={disabled}
+          disabled={!title || !textAreaValue}
           loading={loading}
           navigation={navigation}
           leftIcon={<CloseIcon />}
@@ -112,13 +138,15 @@ const AddPost = ({navigation}) => {
               />
             </>
           )}
-
-          <Button
-            onPress={handleChooseGallary}
-            text="Add Image"
-            color={COLORS.primary}
-            style={{marginVertical: 20}}
-          />
+          {!image && (
+            <Button
+              onPress={handleChooseGallary}
+              disabled={loading || image}
+              text="Add Image"
+              color={COLORS.primary}
+              style={{marginVertical: 20}}
+            />
+          )}
         </View>
       </View>
     </ScrollView>
