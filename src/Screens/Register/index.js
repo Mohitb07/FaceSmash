@@ -30,7 +30,6 @@ const SignUp = ({navigation}) => {
 
   const signUpAttempt = () => {
     onRegisterAttempt({email, password, username});
-    navigation.navigate('Update Profile');
   };
 
   return (
