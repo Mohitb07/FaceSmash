@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -7,11 +7,13 @@ import {
   TouchableOpacity,
   ScrollView,
   RefreshControl,
+  ActivityIndicator,
+  FlatList,
 } from 'react-native';
+import firestore from '@react-native-firebase/firestore';
+
 import Feed from '../../components/Feed';
 import fakeData from '../../assets/fakeData.json';
-import FloatingButton from '../../components/FloatingButton';
-
 import {SearchIcon} from '../../SVG';
 import {UserDataContext} from '../../Context/userData';
 
@@ -22,62 +24,92 @@ const wait = timeout => {
 const Home = ({navigation}) => {
   const {userData} = useContext(UserDataContext);
   const [refreshing, setRefreshing] = useState(false);
+  const [loading, setLoading] = useState(true); // Set loading to true on component mount
+  const [posts, setPosts] = useState([]); // Initial empty array of users
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     wait(2000).then(() => setRefreshing(false));
   }, []);
 
-  return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.scrollView}
-      refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-      }>
-      <View style={styles.container}>
-        <View style={styles.innerContainer}>
-          <View style={styles.headerContainer}>
-            <TouchableOpacity
-              style={styles.leftHeader}
-              onPress={() => navigation.navigate('Profile')}>
-              <Image
-                source={{
-                  uri: userData?.profilePic,
-                }}
-                style={styles.image}
-                resizeMode="cover"
-              />
-              <View style={styles.userInfo}>
-                <Text style={styles.usernameText}>{userData?.username}</Text>
-                <Text style={styles.email}>{userData?.email}</Text>
-              </View>
-            </TouchableOpacity>
+  useEffect(() => {
+    const subscriber = firestore()
+      .collection('Posts')
+      .onSnapshot(querySnapshot => {
+        const allPosts = [];
 
-            <View style={styles.rightHeader}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('Add Post')}
-                style={styles.searchIcon}>
-                <SearchIcon />
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.feedsContainer}>
-            <Text style={styles.feedsLabel}>Trending</Text>
-            {fakeData.posts.map(post => (
+        querySnapshot.forEach(documentSnapshot => {
+          allPosts.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
+          });
+        });
+
+        setPosts(allPosts);
+      });
+
+    // Unsubscribe from events when no longer in use
+    return () => subscriber();
+  }, []);
+
+  console.log('userData', userData);
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.innerContainer}>
+        {posts && (
+          <FlatList
+            data={posts}
+            ListHeaderComponent={() => (
+              <>
+                <View style={styles.headerContainer}>
+                  <TouchableOpacity
+                    style={styles.leftHeader}
+                    onPress={() => navigation.navigate('Profile')}>
+                    <Image
+                      source={{
+                        uri: userData?.profilePic,
+                      }}
+                      style={styles.image}
+                      resizeMode="cover"
+                    />
+                    <View style={styles.userInfo}>
+                      <Text style={styles.usernameText}>
+                        {userData?.username}
+                      </Text>
+                      <Text style={styles.email}>{userData?.email}</Text>
+                    </View>
+                  </TouchableOpacity>
+
+                  <View style={styles.rightHeader}>
+                    <TouchableOpacity
+                      onPress={() => navigation.navigate('Add Post')}
+                      style={styles.searchIcon}>
+                      <SearchIcon />
+                    </TouchableOpacity>
+                  </View>
+                </View>
+                <View style={styles.feedsContainer}>
+                  <Text style={styles.feedsLabel}>Trending</Text>
+                </View>
+              </>
+            )}
+            renderItem={({item}) => (
               <Feed
-                key={post.uid}
-                userProfilePic={post.userProfile}
-                username={post.username}
-                postTitle={post.title}
-                image={post.image}
+                key={item.key}
+                userProfilePic={item.userProfile}
+                username="Mohit Bisht"
+                postTitle={item.title}
+                image={item.image}
+                description={item.description}
                 navigation={navigation}
+                likes={item.likes}
               />
-            ))}
-          </View>
-        </View>
+            )}
+          />
+        )}
       </View>
-    </ScrollView>
+    </View>
   );
 };
 export default Home;
