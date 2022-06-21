@@ -7,14 +7,16 @@ const Feed = ({
   image,
   postTitle = '',
   username = '',
-  userProfilePic,
+  userProfilePic = '',
   navigation,
+  description = '',
+  likes = 0,
 }) => {
   return (
     <View style={styles.container}>
       <View
         style={[styles.innerContainer, !image && styles.innerContainerReverse]}>
-        {image && (
+        {!!image && (
           <View style={styles.imageContainer}>
             <Image
               source={{
@@ -41,7 +43,7 @@ const Feed = ({
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.likes}>193 likes</Text>
+          <Text style={styles.likes}>{likes} likes</Text>
         </View>
 
         <View style={styles.feedInfo}>
@@ -66,11 +68,7 @@ const Feed = ({
             </TouchableOpacity>
           </View>
           <Text style={styles.description} numberOfLines={2}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam
+            {description}
           </Text>
         </View>
       </View>
