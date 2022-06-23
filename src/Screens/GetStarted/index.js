@@ -10,6 +10,7 @@ import React from 'react';
 import Button from '../../components/Button';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS, SIZES, FONTS} from '../../constants';
+import backgroundImage from '../../assets/getStartedBg.jpg';
 
 const GetStarted = ({navigation}) => {
   function renderHeader() {
@@ -21,9 +22,7 @@ const GetStarted = ({navigation}) => {
         <ImageBackground
           style={{flex: 1, justifyContent: 'flex-end'}}
           resizeMode="cover"
-          source={{
-            uri: 'https://firebasestorage.googleapis.com/v0/b/facesmash-8ff0b.appspot.com/o/get-started.jpg?alt=media&token=71ad1b15-0580-4e33-85fd-875bda07c7f0',
-          }}>
+          source={require('../../assets/getStartedBg.jpg')}>
           <LinearGradient
             start={{x: 0, y: 0}}
             end={{x: 0, y: 1}}
@@ -74,101 +73,24 @@ const GetStarted = ({navigation}) => {
           <Button
             text="Get Started"
             onPress={() => navigation.navigate('Login')}
-            color={COLORS.primary}
+            color={COLORS.neon}
           />
         </View>
       </View>
     );
   }
   return (
-    // <View
-    //   style={{
-    //     height: height > 700 ? '65%' : '60%',
-    //   }}>
-    //   <ImageBackground
-    //     style={styles.image}
-    //     source={{
-    //       uri: 'https://firebasestorage.googleapis.com/v0/b/facesmash-8ff0b.appspot.com/o/get-started.jpg?alt=media&token=71ad1b15-0580-4e33-85fd-875bda07c7f0',
-    //     }}>
-    //     <LinearGradient
-    //       start={{x: 0, y: 0}}
-    //       end={{x: 0, y: 1}}
-    //       colors={['transparent', '#000']}
-    //       style={{
-    //         height: 200,
-    //         justifyContent: 'flex-end',
-    //         paddingHorizontal: 24,
-    //       }}>
-    //       <Text
-    //         style={{
-    //           width: '80%',
-    //           color: '#fff',
-    //           fontFamily: 'Roboto-Black',
-    //           fontSize: 40,
-    //           lineHeight: 45,
-    //         }}>
-    //         Cooking a Delicious Food Easily
-    //       </Text>
-    //     </LinearGradient>
-
-    //     <Button
-    //       text="Get Started"
-    //       onPress={() => navigation.navigate('Login')}
-    //       color={colors.primaryColor}
-    //     />
-    //   </ImageBackground>
-    // </View>
     <View
       style={{
         flex: 1,
         backgroundColor: 'black',
       }}>
-      <StatusBar barStyle="dark-content" />
+      <StatusBar barStyle="default" />
 
       {renderHeader()}
       {renderDetail()}
     </View>
   );
 };
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-//   image: {
-//     flex: 1,
-//     padding: 10,
-//     justifyContent: 'flex-end',
-//     paddingVertical: 20,
-//   },
-//   textContainer: {
-//     textAlign: 'center',
-//     paddingHorizontal: 50,
-//   },
-//   heading: {
-//     fontSize: 25,
-//     textAlign: 'center',
-//     fontWeight: 'bold',
-//     color: '#fff',
-//   },
-//   text: {
-//     color: '#fff',
-//     fontSize: 11,
-//     marginBottom: 20,
-//     textAlign: 'center',
-//     lineHeight: 22,
-//   },
-//   btnText: {
-//     textAlign: 'center',
-//     fontSize: 15,
-//     fontWeight: 'bold',
-//     color: '#fff',
-//   },
-//   btn: {
-//     backgroundColor: '#0b59a2',
-//     padding: 15,
-//     borderRadius: 8,
-//   },
-// });
 
 export default GetStarted;
