@@ -20,17 +20,17 @@ const AddPost = ({navigation}) => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  console.log('autherUser', userData);
+  console.log('image', image);
 
   const handlePostCreation = () => {
     setLoading(true);
     if (image) {
       storage()
-        .ref(authUser.uid)
-        .putFile(image)
+        .ref(image.fileName)
+        .putFile(image.uri)
         .then(snapshot => {
           console.log('IMAGE UPLOADED', snapshot);
-          const imageRef = storage().ref(authUser.uid);
+          const imageRef = storage().ref(image.fileName);
           imageRef
             .getDownloadURL()
             .then(url => {
@@ -84,7 +84,8 @@ const AddPost = ({navigation}) => {
       } else if (response.error) {
         console.log('Image picker error', response.error);
       } else {
-        setImage(response.assets[0].uri);
+        console.log('IMAGE META DATA', response);
+        setImage(response.assets[0]);
       }
     });
   };
@@ -127,7 +128,7 @@ const AddPost = ({navigation}) => {
                 <Image
                   style={styles.profilePic}
                   source={{
-                    uri: image,
+                    uri: image.uri,
                   }}
                 />
               </View>
