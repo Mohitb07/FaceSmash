@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   disabled: {
-    backgroundColor: '#063561',
+    backgroundColor: '#000',
     color: '#B2B2B2',
   },
 });
