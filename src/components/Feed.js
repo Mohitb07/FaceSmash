@@ -13,7 +13,7 @@ const Feed = ({
   likes = 0,
 }) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, !image && styles.outerContainer]}>
       <View
         style={[styles.innerContainer, !image && styles.innerContainerReverse]}>
         {!!image && (
@@ -85,8 +85,12 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginTop: 10,
     padding: 20,
+    paddingTop: 15,
     paddingBottom: 10,
     overflow: 'hidden',
+  },
+  outerContainer: {
+    paddingTop: 0,
   },
   innerContainer: {
     // backgroundColor: 'red',
