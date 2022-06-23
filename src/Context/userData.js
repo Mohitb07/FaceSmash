@@ -11,11 +11,13 @@ const UserDataProvider = props => {
   useEffect(() => {
     console.log('calling effect');
     async function getData() {
-      const user = await firestore()
-        .collection('Users')
-        .doc(authUser?.uid)
-        .get();
-      setUserData(user.data());
+      if (authUser) {
+        const user = await firestore()
+          .collection('Users')
+          .doc(authUser?.uid)
+          .get();
+        setUserData(user.data());
+      }
     }
     getData();
   }, [authUser]);
