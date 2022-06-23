@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  ScrollView,
   RefreshControl,
   ActivityIndicator,
   FlatList,
@@ -13,8 +12,7 @@ import {
 import firestore from '@react-native-firebase/firestore';
 
 import Feed from '../../components/Feed';
-import fakeData from '../../assets/fakeData.json';
-import {SearchIcon} from '../../SVG';
+import {SearchIcon, AddIcon} from '../../SVG';
 import {UserDataContext} from '../../Context/userData';
 
 const wait = timeout => {
@@ -42,6 +40,7 @@ const Home = ({navigation}) => {
           allPosts.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
+            userProfile: userData.profilePic,
           });
         });
 
@@ -50,9 +49,9 @@ const Home = ({navigation}) => {
 
     // Unsubscribe from events when no longer in use
     return () => subscriber();
-  }, []);
+  }, [userData]);
 
-  console.log('userData', userData);
+  console.log('posts data', posts);
 
   return (
     <View style={styles.container}>
@@ -85,7 +84,7 @@ const Home = ({navigation}) => {
                     <TouchableOpacity
                       onPress={() => navigation.navigate('Add Post')}
                       style={styles.searchIcon}>
-                      <SearchIcon />
+                      <AddIcon />
                     </TouchableOpacity>
                   </View>
                 </View>
@@ -98,7 +97,7 @@ const Home = ({navigation}) => {
               <Feed
                 key={item.key}
                 userProfilePic={item.userProfile}
-                username="Mohit Bisht"
+                username={item.username}
                 postTitle={item.title}
                 image={item.image}
                 description={item.description}
