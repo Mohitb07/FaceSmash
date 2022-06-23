@@ -10,7 +10,6 @@ import React from 'react';
 import Button from '../../components/Button';
 import LinearGradient from 'react-native-linear-gradient';
 import {COLORS, SIZES, FONTS} from '../../constants';
-import backgroundImage from '../../assets/getStartedBg.jpg';
 
 const GetStarted = ({navigation}) => {
   function renderHeader() {
