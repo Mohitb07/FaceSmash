@@ -81,7 +81,7 @@ const SignUp = ({navigation}) => {
             disabled={isDisabled}
             text="Sign Up"
             onPress={signUpAttempt}
-            color={COLORS.primary}
+            color={COLORS.neon}
           />
           <View style={styles.divider}>
             <View style={styles.line}></View>
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     marginVertical: 25,
   },
   forgotPasswordText: {
-    color: '#0b59a2',
+    color: COLORS.neon,
     textAlign: 'right',
   },
   divider: {
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   signupText: {
-    color: '#0b59a2',
+    color: COLORS.neon,
     fontWeight: 'bold',
     marginLeft: 5,
   },

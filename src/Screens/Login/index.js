@@ -53,7 +53,7 @@ const Login = ({navigation}) => {
       </View>
       <View style={styles.footerContainer}>
         <Button
-          color={COLORS.primary}
+          color={COLORS.neon}
           disabled={isDisabled}
           text="Sign In"
           onPress={onLoginAttempt}
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   forgotPasswordText: {
-    color: '#0b59a2',
+    color: COLORS.neon,
     textAlign: 'right',
   },
   divider: {
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   signupText: {
-    color: '#0b59a2',
+    color: COLORS.neon,
     fontWeight: 'bold',
     marginLeft: 5,
   },
