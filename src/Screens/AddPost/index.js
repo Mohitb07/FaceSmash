@@ -20,8 +20,6 @@ const AddPost = ({navigation}) => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  console.log('image', image);
-
   const handlePostCreation = () => {
     setLoading(true);
     if (image) {
@@ -43,6 +41,9 @@ const AddPost = ({navigation}) => {
                   image: url,
                   user: authUser.uid,
                   userProfile: userData.profilePic,
+                  username: userData.username,
+                  likes: 0,
+                  createdAt: new Date(),
                 })
                 .then(() => {
                   navigation.navigate('Home');
@@ -66,7 +67,9 @@ const AddPost = ({navigation}) => {
           image: null,
           user: authUser.uid,
           userProfile: userData.profilePic,
+          username: userData.username,
           likes: 0,
+          createdAt: new Date(),
         })
         .then(() => {
           navigation.navigate('Home');
