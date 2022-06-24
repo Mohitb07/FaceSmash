@@ -2,16 +2,19 @@ import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
 import React from 'react';
 import {HeartOutlinIcon, HeartFilledIcon, CommentIcon} from '../SVG';
 import {COLORS} from '../constants';
+import moment from 'moment';
 
 const Feed = ({
   image,
   postTitle = '',
   username = '',
-  userProfilePic = '',
+  userProfilePic,
   navigation,
   description = '',
   likes = 0,
+  createdAt,
 }) => {
+  console.log('created at');
   return (
     <View style={[styles.container, !image && styles.outerContainer]}>
       <View
@@ -63,7 +66,9 @@ const Feed = ({
               />
               <View>
                 <Text style={styles.usernameText}>{username}</Text>
-                <Text style={styles.timePosted}>2 min ago</Text>
+                <Text style={styles.timePosted}>
+                  {moment(createdAt.toDate()).fromNow()}
+                </Text>
               </View>
             </TouchableOpacity>
           </View>
