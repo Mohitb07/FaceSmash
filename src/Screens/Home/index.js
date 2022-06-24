@@ -14,44 +14,43 @@ import firestore from '@react-native-firebase/firestore';
 import Feed from '../../components/Feed';
 import {SearchIcon, AddIcon} from '../../SVG';
 import {UserDataContext} from '../../Context/userData';
-
-const wait = timeout => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-};
+import useGetAllPosts from '../../hooks/getAllPosts';
 
 const Home = ({navigation}) => {
-  const {userData} = useContext(UserDataContext);
+  const [posts, loading, userData, getLatestPosts, setPosts, setLoading] =
+    useGetAllPosts();
   const [refreshing, setRefreshing] = useState(false);
-  const [loading, setLoading] = useState(true); // Set loading to true on component mount
-  const [posts, setPosts] = useState([]); // Initial empty array of users
 
   const onRefresh = React.useCallback(() => {
+    setLoading(true);
     setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
+    setPosts([]);
+    getLatestPosts();
+    setRefreshing(false);
+    setLoading(false);
   }, []);
 
-  useEffect(() => {
-    const subscriber = firestore()
-      .collection('Posts')
-      .onSnapshot(querySnapshot => {
-        const allPosts = [];
+  // useEffect(() => {
+  //   const subscriber = firestore()
+  //     .collection('Posts')
+  //     .orderBy('createdAt', 'desc')
+  //     .onSnapshot(querySnapshot => {
+  //       const allPosts = [];
 
-        querySnapshot.forEach(documentSnapshot => {
-          allPosts.push({
-            ...documentSnapshot.data(),
-            key: documentSnapshot.id,
-            userProfile: userData.profilePic,
-          });
-        });
+  //       querySnapshot.forEach(documentSnapshot => {
+  //         allPosts.push({
+  //           ...documentSnapshot.data(),
+  //           key: documentSnapshot.id,
+  //           userProfile: userData.profilePic,
+  //         });
+  //       });
 
-        setPosts(allPosts);
-      });
+  //       setPosts(allPosts);
+  //       setLoading(false);
+  //     });
 
-    // Unsubscribe from events when no longer in use
-    return () => subscriber();
-  }, [userData]);
-
-  console.log('posts data', posts);
+  //   return () => subscriber();
+  // }, [userData]);
 
   return (
     <View style={styles.container}>
@@ -59,6 +58,9 @@ const Home = ({navigation}) => {
         {posts && (
           <FlatList
             data={posts}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
             ListHeaderComponent={() => (
               <>
                 <View style={styles.headerContainer}>
@@ -91,12 +93,25 @@ const Home = ({navigation}) => {
                 <View style={styles.feedsContainer}>
                   <Text style={styles.feedsLabel}>Trending</Text>
                 </View>
+                {loading && (
+                  <View>
+                    <Text
+                      style={{
+                        color: 'white',
+                        textAlign: 'center',
+                        fontSize: 30,
+                      }}>
+                      Loading ....
+                    </Text>
+                  </View>
+                )}
               </>
             )}
             renderItem={({item}) => (
               <Feed
                 key={item.key}
                 userProfilePic={item.userProfile}
+                createdAt={item.createdAt}
                 username={item.username}
                 postTitle={item.title}
                 image={item.image}
