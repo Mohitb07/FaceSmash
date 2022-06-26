@@ -1,6 +1,5 @@
-import {View, Text} from 'react-native';
-import React, {useState, useEffect, useContext} from 'react';
 import firestore from '@react-native-firebase/firestore';
+import {useContext, useEffect, useState} from 'react';
 import {UserDataContext} from '../Context/userData';
 
 const useGetAllPosts = () => {
@@ -19,7 +18,6 @@ const useGetAllPosts = () => {
           allPosts.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
-            userProfile: userData.profilePic,
           });
         });
 
@@ -39,7 +37,6 @@ const useGetAllPosts = () => {
           allPosts.push({
             ...documentSnapshot.data(),
             key: documentSnapshot.id,
-            userProfile: userData.profilePic,
           });
         });
 
