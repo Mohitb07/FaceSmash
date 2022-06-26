@@ -1,33 +1,34 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useState} from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  RefreshControl,
-  ActivityIndicator,
   FlatList,
+  Image,
+  RefreshControl,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import firestore from '@react-native-firebase/firestore';
 
 import Feed from '../../components/Feed';
-import {SearchIcon, AddIcon} from '../../SVG';
 import {UserDataContext} from '../../Context/userData';
 import useGetAllPosts from '../../hooks/getAllPosts';
+import {AddIcon} from '../../SVG';
 
 const Home = ({navigation}) => {
   const [posts, loading, userData, getLatestPosts, setPosts, setLoading] =
     useGetAllPosts();
   const [refreshing, setRefreshing] = useState(false);
+  const {
+    userData: {profilePic, username},
+  } = useContext(UserDataContext);
 
-  const onRefresh = React.useCallback(() => {
-    setLoading(true);
+  console.log('user data', userData);
+
+  const onRefresh = useCallback(() => {
     setRefreshing(true);
     setPosts([]);
     getLatestPosts();
     setRefreshing(false);
-    setLoading(false);
   }, []);
 
   // useEffect(() => {
@@ -110,14 +111,16 @@ const Home = ({navigation}) => {
             renderItem={({item}) => (
               <Feed
                 key={item.key}
-                userProfilePic={item.userProfile}
+                postId={item.key}
+                userProfilePic={profilePic}
                 createdAt={item.createdAt}
-                username={item.username}
+                username={username}
                 postTitle={item.title}
                 image={item.image}
                 description={item.description}
                 navigation={navigation}
                 likes={item.likes}
+                userId={item.user}
               />
             )}
           />
