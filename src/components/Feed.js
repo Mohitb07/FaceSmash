@@ -1,8 +1,14 @@
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import React from 'react';
-import {HeartOutlinIcon, HeartFilledIcon, CommentIcon} from '../SVG';
+import React, {useState} from 'react';
+import {
+  HeartOutlinIcon,
+  HeartFilledIcon,
+  CommentIcon,
+  CommentOutlinedIcon,
+} from '../SVG';
 import {COLORS} from '../constants';
 import moment from 'moment';
+import firestore from '@react-native-firebase/firestore';
 
 const Feed = ({
   image,
@@ -11,10 +17,36 @@ const Feed = ({
   userProfilePic,
   navigation,
   description = '',
-  likes = 0,
+  likes = [],
   createdAt,
+  postId = '',
+  userId = '',
 }) => {
-  console.log('created at');
+  console.log('Feed Renders', postId);
+
+  const handleLikes = () => {
+    if (!likes.includes(userId)) {
+      firestore()
+        .collection('Posts')
+        .doc(postId)
+        .update({
+          likes: [...likes, userId],
+        })
+        .then(() => {
+          console.log('Posts Liked');
+        });
+    } else {
+      firestore()
+        .collection('Posts')
+        .doc(postId)
+        .update({
+          likes: likes.filter(item => item !== userId),
+        })
+        .then(() => {
+          console.log('Posts UnLiked');
+        });
+    }
+  };
   return (
     <View style={[styles.container, !image && styles.outerContainer]}>
       <View
@@ -38,15 +70,19 @@ const Feed = ({
               paddingVertical: 10,
               alignItems: 'center',
             }}>
-            <TouchableOpacity>
-              <HeartFilledIcon />
+            <TouchableOpacity onPress={handleLikes}>
+              {likes.includes(userId) ? (
+                <HeartFilledIcon />
+              ) : (
+                <HeartOutlinIcon />
+              )}
             </TouchableOpacity>
             <TouchableOpacity>
-              <CommentIcon style={{marginLeft: 4}} />
+              <CommentOutlinedIcon style={{marginLeft: 4}} />
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.likes}>{likes} likes</Text>
+          <Text style={styles.likes}>{likes.length} likes</Text>
         </View>
 
         <View style={styles.feedInfo}>
@@ -67,7 +103,7 @@ const Feed = ({
               <View>
                 <Text style={styles.usernameText}>{username}</Text>
                 <Text style={styles.timePosted}>
-                  {moment(createdAt.toDate()).fromNow()}
+                  {moment(createdAt?.toDate()).fromNow()}
                 </Text>
               </View>
             </TouchableOpacity>
