@@ -1,21 +1,14 @@
-import * as React from 'react';
+import React from 'react';
+import {View} from 'react-native';
 import Svg, {
   Circle,
-  ClipPath,
   Defs,
   G,
-  Mask,
+  LinearGradient,
   Path,
   Rect,
-  Desc,
-  LinearGradient,
   Stop,
-  Line,
-  Polygon,
-  Ellipse,
-  Polyline,
 } from 'react-native-svg';
-import {View} from 'react-native';
 import {COLORS} from '../constants';
 
 export const SearchIcon = () => {
@@ -109,6 +102,27 @@ export const CommentIcon = props => {
     </Svg>
   );
 };
+
+export const CommentOutlinedIcon = props => (
+  <Svg
+    width="24px"
+    height="24px"
+    viewBox="0 0 24 24"
+    id="magicoon-Regular"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}>
+    <Defs></Defs>
+    <G id="comments-Regular">
+      <Path
+        id="comments-Regular-2"
+        data-name="comments-Regular"
+        className="cls-1"
+        d="M18,7.25h-.25V6A3.754,3.754,0,0,0,14,2.25H6A3.754,3.754,0,0,0,2.25,6V16a.75.75,0,0,0,.466.694A.741.741,0,0,0,3,16.75a.749.749,0,0,0,.536-.225L5.275,14.75H6.25V16A3.754,3.754,0,0,0,10,19.75h8.725l1.739,1.775A.749.749,0,0,0,21,21.75a.741.741,0,0,0,.284-.056A.75.75,0,0,0,21.75,21V11A3.754,3.754,0,0,0,18,7.25Zm-13.04,6a.75.75,0,0,0-.536.225l-.674.688V6A2.252,2.252,0,0,1,6,3.75h8A2.252,2.252,0,0,1,16.25,6v5A2.252,2.252,0,0,1,14,13.25Zm15.29,5.913-.674-.688a.75.75,0,0,0-.536-.225H10A2.252,2.252,0,0,1,7.75,16V14.75H14A3.754,3.754,0,0,0,17.75,11V8.75H18A2.252,2.252,0,0,1,20.25,11Z"
+        fill="#fff"
+      />
+    </G>
+  </Svg>
+);
 
 export const UserIcon = style => {
   return (
