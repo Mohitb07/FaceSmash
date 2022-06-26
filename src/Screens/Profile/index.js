@@ -5,8 +5,9 @@ import {
   StyleSheet,
   TouchableOpacity,
   ScrollView,
+  FlatList,
 } from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import Feed from '../../components/Feed';
 import {
   VerificationIcon,
@@ -23,11 +24,14 @@ import {UserDataContext} from '../../Context/userData';
 import {COLORS} from '../../constants';
 import Header from '../../components/Header';
 import fakeData from '../../assets/fakeData.json';
+import firestore from '@react-native-firebase/firestore';
 
 const MyProfile = ({navigation}) => {
   const {authUser} = useContext(AuthContext);
   const {userData} = useContext(UserDataContext);
   const {isOpen, onOpen, onClose} = useDisclose();
+  const [myRecentPosts, setMyRecentPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const onLogoutAttempt = () => {
     auth()
@@ -39,6 +43,26 @@ const MyProfile = ({navigation}) => {
       })
       .catch(err => console.log('SIGN OUT ERROR', err));
   };
+
+  useEffect(() => {
+    firestore()
+      .collection('Posts')
+      .where('user', '==', userData.uid)
+      .orderBy('createdAt', 'desc')
+      .get()
+      .then(querySnapshot => {
+        const allRecentPosts = [];
+        querySnapshot.forEach(doc => {
+          allRecentPosts.push({
+            ...doc.data(),
+            key: doc.id,
+          });
+        });
+
+        setMyRecentPosts(allRecentPosts);
+      });
+  }, [userData]);
+
   return (
     <ScrollView stickyHeaderIndices={[0]} showsVerticalScrollIndicator={false}>
       <Header
@@ -64,7 +88,6 @@ const MyProfile = ({navigation}) => {
           </View>
           <Text style={styles.email}>{userData?.email}</Text>
           <TouchableOpacity
-            // onPress={() => navigation.navigate('Update Profile')}
             style={[styles.btnPost, styles.btnBackground, {width: '40%'}]}>
             <Text style={[styles.btnText, {color: '#171719'}]}>Follow</Text>
           </TouchableOpacity>
@@ -102,18 +125,29 @@ const MyProfile = ({navigation}) => {
           </TouchableOpacity>
         </View>
         <Text style={styles.activityLabel}>Recent Activity</Text>
-        <View>
-          {fakeData.posts.map(post => (
-            <Feed
-              key={post.uid}
-              userProfilePic={post.userProfile}
-              username={post.username}
-              postTitle={post.title}
-              image={post.image}
-              navigation={navigation}
-            />
-          ))}
-        </View>
+        {myRecentPosts && (
+          <FlatList
+            data={myRecentPosts}
+            ListFooterComponent={() => (
+              <>{loading && <Text>Loading...</Text>}</>
+            )}
+            renderItem={({item}) => (
+              <Feed
+                key={item.key}
+                postId={item.key}
+                userProfilePic={userData.profilePic}
+                createdAt={item.createdAt}
+                username={userData.username}
+                postTitle={item.title}
+                image={item.image}
+                description={item.description}
+                navigation={navigation}
+                likes={item.likes}
+                userId={item.user}
+              />
+            )}
+          />
+        )}
       </View>
       <Actionsheet isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content>
