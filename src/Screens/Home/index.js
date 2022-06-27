@@ -18,11 +18,6 @@ const Home = ({navigation}) => {
   const [posts, loading, userData, getLatestPosts, setPosts, setLoading] =
     useGetAllPosts();
   const [refreshing, setRefreshing] = useState(false);
-  const {
-    userData: {profilePic, username},
-  } = useContext(UserDataContext);
-
-  console.log('user data', userData);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -53,6 +48,7 @@ const Home = ({navigation}) => {
   //   return () => subscriber();
   // }, [userData]);
 
+  console.log('posts', posts);
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
@@ -112,9 +108,9 @@ const Home = ({navigation}) => {
               <Feed
                 key={item.key}
                 postId={item.key}
-                userProfilePic={profilePic}
+                userProfilePic={item.userProfile}
                 createdAt={item.createdAt}
-                username={username}
+                username={item.username}
                 postTitle={item.title}
                 image={item.image}
                 description={item.description}
