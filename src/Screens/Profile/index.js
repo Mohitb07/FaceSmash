@@ -26,12 +26,15 @@ import Header from '../../components/Header';
 import fakeData from '../../assets/fakeData.json';
 import firestore from '@react-native-firebase/firestore';
 
-const MyProfile = ({navigation}) => {
+const MyProfile = ({route, navigation}) => {
+  const {providedUserId} = route?.params || {};
+
   const {authUser} = useContext(AuthContext);
-  const {userData} = useContext(UserDataContext);
+  // const {userData} = useContext(UserDataContext);
   const {isOpen, onOpen, onClose} = useDisclose();
   const [myRecentPosts, setMyRecentPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState([]);
 
   const onLogoutAttempt = () => {
     auth()
@@ -47,7 +50,7 @@ const MyProfile = ({navigation}) => {
   useEffect(() => {
     firestore()
       .collection('Posts')
-      .where('user', '==', userData.uid)
+      .where('user', '==', providedUserId || userData.uid)
       .orderBy('createdAt', 'desc')
       .get()
       .then(querySnapshot => {
@@ -60,8 +63,31 @@ const MyProfile = ({navigation}) => {
         });
 
         setMyRecentPosts(allRecentPosts);
+        setLoading(false);
       });
-  }, [userData]);
+  }, [userData, providedUserId]);
+
+  useEffect(() => {
+    if (providedUserId) {
+      firestore()
+        .collection('Users')
+        .where('uid', '==', providedUserId)
+        .get()
+        .then(doc => {
+          const profileData = [];
+          doc.forEach(item => {
+            profileData.push({
+              ...item.data(),
+              key: item.id,
+            });
+          });
+
+          setUserData(profileData);
+        });
+    }
+  }, [providedUserId]);
+
+  console.log('users', myRecentPosts);
 
   return (
     <ScrollView stickyHeaderIndices={[0]} showsVerticalScrollIndicator={false}>
@@ -79,14 +105,14 @@ const MyProfile = ({navigation}) => {
           <Image
             style={styles.profilePic}
             source={{
-              uri: userData?.profilePic,
+              uri: userData[0]?.profilePic,
             }}
           />
           <View style={styles.fullNameContainer}>
-            <Text style={styles.textFullName}>{userData?.username}</Text>
+            <Text style={styles.textFullName}>{userData[0]?.username}</Text>
             <VerificationIcon style={{marginLeft: 5}} />
           </View>
-          <Text style={styles.email}>{userData?.email}</Text>
+          <Text style={styles.email}>{userData[0]?.email}</Text>
           <TouchableOpacity
             style={[styles.btnPost, styles.btnBackground, {width: '40%'}]}>
             <Text style={[styles.btnText, {color: '#171719'}]}>Follow</Text>
@@ -94,11 +120,11 @@ const MyProfile = ({navigation}) => {
         </View>
         <View style={styles.connections}>
           <View>
-            <Text style={styles.text}>{userData?.followings.length}</Text>
+            <Text style={styles.text}>{userData[0]?.followings?.length}</Text>
             <Text style={(styles.text, {color: '#747474'})}>Following</Text>
           </View>
           <View>
-            <Text style={styles.text}>{userData?.followers.length}</Text>
+            <Text style={styles.text}>{userData[0]?.followers?.length}</Text>
             <Text style={(styles.text, {color: '#747474'})}>Followers</Text>
           </View>
           <View>
@@ -135,9 +161,9 @@ const MyProfile = ({navigation}) => {
               <Feed
                 key={item.key}
                 postId={item.key}
-                userProfilePic={userData.profilePic}
+                userProfilePic={item.userProfile}
                 createdAt={item.createdAt}
-                username={userData.username}
+                username={item.username}
                 postTitle={item.title}
                 image={item.image}
                 description={item.description}
