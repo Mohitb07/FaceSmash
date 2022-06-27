@@ -40,8 +40,8 @@ const AddPost = ({navigation}) => {
                   description: textAreaValue,
                   image: url,
                   user: authUser.uid,
-                  // userProfile: userData.profilePic,
-                  // username: userData.username,
+                  userProfile: userData.profilePic,
+                  username: userData.username,
                   likes: [],
                   createdAt: new Date(),
                 })
@@ -66,8 +66,8 @@ const AddPost = ({navigation}) => {
           description: textAreaValue,
           image: null,
           user: authUser.uid,
-          // userProfile: userData.profilePic,
-          // username: userData.username,
+          userProfile: userData.profilePic,
+          username: userData.username,
           likes: [],
           createdAt: new Date(),
         })
