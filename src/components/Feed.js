@@ -91,7 +91,11 @@ const Feed = ({
               <Text style={styles.feedTitle}>{postTitle}</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => navigation.navigate('Profile')}
+              onPress={() =>
+                navigation.navigate('Profile', {
+                  providedUserId: userId,
+                })
+              }
               style={styles.userInfo}>
               <Image
                 source={{
