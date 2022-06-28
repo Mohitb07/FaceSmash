@@ -12,7 +12,7 @@ import {COLORS, FONTS} from '../../../constants/theme';
 const UpdateProfile = ({navigation}) => {
   const [image, setImage] = useState(null);
   const {authUser} = useContext(AuthContext);
-  const {userData, updateUserData} = useContext(UserDataContext);
+  const {contextUser, updateUserData} = useContext(UserDataContext);
   const [loading, setLoading] = useState(false);
 
   const disabled = !image;
@@ -82,13 +82,13 @@ const UpdateProfile = ({navigation}) => {
           <Image
             style={styles.profilePic}
             source={{
-              uri: image ? image : userData?.profilePic,
+              uri: image ? image : contextUser?.profilePic,
             }}
           />
           <View style={styles.fullNameContainer}>
-            <Text style={styles.textFullName}>{userData?.username}</Text>
+            <Text style={styles.textFullName}>{contextUser?.username}</Text>
           </View>
-          <Text style={styles.email}>{userData?.email}</Text>
+          <Text style={styles.email}>{contextUser?.email}</Text>
         </View>
 
         <View style={styles.btnContainer}>
@@ -96,14 +96,14 @@ const UpdateProfile = ({navigation}) => {
             onPress={handleChooseGallary}
             style={styles.customBtn}
             text="Open Gallary"
-            color={COLORS.transparentBlack9}
-            textStyle={styles.customBtnText}
+            color={COLORS.primary}
+            textStyle={[styles.customBtnText, {color: 'white'}]}
             icon={<GallaryIcon />}
           />
           <Button
             onPress={handleTakePhoto}
-            style={[styles.customBtn, {marginVertical: 0}]}
-            color={COLORS.primary}
+            style={[styles.customBtn]}
+            color={COLORS.neon}
             text="Take Now"
             textStyle={styles.customBtnText}
             icon={<CameraIcon />}
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     padding: 15,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.mainBackground,
   },
   userInfo: {
     flex: 1,

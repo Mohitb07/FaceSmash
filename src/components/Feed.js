@@ -22,8 +22,7 @@ const Feed = ({
   postId = '',
   userId = '',
 }) => {
-  console.log('Feed Renders', postId);
-
+  console.log('user proflie', userProfilePic);
   const handleLikes = () => {
     if (!likes.includes(userId)) {
       firestore()

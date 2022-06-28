@@ -12,7 +12,7 @@ export const COLORS = {
   lime: '#2AD699',
   lightGreen: '#E7F9EF',
   lightGreen1: '#8EbCA0',
-  neon: '#BAFD05',
+  neon: '#AFE41F',
 
   white: '#fff',
   white2: '#F9F9F9',

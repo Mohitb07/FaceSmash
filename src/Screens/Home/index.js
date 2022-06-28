@@ -10,14 +10,15 @@ import {
 } from 'react-native';
 
 import Feed from '../../components/Feed';
-import {UserDataContext} from '../../Context/userData';
 import useGetAllPosts from '../../hooks/getAllPosts';
 import {AddIcon} from '../../SVG';
 
 const Home = ({navigation}) => {
-  const [posts, loading, userData, getLatestPosts, setPosts, setLoading] =
+  const [posts, loading, contextUser, getLatestPosts, setPosts, setLoading] =
     useGetAllPosts();
   const [refreshing, setRefreshing] = useState(false);
+
+  console.log('posts', posts);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
@@ -26,34 +27,12 @@ const Home = ({navigation}) => {
     setRefreshing(false);
   }, []);
 
-  // useEffect(() => {
-  //   const subscriber = firestore()
-  //     .collection('Posts')
-  //     .orderBy('createdAt', 'desc')
-  //     .onSnapshot(querySnapshot => {
-  //       const allPosts = [];
-
-  //       querySnapshot.forEach(documentSnapshot => {
-  //         allPosts.push({
-  //           ...documentSnapshot.data(),
-  //           key: documentSnapshot.id,
-  //           userProfile: userData.profilePic,
-  //         });
-  //       });
-
-  //       setPosts(allPosts);
-  //       setLoading(false);
-  //     });
-
-  //   return () => subscriber();
-  // }, [userData]);
-
-  console.log('posts', posts);
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
         {posts && (
           <FlatList
+            showsVerticalScrollIndicator={false}
             data={posts}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -63,19 +42,23 @@ const Home = ({navigation}) => {
                 <View style={styles.headerContainer}>
                   <TouchableOpacity
                     style={styles.leftHeader}
-                    onPress={() => navigation.navigate('Profile')}>
+                    onPress={() =>
+                      navigation.navigate('Profile', {
+                        providedUserId: contextUser.uid,
+                      })
+                    }>
                     <Image
                       source={{
-                        uri: userData?.profilePic,
+                        uri: contextUser?.profilePic,
                       }}
                       style={styles.image}
                       resizeMode="cover"
                     />
                     <View style={styles.userInfo}>
                       <Text style={styles.usernameText}>
-                        {userData?.username}
+                        {contextUser?.username}
                       </Text>
-                      <Text style={styles.email}>{userData?.email}</Text>
+                      <Text style={styles.email}>{contextUser?.email}</Text>
                     </View>
                   </TouchableOpacity>
 

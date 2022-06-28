@@ -44,8 +44,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     padding: 15,
-    backgroundColor: COLORS.background,
+    backgroundColor: COLORS.mainBackground,
     alignItems: 'center',
+    borderBottomColor: COLORS.white2,
+    borderBottomWidth: 0.2,
   },
   headerText: {
     fontSize: 20,

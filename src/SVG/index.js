@@ -483,7 +483,7 @@ export const CameraIcon = props => (
     id="_08_-_Camera"
     data-name="08 - Camera"
     xmlns="http://www.w3.org/2000/svg"
-    fill="#fff"
+    fill="#000"
     {...props}>
     <Path
       id="Path_230"

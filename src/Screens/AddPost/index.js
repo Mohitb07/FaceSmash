@@ -16,7 +16,7 @@ const AddPost = ({navigation}) => {
   const [textAreaValue, setTextAreaValue] = useState();
   const [title, setTitle] = useState('');
   const {authUser} = useContext(AuthContext);
-  const {userData} = useContext(UserDataContext);
+  const {contextUser} = useContext(UserDataContext);
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -40,8 +40,8 @@ const AddPost = ({navigation}) => {
                   description: textAreaValue,
                   image: url,
                   user: authUser.uid,
-                  userProfile: userData.profilePic,
-                  username: userData.username,
+                  userProfile: contextUser.profilePic,
+                  username: contextUser.username,
                   likes: [],
                   createdAt: new Date(),
                 })
@@ -66,15 +66,17 @@ const AddPost = ({navigation}) => {
           description: textAreaValue,
           image: null,
           user: authUser.uid,
-          userProfile: userData.profilePic,
-          username: userData.username,
+          userProfile: contextUser.profilePic,
+          username: contextUser.username,
           likes: [],
           createdAt: new Date(),
         })
         .then(() => {
+          setLoading(false);
           navigation.navigate('Home');
         })
         .catch(err => {
+          setLoading(false);
           console.log('error posting', err);
         });
     }
@@ -147,7 +149,7 @@ const AddPost = ({navigation}) => {
               onPress={handleChooseGallary}
               disabled={loading || image}
               text="Add Image"
-              color={COLORS.primary}
+              color={COLORS.neon}
               style={{marginVertical: 20}}
             />
           )}

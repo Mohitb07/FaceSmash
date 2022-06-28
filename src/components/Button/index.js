@@ -6,6 +6,7 @@ import {
 } from 'react-native';
 import React from 'react';
 import LinearGradient from 'react-native-linear-gradient';
+import {COLORS} from '../../constants';
 
 const Button = ({
   onPress = () => {},
@@ -14,7 +15,7 @@ const Button = ({
   color = '',
   icon,
   style: customStyle = {},
-  textStyle: customTextStyle = {},
+  textStyle: customTextStyle = [],
   loader = false,
 }) => {
   return (
@@ -51,7 +52,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#fff',
+    color: COLORS.transparentBlack7,
     marginHorizontal: 10,
   },
   btn: {

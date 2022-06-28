@@ -1,22 +1,22 @@
 import React, {useEffect, useState, useContext} from 'react';
 import firestore from '@react-native-firebase/firestore';
 import {AuthContext} from './auth';
+import storage from '@react-native-firebase/storage';
 
 export const UserDataContext = React.createContext();
 
 const UserDataProvider = props => {
-  const [userData, setUserData] = useState({});
+  const [contextUser, setContextUser] = useState({});
   const {authUser} = useContext(AuthContext);
 
   useEffect(() => {
-    console.log('calling effect');
     async function getData() {
       if (authUser) {
         const user = await firestore()
           .collection('Users')
           .doc(authUser?.uid)
           .get();
-        setUserData(user.data());
+        setContextUser(user.data());
       }
     }
     getData();
@@ -35,8 +35,23 @@ const UserDataProvider = props => {
           .doc(authUser.uid)
           .get();
         setLoading(false);
-        setUserData(updatedUser.data());
-        navigation.navigate('Profile');
+        setContextUser(updatedUser.data());
+        const allPosts = await firestore().collection('Posts').get();
+        const batch = firestore().batch();
+        allPosts.forEach(async doc => {
+          const urlRef = await storage().ref(doc.data().user).getDownloadURL();
+          console.log('url ref', urlRef);
+          const docRef = firestore().collection('Posts').doc(doc.id);
+          batch.update(docRef, {
+            userProfile: urlRef,
+          });
+        });
+        batch.commit().then(() => {
+          console.log('updated all documents');
+          navigation.push('Profile', {
+            providedUserId: contextUser.uid,
+          });
+        });
       })
       .catch(error => {
         console.log('ERROR UPDATING USER', error);
@@ -45,7 +60,10 @@ const UserDataProvider = props => {
   };
 
   return (
-    <UserDataContext.Provider value={{userData, updateUserData}} {...props} />
+    <UserDataContext.Provider
+      value={{contextUser, updateUserData}}
+      {...props}
+    />
   );
 };
 

@@ -3,7 +3,7 @@ import {useContext, useEffect, useState} from 'react';
 import {UserDataContext} from '../Context/userData';
 
 const useGetAllPosts = () => {
-  const {userData} = useContext(UserDataContext);
+  const {contextUser} = useContext(UserDataContext);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -45,9 +45,9 @@ const useGetAllPosts = () => {
       });
 
     return () => subscriber();
-  }, [userData]);
+  }, [contextUser]);
 
-  return [posts, loading, userData, getLatestPosts, setPosts, setLoading];
+  return [posts, loading, contextUser, getLatestPosts, setPosts, setLoading];
 };
 
 export default useGetAllPosts;
