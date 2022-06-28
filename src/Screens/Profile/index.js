@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import React, {useContext, useState, useEffect} from 'react';
 import Feed from '../../components/Feed';
@@ -27,14 +28,15 @@ import fakeData from '../../assets/fakeData.json';
 import firestore from '@react-native-firebase/firestore';
 
 const MyProfile = ({route, navigation}) => {
-  const {providedUserId} = route?.params || {};
+  const {providedUserId} = route?.params || null;
 
   const {authUser} = useContext(AuthContext);
-  // const {userData} = useContext(UserDataContext);
+  const {contextUser} = useContext(UserDataContext);
   const {isOpen, onOpen, onClose} = useDisclose();
   const [myRecentPosts, setMyRecentPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState([]);
+  const [userProfileLoading, setUserProfileLoading] = useState(true);
 
   const onLogoutAttempt = () => {
     auth()
@@ -48,9 +50,10 @@ const MyProfile = ({route, navigation}) => {
   };
 
   useEffect(() => {
+    console.log('calling post effect 😢❤️❤️❤️🟢');
     firestore()
       .collection('Posts')
-      .where('user', '==', providedUserId || userData.uid)
+      .where('user', '==', providedUserId)
       .orderBy('createdAt', 'desc')
       .get()
       .then(querySnapshot => {
@@ -65,157 +68,222 @@ const MyProfile = ({route, navigation}) => {
         setMyRecentPosts(allRecentPosts);
         setLoading(false);
       });
-  }, [userData, providedUserId]);
+  }, [providedUserId, contextUser, userData]);
 
   useEffect(() => {
-    if (providedUserId) {
-      firestore()
-        .collection('Users')
-        .where('uid', '==', providedUserId)
-        .get()
-        .then(doc => {
-          const profileData = [];
-          doc.forEach(item => {
-            profileData.push({
-              ...item.data(),
-              key: item.id,
-            });
+    firestore()
+      .collection('Users')
+      .where('uid', '==', providedUserId)
+      .get()
+      .then(doc => {
+        const profileData = [];
+        doc.forEach(item => {
+          profileData.push({
+            ...item.data(),
+            key: item.id,
           });
-
-          setUserData(profileData);
         });
-    }
-  }, [providedUserId]);
 
-  console.log('users', myRecentPosts);
+        setUserData(profileData);
+        setUserProfileLoading(false);
+      });
+  }, [providedUserId, contextUser]);
+
+  // let content = null;
+  // if (myRecentPosts?.length > 0) {
+  //   content = myRecentPosts.map(item => {
+  //     console.log(`item ${item.title}`, item.userProfile);
+  //     return (
+  //       <Feed
+  //         key={item.key}
+  //         postId={item.key}
+  //         userProfilePic={item.userProfile}
+  //         createdAt={item.createdAt}
+  //         username={item.username}
+  //         postTitle={item.title}
+  //         image={item.image}
+  //         description={item.description}
+  //         navigation={navigation}
+  //         likes={item.likes}
+  //         userId={item.user}
+  //       />
+  //     );
+  //   });
+  // }
 
   return (
-    <ScrollView stickyHeaderIndices={[0]} showsVerticalScrollIndicator={false}>
+    <>
       <Header
         showBackButton={true}
         navigation={navigation}
         key="profile"
+        label={userData[0]?.username}
         rightSection
         rightIcon={<GearIcon />}
         onPress={onOpen}
-        bgColor="#1D1F20"
+        // bgColor="#1D1F20"
       />
       <View style={styles.container}>
-        <View style={styles.userInfo}>
-          <Image
-            style={styles.profilePic}
-            source={{
-              uri: userData[0]?.profilePic,
-            }}
-          />
-          <View style={styles.fullNameContainer}>
-            <Text style={styles.textFullName}>{userData[0]?.username}</Text>
-            <VerificationIcon style={{marginLeft: 5}} />
-          </View>
-          <Text style={styles.email}>{userData[0]?.email}</Text>
-          <TouchableOpacity
-            style={[styles.btnPost, styles.btnBackground, {width: '40%'}]}>
-            <Text style={[styles.btnText, {color: '#171719'}]}>Follow</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.connections}>
-          <View>
-            <Text style={styles.text}>{userData[0]?.followings?.length}</Text>
-            <Text style={(styles.text, {color: '#747474'})}>Following</Text>
-          </View>
-          <View>
-            <Text style={styles.text}>{userData[0]?.followers?.length}</Text>
-            <Text style={(styles.text, {color: '#747474'})}>Followers</Text>
-          </View>
-          <View>
-            <Text style={styles.text}>0</Text>
-            <Text style={(styles.text, {color: '#747474'})}>Posts</Text>
-          </View>
-        </View>
-        <View style={styles.bioContainer}>
-          <Text style={styles.bio}>Inspiring Designers Globally 🌎</Text>
-        </View>
+        <FlatList
+          contentContainerStyle={{paddingBottom: 20}}
+          data={myRecentPosts}
+          showsVerticalScrollIndicator={false}
+          ListEmptyComponent={() =>
+            loading ? (
+              <ActivityIndicator />
+            ) : (
+              <Text
+                style={{
+                  textAlign: 'center',
+                  color: COLORS.white,
+                  fontSize: 20,
+                  marginTop: 40,
+                }}>
+                No Enough Data
+              </Text>
+            )
+          }
+          keyExtractor={item => item.key}
+          ListHeaderComponent={() => (
+            <View style={{paddingBottom: 20}}>
+              <View style={styles.userInfo}>
+                {userProfileLoading ? (
+                  <Image
+                    style={styles.profilePic}
+                    source={{
+                      uri: 'https://media.istockphoto.com/photos/texture-black-total-background-abstract-new-asphalt-stucco-concrete-picture-id1251205352?k=20&m=1251205352&s=612x612&w=0&h=0plv7YbuwV3fv2KGxdppirlJ5CXaenLMaEmxikfVPsU=',
+                    }}
+                  />
+                ) : (
+                  <Image
+                    style={styles.profilePic}
+                    source={{
+                      uri: userData[0]?.profilePic,
+                    }}
+                  />
+                )}
+                <View style={styles.fullNameContainer}>
+                  <Text style={styles.textFullName}>
+                    {userData[0]?.username}
+                  </Text>
+                  {userData[0]?.username && (
+                    <VerificationIcon style={{marginLeft: 5}} />
+                  )}
+                </View>
+                <Text style={styles.email}>{userData[0]?.email}</Text>
+                <TouchableOpacity
+                  style={[
+                    styles.btnPost,
+                    styles.btnBackground,
+                    {width: '40%'},
+                  ]}>
+                  <Text
+                    style={[styles.btnText, {color: COLORS.transparentBlack7}]}>
+                    Follow
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <View style={styles.connections}>
+                <View>
+                  <Text style={styles.text}>
+                    {userData[0]?.followings?.length}
+                  </Text>
+                  <Text style={(styles.text, {color: '#747474'})}>
+                    Following
+                  </Text>
+                </View>
+                <View>
+                  <Text style={styles.text}>
+                    {userData[0]?.followers?.length}
+                  </Text>
+                  <Text style={(styles.text, {color: '#747474'})}>
+                    Followers
+                  </Text>
+                </View>
+                <View>
+                  <Text style={styles.text}>{myRecentPosts?.length}</Text>
+                  <Text style={(styles.text, {color: '#747474'})}>Posts</Text>
+                </View>
+              </View>
+              {/* <View style={styles.bioContainer}>
+                <Text style={styles.bio}>Inspiring Designers Globally 🌎</Text>
+              </View> */}
 
-        <View style={styles.btnContainer}>
-          <TouchableOpacity style={styles.btnPost}>
-            <Text style={styles.btnText}>Post</Text>
-            <Text style={styles.btnBadge}>50</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[styles.btnPost, styles.btnBackground]}
-            onPress={() => navigation.navigate('Update Profile')}>
-            <EditIcon />
-            <Text style={[styles.btnText, {color: '#171719'}]}>
-              Edit Profile
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.activityLabel}>Recent Activity</Text>
-        {myRecentPosts && (
-          <FlatList
-            data={myRecentPosts}
-            ListFooterComponent={() => (
-              <>{loading && <Text>Loading...</Text>}</>
-            )}
-            renderItem={({item}) => (
-              <Feed
-                key={item.key}
-                postId={item.key}
-                userProfilePic={item.userProfile}
-                createdAt={item.createdAt}
-                username={item.username}
-                postTitle={item.title}
-                image={item.image}
-                description={item.description}
-                navigation={navigation}
-                likes={item.likes}
-                userId={item.user}
-              />
-            )}
-          />
-        )}
-      </View>
-      <Actionsheet isOpen={isOpen} onClose={onClose}>
-        <Actionsheet.Content>
-          <Box w="100%" h={60} px={4} justifyContent="center">
-            <NText
-              fontSize="20"
-              color="gray.500"
-              _dark={{
-                color: 'gray.300',
-              }}>
-              Personal Settings
-            </NText>
-          </Box>
-          <Actionsheet.Item style={styles.defaultStyle}>
-            <TouchableOpacity style={styles.btnLogout}>
-              <DocumentIcon style={{marginRight: 5}} />
-              <Text style={{color: 'white', fontWeight: '600'}}>
-                Settings and Privacy
-              </Text>
-            </TouchableOpacity>
-          </Actionsheet.Item>
-          <Actionsheet.Item style={styles.defaultStyle}>
-            <TouchableOpacity style={styles.btnLogout}>
-              <PrivacyIcon style={{marginRight: 5}} />
-              <Text style={{color: 'white', fontWeight: '600'}}>
-                Settings and Privacy
-              </Text>
-            </TouchableOpacity>
-          </Actionsheet.Item>
-          {!!authUser && (
+              <View style={styles.btnContainer}>
+                <TouchableOpacity style={styles.btnPost}>
+                  <Text style={styles.btnText}>Post</Text>
+                  <Text style={styles.btnBadge}>{myRecentPosts?.length}</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.btnPost, styles.btnBackground]}
+                  onPress={() => navigation.navigate('Update Profile')}>
+                  <EditIcon />
+                  <Text
+                    style={[styles.btnText, {color: COLORS.transparentBlack7}]}>
+                    Edit Profile
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.activityLabel}>Recent Activity</Text>
+            </View>
+          )}
+          renderItem={({item}) => (
+            <Feed
+              postId={item.key}
+              userProfilePic={item?.userProfile}
+              createdAt={item.createdAt}
+              username={item.username}
+              postTitle={item.title}
+              image={item.image}
+              description={item.description}
+              navigation={navigation}
+              likes={item.likes}
+              userId={item.user}
+            />
+          )}
+        />
+        <Actionsheet isOpen={isOpen} onClose={onClose}>
+          <Actionsheet.Content>
+            <Box w="100%" h={60} px={4} justifyContent="center">
+              <NText
+                fontSize="20"
+                color="gray.500"
+                _dark={{
+                  color: 'gray.300',
+                }}>
+                Personal Settings
+              </NText>
+            </Box>
             <Actionsheet.Item style={styles.defaultStyle}>
-              <TouchableOpacity
-                style={styles.btnLogout}
-                onPress={onLogoutAttempt}>
-                <LogoutIcon style={{marginRight: 5}} />
-                <Text style={{color: 'red', fontWeight: '600'}}>Log Out</Text>
+              <TouchableOpacity style={styles.btnLogout}>
+                <DocumentIcon style={{marginRight: 5}} />
+                <Text style={{color: 'white', fontWeight: '600'}}>
+                  Settings and Privacy
+                </Text>
               </TouchableOpacity>
             </Actionsheet.Item>
-          )}
-        </Actionsheet.Content>
-      </Actionsheet>
-    </ScrollView>
+            <Actionsheet.Item style={styles.defaultStyle}>
+              <TouchableOpacity style={styles.btnLogout}>
+                <PrivacyIcon style={{marginRight: 5}} />
+                <Text style={{color: 'white', fontWeight: '600'}}>
+                  Settings and Privacy
+                </Text>
+              </TouchableOpacity>
+            </Actionsheet.Item>
+            {!!authUser && (
+              <Actionsheet.Item style={styles.defaultStyle}>
+                <TouchableOpacity
+                  style={styles.btnLogout}
+                  onPress={onLogoutAttempt}>
+                  <LogoutIcon style={{marginRight: 5}} />
+                  <Text style={{color: 'red', fontWeight: '600'}}>Log Out</Text>
+                </TouchableOpacity>
+              </Actionsheet.Item>
+            )}
+          </Actionsheet.Content>
+        </Actionsheet>
+      </View>
+    </>
   );
 };
 
@@ -322,5 +390,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 20,
+  },
+  loading: {
+    marginVertical: 10,
   },
 });
