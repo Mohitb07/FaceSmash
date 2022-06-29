@@ -22,7 +22,6 @@ const Feed = ({
   postId = '',
   userId = '',
 }) => {
-  console.log('user proflie', userProfilePic);
   const handleLikes = () => {
     if (!likes.includes(userId)) {
       firestore()
@@ -120,7 +119,7 @@ const Feed = ({
   );
 };
 
-export default Feed;
+export default React.memo(Feed);
 
 const styles = StyleSheet.create({
   container: {
