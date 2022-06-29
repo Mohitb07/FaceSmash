@@ -41,11 +41,7 @@ const MyProfile = ({route, navigation}) => {
   const onLogoutAttempt = () => {
     auth()
       .signOut()
-      .then(() => {
-        setAuthenticatedUser(null);
-        console.log('Signed Out');
-        navigation.navigate('Login');
-      })
+      .then(() => console.log('logged out'))
       .catch(err => console.log('SIGN OUT ERROR', err));
   };
 
@@ -68,7 +64,7 @@ const MyProfile = ({route, navigation}) => {
         setMyRecentPosts(allRecentPosts);
         setLoading(false);
       });
-  }, [providedUserId, contextUser, userData]);
+  }, []);
 
   useEffect(() => {
     firestore()
@@ -87,29 +83,7 @@ const MyProfile = ({route, navigation}) => {
         setUserData(profileData);
         setUserProfileLoading(false);
       });
-  }, [providedUserId, contextUser]);
-
-  // let content = null;
-  // if (myRecentPosts?.length > 0) {
-  //   content = myRecentPosts.map(item => {
-  //     console.log(`item ${item.title}`, item.userProfile);
-  //     return (
-  //       <Feed
-  //         key={item.key}
-  //         postId={item.key}
-  //         userProfilePic={item.userProfile}
-  //         createdAt={item.createdAt}
-  //         username={item.username}
-  //         postTitle={item.title}
-  //         image={item.image}
-  //         description={item.description}
-  //         navigation={navigation}
-  //         likes={item.likes}
-  //         userId={item.user}
-  //       />
-  //     );
-  //   });
-  // }
+  }, []);
 
   return (
     <>
@@ -121,7 +95,6 @@ const MyProfile = ({route, navigation}) => {
         rightSection
         rightIcon={<GearIcon />}
         onPress={onOpen}
-        // bgColor="#1D1F20"
       />
       <View style={styles.container}>
         <FlatList
