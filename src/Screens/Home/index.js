@@ -1,5 +1,6 @@
 import React, {useCallback, useContext, useState} from 'react';
 import {
+  ActivityIndicator,
   FlatList,
   Image,
   RefreshControl,
@@ -30,80 +31,78 @@ const Home = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
-        {posts && (
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={posts}
-            refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            }
-            ListHeaderComponent={() => (
-              <>
-                <View style={styles.headerContainer}>
-                  <TouchableOpacity
-                    style={styles.leftHeader}
-                    onPress={() =>
-                      navigation.navigate('Profile', {
-                        providedUserId: contextUser.uid,
-                      })
-                    }>
-                    <Image
-                      source={{
-                        uri: contextUser?.profilePic,
-                      }}
-                      style={styles.image}
-                      resizeMode="cover"
-                    />
-                    <View style={styles.userInfo}>
-                      <Text style={styles.usernameText}>
-                        {contextUser?.username}
-                      </Text>
-                      <Text style={styles.email}>{contextUser?.email}</Text>
-                    </View>
-                  </TouchableOpacity>
-
-                  <View style={styles.rightHeader}>
-                    <TouchableOpacity
-                      onPress={() => navigation.navigate('Add Post')}
-                      style={styles.searchIcon}>
-                      <AddIcon />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-                <View style={styles.feedsContainer}>
-                  <Text style={styles.feedsLabel}>Trending</Text>
-                </View>
-                {loading && (
-                  <View>
-                    <Text
-                      style={{
-                        color: 'white',
-                        textAlign: 'center',
-                        fontSize: 30,
-                      }}>
-                      Loading ....
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          data={posts}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          ListHeaderComponent={() => (
+            <>
+              <View style={styles.headerContainer}>
+                <TouchableOpacity
+                  style={styles.leftHeader}
+                  onPress={() =>
+                    navigation.navigate('Profile', {
+                      providedUserId: contextUser.uid,
+                    })
+                  }>
+                  <Image
+                    source={{
+                      uri: contextUser?.profilePic,
+                    }}
+                    style={styles.image}
+                    resizeMode="cover"
+                  />
+                  <View style={styles.userInfo}>
+                    <Text style={styles.usernameText}>
+                      {contextUser?.username}
                     </Text>
+                    <Text style={styles.email}>{contextUser?.email}</Text>
                   </View>
-                )}
-              </>
-            )}
-            renderItem={({item}) => (
-              <Feed
-                key={item.key}
-                postId={item.key}
-                userProfilePic={item.userProfile}
-                createdAt={item.createdAt}
-                username={item.username}
-                postTitle={item.title}
-                image={item.image}
-                description={item.description}
-                navigation={navigation}
-                likes={item.likes}
-                userId={item.user}
-              />
-            )}
-          />
-        )}
+                </TouchableOpacity>
+
+                <View style={styles.rightHeader}>
+                  <TouchableOpacity
+                    onPress={() => navigation.navigate('Add Post')}
+                    style={styles.searchIcon}>
+                    <AddIcon />
+                  </TouchableOpacity>
+                </View>
+              </View>
+              <View style={styles.feedsContainer}>
+                <Text style={styles.feedsLabel}>Trending</Text>
+              </View>
+              {loading && (
+                <View>
+                  <Text
+                    style={{
+                      color: 'white',
+                      textAlign: 'center',
+                      fontSize: 30,
+                    }}>
+                    <ActivityIndicator />
+                  </Text>
+                </View>
+              )}
+            </>
+          )}
+          renderItem={({item}) => (
+            <Feed
+              key={item.key}
+              postId={item.key}
+              userProfilePic={item.userProfile}
+              createdAt={item.createdAt}
+              username={item.username}
+              postTitle={item.title}
+              image={item.image}
+              description={item.description}
+              navigation={navigation}
+              likes={item.likes}
+              userId={item.user}
+            />
+          )}
+        />
       </View>
     </View>
   );
