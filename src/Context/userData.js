@@ -34,22 +34,30 @@ const UserDataProvider = props => {
           .collection('Users')
           .doc(authUser.uid)
           .get();
-        setLoading(false);
         setContextUser(updatedUser.data());
-        const allPosts = await firestore().collection('Posts').get();
+        const userRef = await firestore()
+          .collection('Users')
+          .doc(authUser.uid)
+          .get();
+        console.log('user ref ⚡⚡⚡⚡⚡', userRef);
+        const allPosts = await firestore()
+          .collection('Posts')
+          .where('user', '==', authUser.uid)
+          .orderBy('createdAt', 'desc')
+          .get();
+
         const batch = firestore().batch();
-        allPosts.forEach(async doc => {
-          const urlRef = await storage().ref(doc.data().user).getDownloadURL();
-          console.log('url ref', urlRef);
+        allPosts.forEach(doc => {
           const docRef = firestore().collection('Posts').doc(doc.id);
           batch.update(docRef, {
-            userProfile: urlRef,
+            userProfile: userRef.data().profilePic,
           });
         });
         batch.commit().then(() => {
-          console.log('updated all documents');
-          navigation.push('Profile', {
-            providedUserId: contextUser.uid,
+          console.log('updated al docs');
+          setLoading(false);
+          navigation.replace('Profile', {
+            providedUserId: authUser.uid,
           });
         });
       })
