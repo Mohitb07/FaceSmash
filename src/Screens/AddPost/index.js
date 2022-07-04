@@ -11,11 +11,13 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import {AuthContext} from '../../Context/auth';
 import {UserDataContext} from '../../Context/userData';
+import {useRecoilState} from 'recoil';
+import {authState} from '../../atoms/authAtom';
 
 const AddPost = ({navigation}) => {
   const [textAreaValue, setTextAreaValue] = useState();
   const [title, setTitle] = useState('');
-  const {authUser} = useContext(AuthContext);
+  const authUser = useRecoilValue(authState);
   const {contextUser} = useContext(UserDataContext);
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);

@@ -8,10 +8,12 @@ import {AuthContext} from '../../../Context/auth';
 import {UserDataContext} from '../../../Context/userData';
 import Header from '../../../components/Header';
 import {COLORS, FONTS} from '../../../constants/theme';
+import { authState } from '../../../atoms/authAtom';
+import {useRecoilValue} from 'recoil'
 
 const UpdateProfile = ({navigation}) => {
   const [image, setImage] = useState(null);
-  const {authUser} = useContext(AuthContext);
+  const authUser = useRecoilValue(authState);
   const {contextUser, updateUserData} = useContext(UserDataContext);
   const [loading, setLoading] = useState(false);
 

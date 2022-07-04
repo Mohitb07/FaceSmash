@@ -19,18 +19,19 @@ import {
   EditIcon,
 } from '../../SVG';
 import {Actionsheet, Text as NText, Box, useDisclose} from 'native-base';
-import {AuthContext} from '../../Context/auth';
+// import {AuthContext} from '../../Context/auth';
 import auth from '@react-native-firebase/auth';
 import {UserDataContext} from '../../Context/userData';
 import {COLORS} from '../../constants';
 import Header from '../../components/Header';
-import fakeData from '../../assets/fakeData.json';
 import firestore from '@react-native-firebase/firestore';
+import {authState} from '../../atoms/authAtom';
+import {useRecoilValue} from 'recoil';
 
 const MyProfile = ({route, navigation}) => {
   const {providedUserId} = route?.params || null;
 
-  const {authUser} = useContext(AuthContext);
+  const authUser = useRecoilValue(authState);
   const {contextUser} = useContext(UserDataContext);
   const {isOpen, onOpen, onClose} = useDisclose();
   const [myRecentPosts, setMyRecentPosts] = useState([]);

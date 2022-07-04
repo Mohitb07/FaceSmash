@@ -1,61 +1,48 @@
+import React from 'react';
 import firestore from '@react-native-firebase/firestore';
-import {useContext, useEffect, useState} from 'react';
+import {useCallback, useContext, useEffect, useState} from 'react';
 import {AuthContext} from '../Context/auth';
 import {UserDataContext} from '../Context/userData';
 
 const useGetAllPosts = () => {
-  console.log('inside useGetAllPosts');
-  const {contextUser} = useContext(UserDataContext);
-  const {authUser} = useContext(AuthContext);
-  const [posts, setPosts] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+  const [posts, setPosts] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const getLatestPosts = () => {
-    if (authUser) {
-      firestore()
-        .collection('Posts')
-        .orderBy('createdAt', 'desc')
-        .onSnapshot(querySnapshot => {
-          const allPosts = [];
+  console.log('inside get All');
+  const getPosts = useCallback(() => {
+    console.log('get Posts triggered');
+    firestore()
+      .collection('Posts')
+      .orderBy('createdAt', 'desc')
+      .onSnapshot(querySnapshot => {
+        const allPosts = [];
 
-          querySnapshot.forEach(documentSnapshot => {
-            allPosts.push({
-              ...documentSnapshot.data(),
-              key: documentSnapshot.id,
-            });
+        querySnapshot.forEach(documentSnapshot => {
+          allPosts.push({
+            ...documentSnapshot.data(),
+            key: documentSnapshot.id,
           });
-
-          setPosts(allPosts);
-          setLoading(false);
         });
-    }
-  };
 
-  let sub;
-  useEffect(() => {
-    if (authUser) {
-      sub = firestore()
-        .collection('Posts')
-        .orderBy('createdAt', 'desc')
-        .onSnapshot(querySnapshot => {
-          const allPosts = [];
-
-          querySnapshot.forEach(documentSnapshot => {
-            allPosts.push({
-              ...documentSnapshot.data(),
-              key: documentSnapshot.id,
-            });
-          });
-
-          setPosts(allPosts);
-          setLoading(false);
-        });
-    }
-
-    return () => sub();
+        setPosts(allPosts);
+        setLoading(false);
+      });
   }, []);
 
-  return [posts, loading, contextUser, getLatestPosts, setPosts, setLoading];
+  const memoPosts = React.useMemo(() => posts, [posts]);
+
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    setTimeout(() => setRefreshing(false), 300);
+  }, []);
+
+  useEffect(() => {
+    console.log('use Effect triggered');
+    getPosts();
+  }, [getPosts]);
+
+  return [memoPosts, onRefresh, refreshing, loading];
 };
 
 export default useGetAllPosts;

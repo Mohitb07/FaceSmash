@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
   HeartOutlinIcon,
   HeartFilledIcon,
@@ -22,7 +22,8 @@ const Feed = ({
   postId = '',
   userId = '',
 }) => {
-  const handleLikes = () => {
+  console.log('FEED', postTitle);
+  const handleLikes = useCallback(() => {
     if (!likes.includes(userId)) {
       firestore()
         .collection('Posts')
@@ -44,7 +45,8 @@ const Feed = ({
           console.log('Posts UnLiked');
         });
     }
-  };
+  }, [likes]);
+
   return (
     <View style={[styles.container, !image && styles.outerContainer]}>
       <View
@@ -134,9 +136,6 @@ const styles = StyleSheet.create({
   },
   outerContainer: {
     paddingTop: 0,
-  },
-  innerContainer: {
-    // backgroundColor: 'red',
   },
   innerContainerReverse: {
     flexDirection: 'column-reverse',

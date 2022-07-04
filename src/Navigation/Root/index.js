@@ -1,4 +1,4 @@
-import React, {createRef, useContext} from 'react';
+import React, {createRef, useContext, useEffect, useState} from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
 import Home from '../../Screens/Home';
@@ -15,13 +15,17 @@ import RightHeader from '../../components/RightHeader';
 import Loader from '../../components/Loader';
 import AddPost from '../../Screens/AddPost';
 import BottomTab from '../BottomNavigation';
+import {useRecoilState} from 'recoil';
+import {authState, initializingState} from '../../atoms/authAtom';
 
 const RootStack = createNativeStackNavigator();
 export const navigationRef = createRef();
 
 const Root = () => {
-  const {authUser, initializing} = useContext(AuthContext);
-  const {onOpen} = useContext(BottomSheetContext);
+  // const {authUser, initializing} = useContext(AuthContext);
+  // const {onOpen} = useContext(BottomSheetContext);
+  const [initializing, setInitializing] = useRecoilState(initializingState);
+  const [authUser, setAuth] = useRecoilState(authState);
 
   if (initializing) {
     return <Loader />;
