@@ -1,13 +1,29 @@
-import React, {useEffect, useState, useContext} from 'react';
+import React, {useEffect, useState, useContext, useCallback} from 'react';
 import firestore from '@react-native-firebase/firestore';
-import {AuthContext} from './auth';
+// import {AuthContext} from './auth';
 import storage from '@react-native-firebase/storage';
+import {useRecoilState} from 'recoil';
+import {authState, initializingState} from '../atoms/authAtom';
+import auth from '@react-native-firebase/auth';
 
 export const UserDataContext = React.createContext();
 
 const UserDataProvider = props => {
+  console.log('user data context render');
   const [contextUser, setContextUser] = useState({});
-  const {authUser} = useContext(AuthContext);
+  const [authUser, setAuth] = useRecoilState(authState);
+  const [initializing, setInitializing] = useRecoilState(initializingState);
+
+  function onAuthStateChanged(user) {
+    setAuth(user);
+    if (initializing) setInitializing(false);
+  }
+
+  let subscriber;
+  useEffect(() => {
+    subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
 
   useEffect(() => {
     async function getData() {
@@ -22,7 +38,7 @@ const UserDataProvider = props => {
     getData();
   }, [authUser]);
 
-  const updateUserData = (url, navigation, setLoading) => {
+  const updateUserData = useCallback((url, navigation, setLoading) => {
     firestore()
       .collection('Users')
       .doc(authUser.uid)
@@ -65,14 +81,16 @@ const UserDataProvider = props => {
         console.log('ERROR UPDATING USER', error);
         return null;
       });
-  };
+  }, []);
 
-  return (
-    <UserDataContext.Provider
-      value={{contextUser, updateUserData}}
-      {...props}
-    />
+  const value = React.useMemo(
+    () => ({
+      contextUser,
+      updateUserData,
+    }),
+    [contextUser, updateUserData],
   );
+  return <UserDataContext.Provider value={value} {...props} />;
 };
 
 export default UserDataProvider;

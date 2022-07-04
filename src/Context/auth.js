@@ -1,39 +1,22 @@
-import React, {createContext, useState, useEffect} from 'react';
-import auth from '@react-native-firebase/auth';
+// import React, {createContext, useState, useEffect} from 'react';
+// import auth from '@react-native-firebase/auth';
+// import {useRecoilState} from 'recoil'
 
-export const AuthContext = createContext();
+// export const AuthContext = createContext();
 
-function AuthProvider({children}) {
-  const [authUser, setAuthUser] = useState();
-  const [initializing, setInitializing] = useState(true);
+// function AuthProvider({children}) {
+//   // const [authUser, setAuthUser] = useState();
+//   const [] = useRecoilState()
+//   const [initializing, setInitializing] = useState(true);
 
-  function onAuthStateChanged(authUser) {
-    setAuthUser(authUser);
-    if (initializing) setInitializing(false);
-  }
+//   console.log('auth User context render');
 
-  let subscriber;
-  useEffect(() => {
-    setTimeout(() => {
-      subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    }, 3000);
-    return subscriber;
-  }, []);
+//   const value = React.useMemo(
+//     () => ({authUser, initializing}),
+//     [authUser, initializing],
+//   );
 
-  // const setAuthenticatedUser = value => {
-  //   setAuthUser(value);
-  // };
+//   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+// }
 
-  console.log('authuser', authUser);
-
-  if (authUser) {
-    console.log('user is authenticated');
-  }
-  return (
-    <AuthContext.Provider value={{authUser, initializing}}>
-      {children}
-    </AuthContext.Provider>
-  );
-}
-
-export default AuthProvider;
+// export default AuthProvider;
