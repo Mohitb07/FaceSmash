@@ -29,6 +29,7 @@
     "react-native-splash-screen": "^3.3.0",
     "react-native-svg": "^12.3.0",
     "react-native-ui-lib": "^6.16.0",
+    "recoil": "^0.7.4",
     "rn-slick-bottom-tabs": "^1.1.1"
   },
   "devDependencies": {
