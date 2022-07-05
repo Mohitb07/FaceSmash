@@ -11,7 +11,7 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import {AuthContext} from '../../Context/auth';
 import {UserDataContext} from '../../Context/userData';
-import {useRecoilState} from 'recoil';
+import {useRecoilValue} from 'recoil';
 import {authState} from '../../atoms/authAtom';
 
 const AddPost = ({navigation}) => {
@@ -44,7 +44,7 @@ const AddPost = ({navigation}) => {
                   user: authUser.uid,
                   userProfile: contextUser.profilePic,
                   username: contextUser.username,
-                  likes: [],
+                  likes: 0,
                   createdAt: new Date(),
                 })
                 .then(() => {
@@ -70,7 +70,7 @@ const AddPost = ({navigation}) => {
           user: authUser.uid,
           userProfile: contextUser.profilePic,
           username: contextUser.username,
-          likes: [],
+          likes: 0,
           createdAt: new Date(),
         })
         .then(() => {
