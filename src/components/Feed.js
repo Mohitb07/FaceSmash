@@ -9,6 +9,8 @@ import {
 import {COLORS} from '../constants';
 import moment from 'moment';
 import firestore from '@react-native-firebase/firestore';
+import {useRecoilState} from 'recoil';
+import {postState} from '../atoms/postAtom';
 
 const Feed = ({
   image,
@@ -17,35 +19,23 @@ const Feed = ({
   userProfilePic,
   navigation,
   description = '',
-  likes = [],
+  likes = 0,
   createdAt,
   postId = '',
   userId = '',
+  onLike,
+  post,
 }) => {
-  console.log('FEED', postTitle);
-  const handleLikes = useCallback(() => {
-    if (!likes.includes(userId)) {
-      firestore()
-        .collection('Posts')
-        .doc(postId)
-        .update({
-          likes: [...likes, userId],
-        })
-        .then(() => {
-          console.log('Posts Liked');
-        });
-    } else {
-      firestore()
-        .collection('Posts')
-        .doc(postId)
-        .update({
-          likes: likes.filter(item => item !== userId),
-        })
-        .then(() => {
-          console.log('Posts UnLiked');
-        });
+  const [postStateValue, setPostStateValue] = useRecoilState(postState);
+  const handleLikes = () => {
+    try {
+      onLike(postId, post);
+    } catch (err) {
+      console.log('handlelikes error', err.message);
     }
-  }, [likes]);
+  };
+
+  const isLiked = postStateValue.postLikes.find(item => item.postId === postId);
 
   return (
     <View style={[styles.container, !image && styles.outerContainer]}>
@@ -71,18 +61,14 @@ const Feed = ({
               alignItems: 'center',
             }}>
             <TouchableOpacity onPress={handleLikes}>
-              {likes.includes(userId) ? (
-                <HeartFilledIcon />
-              ) : (
-                <HeartOutlinIcon />
-              )}
+              {isLiked ? <HeartFilledIcon /> : <HeartOutlinIcon />}
             </TouchableOpacity>
             <TouchableOpacity>
               <CommentOutlinedIcon style={{marginLeft: 4}} />
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.likes}>{likes.length} likes</Text>
+          <Text style={styles.likes}>{likes} likes</Text>
         </View>
 
         <View style={styles.feedInfo}>
