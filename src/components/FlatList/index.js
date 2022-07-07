@@ -9,6 +9,7 @@ import usePosts from '../../hooks/usePosts';
 import {authState} from '../../atoms/authAtom';
 
 function CustomFlatList({navigation}) {
+  console.log('flat list');
   const [onPostLike] = usePosts();
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
   const [authUser, setAuthUser] = useRecoilState(authState);
@@ -64,66 +65,64 @@ function CustomFlatList({navigation}) {
     getPosts();
   }, [getPosts]);
 
-  useEffect(() => {
-    async function getUserLikedPosts() {
-      // get user's liked posts
-      try {
-        const userLikedPosts = await firestore()
-          .collection('Users')
-          .doc(authUser.uid)
-          .collection('postlikes')
-          .get();
+  const getUserLikedPosts = useCallback(async () => {
+    // get user's liked posts
+    try {
+      const userLikedPosts = await firestore()
+        .collection('Users')
+        .doc(authUser.uid)
+        .collection('postlikes')
+        .get();
 
-        const postsLiked = [];
-        userLikedPosts.docs.map(doc => postsLiked.push(doc.data()));
+      const postsLiked = [];
+      userLikedPosts.docs.map(doc => postsLiked.push(doc.data()));
 
-        setPostStateValue(prev => ({
-          ...prev,
-          postLikes: postsLiked,
-        }));
-      } catch (err) {
-        console.log('getLikedposterror', err.message);
-      }
+      setPostStateValue(prev => ({
+        ...prev,
+        postLikes: postsLiked,
+      }));
+    } catch (err) {
+      console.log('getLikedposterror', err.message);
     }
-
-    getUserLikedPosts();
   }, []);
 
-  console.log('state', postStateValue.posts);
+  useEffect(() => {
+    getUserLikedPosts();
+  }, [getUserLikedPosts]);
+
+  const renderItem = ({item}) => (
+    <Feed
+      key={item.key}
+      postId={item.key}
+      userProfilePic={item.userProfile}
+      createdAt={item.createdAt}
+      username={item.username}
+      postTitle={item.title}
+      image={item.image}
+      description={item.description}
+      navigation={navigation}
+      likes={postStateValue.posts.find(post => post.key === item.key)?.likes}
+      userId={item.user}
+      onLike={onPostLike}
+      post={item}
+      // onDelete={onPostDelete}
+      // onUpdate={onPostUpdate}
+    />
+  );
 
   return (
     <FlatList
       showsVerticalScrollIndicator={false}
       data={postStateValue.posts}
-      keyExtractor={item => item.key}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
       ListHeaderComponent={() => (
         <PostHeader navigation={navigation} loading={loading} />
       )}
-      renderItem={({item}) => (
-        <Feed
-          postId={item.key}
-          userProfilePic={item.userProfile}
-          createdAt={item.createdAt}
-          username={item.username}
-          postTitle={item.title}
-          image={item.image}
-          description={item.description}
-          navigation={navigation}
-          likes={
-            postStateValue.posts.find(post => post.key === item.key)?.likes
-          }
-          userId={item.user}
-          onLike={onPostLike}
-          post={item}
-          // onDelete={onPostDelete}
-          // onUpdate={onPostUpdate}
-        />
-      )}
+      renderItem={renderItem}
     />
   );
 }
 
-export default React.memo(CustomFlatList);
+export default CustomFlatList;
