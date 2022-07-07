@@ -26,12 +26,15 @@ import {COLORS} from '../../constants';
 import Header from '../../components/Header';
 import firestore from '@react-native-firebase/firestore';
 import {authState} from '../../atoms/authAtom';
-import {useRecoilValue} from 'recoil';
+import {useRecoilState, useRecoilValue} from 'recoil';
+import usePosts from '../../hooks/usePosts';
+import {postState} from '../../atoms/postAtom';
 
 const MyProfile = ({route, navigation}) => {
   const {providedUserId} = route?.params || null;
-
+  const [onPostLike] = usePosts();
   const authUser = useRecoilValue(authState);
+  const [postStateValue, setPostStateValue] = useRecoilState(postState);
   const {contextUser} = useContext(UserDataContext);
   const {isOpen, onOpen, onClose} = useDisclose();
   const [myRecentPosts, setMyRecentPosts] = useState([]);
@@ -211,8 +214,11 @@ const MyProfile = ({route, navigation}) => {
               image={item.image}
               description={item.description}
               navigation={navigation}
-              likes={item.likes}
+              likes={
+                postStateValue.posts.find(post => post.key === item.key)?.likes
+              }
               userId={item.user}
+              onLike={onPostLike}
             />
           )}
         />
