@@ -29,6 +29,7 @@ import {authState} from '../../atoms/authAtom';
 import {useRecoilState, useRecoilValue} from 'recoil';
 import usePosts from '../../hooks/usePosts';
 import {postState} from '../../atoms/postAtom';
+import FastImage from 'react-native-fast-image';
 
 const MyProfile = ({route, navigation}) => {
   const {providedUserId} = route?.params || null;
@@ -132,11 +133,20 @@ const MyProfile = ({route, navigation}) => {
                     }}
                   />
                 ) : (
-                  <Image
+                  // <Image
+                  //   style={styles.profilePic}
+                  //   source={{
+                  //     uri: userData[0]?.profilePic,
+                  //   }}
+                  // />
+                  <FastImage
                     style={styles.profilePic}
                     source={{
                       uri: userData[0]?.profilePic,
+                      // headers: { Authorization: 'someAuthToken' },
+                      priority: FastImage.priority.normal,
                     }}
+                    resizeMode={FastImage.resizeMode.contain}
                   />
                 )}
                 <View style={styles.fullNameContainer}>

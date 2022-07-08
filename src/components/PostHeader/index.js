@@ -9,6 +9,7 @@ import {
 import React, {useContext} from 'react';
 import {UserDataContext} from '../../Context/userData';
 import {AddIcon} from '../../SVG';
+import FastImage from 'react-native-fast-image';
 
 function PostHeader({navigation, loading = false}) {
   const {contextUser} = useContext(UserDataContext);
@@ -22,12 +23,21 @@ function PostHeader({navigation, loading = false}) {
               providedUserId: contextUser.uid,
             })
           }>
-          <Image
+          {/* <Image
             source={{
               uri: contextUser?.profilePic,
             }}
             style={styles.image}
             resizeMode="cover"
+          /> */}
+          <FastImage
+            style={styles.image}
+            source={{
+              uri: contextUser?.profilePic,
+              // headers: { Authorization: 'someAuthToken' },
+              priority: FastImage.priority.normal,
+            }}
+            resizeMode={FastImage.resizeMode.contain}
           />
           <View style={styles.userInfo}>
             <Text style={styles.usernameText}>{contextUser?.username}</Text>

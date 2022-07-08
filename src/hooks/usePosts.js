@@ -93,8 +93,8 @@ const usePosts = () => {
     }
   };
 
-  const onPostDelete = () => {};
-  const onPostUpdate = () => {};
+  // const onPostDelete = () => {};
+  // const onPostUpdate = () => {};
 
   return [onPostLike];
 };

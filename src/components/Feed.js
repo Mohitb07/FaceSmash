@@ -11,6 +11,7 @@ import moment from 'moment';
 import firestore from '@react-native-firebase/firestore';
 import {useRecoilState} from 'recoil';
 import {postState} from '../atoms/postAtom';
+import FastImage from 'react-native-fast-image';
 
 const Feed = ({
   image,
@@ -26,7 +27,9 @@ const Feed = ({
   onLike,
   post,
 }) => {
+  console.log('feed', postTitle);
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
+
   const handleLikes = () => {
     try {
       onLike(postId, post);
@@ -43,12 +46,20 @@ const Feed = ({
         style={[styles.innerContainer, !image && styles.innerContainerReverse]}>
         {!!image && (
           <View style={styles.imageContainer}>
-            <Image
+            {/* <Image
               source={{
                 uri: image,
               }}
               resizeMode="cover"
               style={styles.image}
+            /> */}
+            <FastImage
+              style={styles.image}
+              source={{
+                uri: image,
+                // headers: { Authorization: 'someAuthToken' },
+                priority: FastImage.priority.normal,
+              }}
             />
           </View>
         )}
@@ -83,12 +94,20 @@ const Feed = ({
                 })
               }
               style={styles.userInfo}>
-              <Image
+              {/* <Image
                 source={{
                   uri: userProfilePic,
                 }}
                 style={styles.userProfile}
                 resizeMode="cover"
+              /> */}
+              <FastImage
+                style={styles.userProfile}
+                source={{
+                  uri: userProfilePic,
+                  priority: FastImage.priority.normal,
+                }}
+                resizeMode={FastImage.resizeMode.contain}
               />
               <View>
                 <Text style={styles.usernameText}>{username}</Text>
