@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   HeartOutlinIcon,
   HeartFilledIcon,
@@ -12,6 +12,7 @@ import firestore from '@react-native-firebase/firestore';
 import {useRecoilState} from 'recoil';
 import {postState} from '../atoms/postAtom';
 import FastImage from 'react-native-fast-image';
+import {authState} from '../atoms/authAtom';
 
 const Feed = ({
   image,
@@ -24,21 +25,78 @@ const Feed = ({
   createdAt,
   postId = '',
   userId = '',
-  onLike,
   post,
+  hasLiked: likedStatus,
 }) => {
   console.log('feed', postTitle);
-  const [postStateValue, setPostStateValue] = useRecoilState(postState);
+  const [authUser, setAuthUser] = useRecoilState(authState);
+  const [hasLiked, setHasLiked] = useState(likedStatus);
+  const [likesCounter, setLikesCounter] = useState(likes);
 
-  const handleLikes = () => {
+  useEffect(() => {
+    setHasLiked(likedStatus);
+  }, [likedStatus]);
+
+  const handleLikes = async () => {
     try {
-      onLike(postId, post);
+      const userDocRef = firestore()
+        .collection('Users')
+        .doc(authUser.uid)
+        .collection('postlikes')
+        .doc(postId);
+      const postRef = firestore().collection('Posts').doc(postId);
+
+      let isExistingPost;
+      await userDocRef.get().then(doc => {
+        if (doc.exists) {
+          console.log('existing');
+          isExistingPost = true;
+        } else {
+          console.log('not existing');
+          isExistingPost = false;
+        }
+      });
+      const batch = firestore().batch();
+
+      if (!isExistingPost) {
+        console.log('inside if');
+        try {
+          setHasLiked(true);
+          setLikesCounter(prev => (prev += 1));
+          // remove the user id from the user doc
+          batch.set(userDocRef, {
+            postId: postId,
+            liked: true,
+          });
+          // increment the counter of likes in posts collection
+          batch.update(postRef, {
+            likes: firestore.FieldValue.increment(1),
+          });
+        } catch (error) {
+          setHasLiked(false);
+          setLikesCounter(prev => (prev -= 1));
+        }
+      } else {
+        console.log('inside else');
+        try {
+          setHasLiked(false);
+          setLikesCounter(prev => (prev -= 1));
+          // add the user id to the user doc
+          batch.delete(userDocRef);
+          // decrement the counter of likes in posts collection
+          batch.update(postRef, {
+            likes: firestore.FieldValue.increment(-1),
+          });
+        } catch (error) {
+          setHasLiked(true);
+          setLikesCounter(prev => (prev += 1));
+        }
+      }
+      batch.commit(() => console.log('operation completed'));
     } catch (err) {
       console.log('handlelikes error', err.message);
     }
   };
-
-  const isLiked = postStateValue.postLikes.find(item => item.postId === postId);
 
   return (
     <View style={[styles.container, !image && styles.outerContainer]}>
@@ -46,18 +104,10 @@ const Feed = ({
         style={[styles.innerContainer, !image && styles.innerContainerReverse]}>
         {!!image && (
           <View style={styles.imageContainer}>
-            {/* <Image
-              source={{
-                uri: image,
-              }}
-              resizeMode="cover"
-              style={styles.image}
-            /> */}
             <FastImage
               style={styles.image}
               source={{
                 uri: image,
-                // headers: { Authorization: 'someAuthToken' },
                 priority: FastImage.priority.normal,
               }}
             />
@@ -72,14 +122,14 @@ const Feed = ({
               alignItems: 'center',
             }}>
             <TouchableOpacity onPress={handleLikes}>
-              {isLiked ? <HeartFilledIcon /> : <HeartOutlinIcon />}
+              {hasLiked ? <HeartFilledIcon /> : <HeartOutlinIcon />}
             </TouchableOpacity>
             <TouchableOpacity>
               <CommentOutlinedIcon style={{marginLeft: 4}} />
             </TouchableOpacity>
           </View>
 
-          <Text style={styles.likes}>{likes} likes</Text>
+          <Text style={styles.likes}>{likesCounter} likes</Text>
         </View>
 
         <View style={styles.feedInfo}>
@@ -94,13 +144,6 @@ const Feed = ({
                 })
               }
               style={styles.userInfo}>
-              {/* <Image
-                source={{
-                  uri: userProfilePic,
-                }}
-                style={styles.userProfile}
-                resizeMode="cover"
-              /> */}
               <FastImage
                 style={styles.userProfile}
                 source={{
