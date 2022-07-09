@@ -8,7 +8,7 @@ import {
   FlatList,
   ActivityIndicator,
 } from 'react-native';
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useState, useEffect, useCallback} from 'react';
 import Feed from '../../components/Feed';
 import {
   VerificationIcon,
@@ -27,13 +27,13 @@ import Header from '../../components/Header';
 import firestore from '@react-native-firebase/firestore';
 import {authState} from '../../atoms/authAtom';
 import {useRecoilState, useRecoilValue} from 'recoil';
-import usePosts from '../../hooks/usePosts';
+// import usePosts from '../../hooks/usePosts';
 import {postState} from '../../atoms/postAtom';
 import FastImage from 'react-native-fast-image';
 
 const MyProfile = ({route, navigation}) => {
   const {providedUserId} = route?.params || null;
-  const [onPostLike] = usePosts();
+  // const [onPostLike] = usePosts();
   const authUser = useRecoilValue(authState);
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
   const {contextUser} = useContext(UserDataContext);
@@ -42,6 +42,7 @@ const MyProfile = ({route, navigation}) => {
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState([]);
   const [userProfileLoading, setUserProfileLoading] = useState(true);
+  const [userLikedPosts, setUserLikedPosts] = useState([]);
 
   const onLogoutAttempt = () => {
     auth()
@@ -89,6 +90,28 @@ const MyProfile = ({route, navigation}) => {
         setUserProfileLoading(false);
       });
   }, []);
+
+  const getUserLikedPosts = useCallback(async () => {
+    // get user's liked posts
+    try {
+      const userLikedPosts = await firestore()
+        .collection('Users')
+        .doc(authUser.uid)
+        .collection('postlikes')
+        .get();
+
+      const postsLiked = [];
+      userLikedPosts.docs.map(doc => postsLiked.push(doc.data()));
+
+      setUserLikedPosts(postsLiked);
+    } catch (err) {
+      console.log('getLikedposterror', err.message);
+    }
+  }, []);
+
+  useEffect(() => {
+    getUserLikedPosts();
+  }, [getUserLikedPosts]);
 
   return (
     <>
@@ -228,7 +251,10 @@ const MyProfile = ({route, navigation}) => {
                 postStateValue.posts.find(post => post.key === item.key)?.likes
               }
               userId={item.user}
-              onLike={onPostLike}
+              hasLiked={
+                userLikedPosts.find(post => post.postId === item.key)?.liked
+              }
+              // onLike={onPostLike}
             />
           )}
         />
