@@ -5,19 +5,27 @@ import PostHeader from '../PostHeader';
 import {useRecoilState} from 'recoil';
 import {postState} from '../../atoms/postAtom';
 import firestore from '@react-native-firebase/firestore';
-import usePosts from '../../hooks/usePosts';
 import {authState} from '../../atoms/authAtom';
+import {Text} from 'native-base';
+import FeedSkeleton from '../FeedSkeleton';
+import {COLORS} from '../../constants';
+import {useFocusEffect} from '@react-navigation/native';
 
 function CustomFlatList({navigation}) {
   console.log('flat list');
   // const [onPostLike] = usePosts();
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
   const [authUser, setAuthUser] = useRecoilState(authState);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [userLikedPosts, setUserLikedPosts] = useState([]);
 
   const getPosts = useCallback(async () => {
+    setPostStateValue(prev => ({
+      ...prev,
+      posts: [],
+    }));
+    setLoading(true);
     try {
       const allPosts = await firestore()
         .collection('Posts')
@@ -56,12 +64,6 @@ function CustomFlatList({navigation}) {
     // });
   }, []);
 
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    await getPosts();
-    setRefreshing(false);
-  }, []);
-
   useEffect(() => {
     getPosts();
   }, [getPosts]);
@@ -84,9 +86,16 @@ function CustomFlatList({navigation}) {
     }
   }, []);
 
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await getPosts();
+    await getUserLikedPosts();
+    setRefreshing(false);
+  }, []);
+
   useEffect(() => {
     getUserLikedPosts();
-  }, [getUserLikedPosts]);
+  }, []);
 
   const renderItem = ({item}) => (
     <Feed
@@ -102,7 +111,6 @@ function CustomFlatList({navigation}) {
       likes={postStateValue.posts.find(post => post.key === item.key)?.likes}
       userId={item.user}
       hasLiked={userLikedPosts.find(post => post.postId === item.key)?.liked}
-      // onLike={onPostLike}
       post={item}
       // onDelete={onPostDelete}
       // onUpdate={onPostUpdate}
@@ -112,7 +120,24 @@ function CustomFlatList({navigation}) {
   return (
     <FlatList
       showsVerticalScrollIndicator={false}
-      data={postStateValue.posts}
+      data={[]}
+      ListEmptyComponent={
+        loading ? (
+          <>
+            <FeedSkeleton />
+            <FeedSkeleton />
+            <FeedSkeleton />
+          </>
+        ) : (
+          <Text
+            textAlign="center"
+            color={COLORS.white}
+            fontSize={20}
+            marginTop={20}>
+            No Enough Posts
+          </Text>
+        )
+      }
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
