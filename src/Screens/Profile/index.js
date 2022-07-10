@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   TouchableOpacity,
   ScrollView,
@@ -18,9 +17,20 @@ import {
   GearIcon,
   EditIcon,
 } from '../../SVG';
-import {Actionsheet, Text as NText, Box, useDisclose} from 'native-base';
+import {
+  Actionsheet,
+  Text as NText,
+  Box,
+  useDisclose,
+  HStack,
+  Center,
+  Icon,
+  Button,
+  VStack,
+  Skeleton,
+} from 'native-base';
 // import {AuthContext} from '../../Context/auth';
-import auth from '@react-native-firebase/auth';
+
 import {UserDataContext} from '../../Context/userData';
 import {COLORS} from '../../constants';
 import Header from '../../components/Header';
@@ -30,29 +40,24 @@ import {useRecoilState, useRecoilValue} from 'recoil';
 // import usePosts from '../../hooks/usePosts';
 import {postState} from '../../atoms/postAtom';
 import FastImage from 'react-native-fast-image';
+import {bottomSheetState} from '../../atoms/bottomSheetAtom';
+import {Image} from 'native-base';
+import FeedSkeleton from '../../components/FeedSkeleton';
 
 const MyProfile = ({route, navigation}) => {
   const {providedUserId} = route?.params || null;
   // const [onPostLike] = usePosts();
   const authUser = useRecoilValue(authState);
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
-  const {contextUser} = useContext(UserDataContext);
-  const {isOpen, onOpen, onClose} = useDisclose();
   const [myRecentPosts, setMyRecentPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState([]);
   const [userProfileLoading, setUserProfileLoading] = useState(true);
   const [userLikedPosts, setUserLikedPosts] = useState([]);
-
-  const onLogoutAttempt = () => {
-    auth()
-      .signOut()
-      .then(() => console.log('logged out'))
-      .catch(err => console.log('SIGN OUT ERROR', err));
-  };
+  const [bottomSheetStateValue, setBottomSheetStateValue] =
+    useRecoilState(bottomSheetState);
 
   useEffect(() => {
-    console.log('calling post effect 😢❤️❤️❤️🟢');
     firestore()
       .collection('Posts')
       .where('user', '==', providedUserId)
@@ -113,6 +118,14 @@ const MyProfile = ({route, navigation}) => {
     getUserLikedPosts();
   }, [getUserLikedPosts]);
 
+  const handleModalState = () => {
+    setBottomSheetStateValue(prev => ({
+      ...prev,
+      type: 'profile',
+      isOpen: true,
+    }));
+  };
+
   return (
     <>
       <Header
@@ -122,33 +135,31 @@ const MyProfile = ({route, navigation}) => {
         label={userData[0]?.username}
         rightSection
         rightIcon={<GearIcon />}
-        onPress={onOpen}
+        onPress={handleModalState}
       />
       <View style={styles.container}>
         <FlatList
           contentContainerStyle={{paddingBottom: 20}}
-          data={myRecentPosts}
+          data={[]}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={() =>
             loading ? (
-              <ActivityIndicator />
+              <FeedSkeleton />
             ) : (
-              <Text
-                style={{
-                  textAlign: 'center',
-                  color: COLORS.white,
-                  fontSize: 20,
-                  marginTop: 40,
-                }}>
-                No Enough Data
-              </Text>
+              <NText
+                textAlign="center"
+                color={COLORS.white}
+                fontSize={20}
+                marginTop={20}>
+                No Enough Posts
+              </NText>
             )
           }
           keyExtractor={item => item.key}
           ListHeaderComponent={() => (
             <View style={{paddingBottom: 20}}>
               <View style={styles.userInfo}>
-                {userProfileLoading ? (
+                {/* {userProfileLoading ? (
                   <Image
                     style={styles.profilePic}
                     source={{
@@ -171,17 +182,39 @@ const MyProfile = ({route, navigation}) => {
                     }}
                     resizeMode={FastImage.resizeMode.contain}
                   />
-                )}
-                <View style={styles.fullNameContainer}>
+                )} */}
+                <Image
+                  size={110}
+                  alt="fallback text"
+                  borderRadius={100}
+                  source={{
+                    uri: userData[0]?.profilePic,
+                  }}
+                  fallbackSource={{
+                    uri: 'https://www.w3schools.com/css/img_lights.jpg',
+                  }}
+                  mb="3.5"
+                />
+                <HStack alignItems="center" justifyContent="center" ml="6">
+                  <Text style={styles.textFullName}>
+                    {userData[0]?.username}
+                  </Text>
+                  {userData[0]?.username && (
+                    <Icon as={VerificationIcon} ml="2" />
+                  )}
+                </HStack>
+                {/* <View style={styles.fullNameContainer}>
                   <Text style={styles.textFullName}>
                     {userData[0]?.username}
                   </Text>
                   {userData[0]?.username && (
                     <VerificationIcon style={{marginLeft: 5}} />
                   )}
-                </View>
-                <Text style={styles.email}>{userData[0]?.email}</Text>
-                <TouchableOpacity
+                </View> */}
+                <NText textAlign="center" color="gray.400">
+                  {userData[0]?.email}
+                </NText>
+                {/* <TouchableOpacity
                   style={[
                     styles.btnPost,
                     styles.btnBackground,
@@ -191,7 +224,17 @@ const MyProfile = ({route, navigation}) => {
                     style={[styles.btnText, {color: COLORS.transparentBlack7}]}>
                     Follow
                   </Text>
-                </TouchableOpacity>
+                </TouchableOpacity> */}
+                <Button
+                  mt="7"
+                  backgroundColor={COLORS.neon}
+                  isLoading={false}
+                  borderRadius="full"
+                  width="1/2">
+                  <NText fontWeight="semibold" color={COLORS.transparentBlack7}>
+                    Follow
+                  </NText>
+                </Button>
               </View>
               <View style={styles.connections}>
                 <View>
@@ -247,9 +290,7 @@ const MyProfile = ({route, navigation}) => {
               image={item.image}
               description={item.description}
               navigation={navigation}
-              likes={
-                postStateValue.posts.find(post => post.key === item.key)?.likes
-              }
+              likes={myRecentPosts.find(post => post.key === item.key)?.likes}
               userId={item.user}
               hasLiked={
                 userLikedPosts.find(post => post.postId === item.key)?.liked
@@ -258,46 +299,6 @@ const MyProfile = ({route, navigation}) => {
             />
           )}
         />
-        <Actionsheet isOpen={isOpen} onClose={onClose}>
-          <Actionsheet.Content>
-            <Box w="100%" h={60} px={4} justifyContent="center">
-              <NText
-                fontSize="20"
-                color="gray.500"
-                _dark={{
-                  color: 'gray.300',
-                }}>
-                Personal Settings
-              </NText>
-            </Box>
-            <Actionsheet.Item style={styles.defaultStyle}>
-              <TouchableOpacity style={styles.btnLogout}>
-                <DocumentIcon style={{marginRight: 5}} />
-                <Text style={{color: 'white', fontWeight: '600'}}>
-                  Settings and Privacy
-                </Text>
-              </TouchableOpacity>
-            </Actionsheet.Item>
-            <Actionsheet.Item style={styles.defaultStyle}>
-              <TouchableOpacity style={styles.btnLogout}>
-                <PrivacyIcon style={{marginRight: 5}} />
-                <Text style={{color: 'white', fontWeight: '600'}}>
-                  Settings and Privacy
-                </Text>
-              </TouchableOpacity>
-            </Actionsheet.Item>
-            {!!authUser && (
-              <Actionsheet.Item style={styles.defaultStyle}>
-                <TouchableOpacity
-                  style={styles.btnLogout}
-                  onPress={onLogoutAttempt}>
-                  <LogoutIcon style={{marginRight: 5}} />
-                  <Text style={{color: 'red', fontWeight: '600'}}>Log Out</Text>
-                </TouchableOpacity>
-              </Actionsheet.Item>
-            )}
-          </Actionsheet.Content>
-        </Actionsheet>
       </View>
     </>
   );
@@ -394,6 +395,7 @@ const styles = StyleSheet.create({
   fullNameContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    textAlign: 'center',
   },
   btnLogout: {
     flexDirection: 'row',
