@@ -15,20 +15,23 @@ import {NativeBaseProvider} from 'native-base';
 import {theme} from './src/theme';
 import {RecoilRoot} from 'recoil';
 import 'react-native-gesture-handler';
+import AuthUserContext from './src/Context/auth';
+import BottomSheet from './src/components/BottomSheet';
 
 const App = () => {
   return (
     <RecoilRoot>
       <NativeBaseProvider theme={theme}>
-        {/* <AuthContext> */}
-        <UserDataContext>
-          <BottomSheetProvider>
-            <NavigationContainer ref={navigationRef}>
-              <Navigation />
-            </NavigationContainer>
-          </BottomSheetProvider>
-        </UserDataContext>
-        {/* </AuthContext> */}
+        <AuthUserContext>
+          <UserDataContext>
+            <BottomSheetProvider>
+              <NavigationContainer ref={navigationRef}>
+                <Navigation />
+              </NavigationContainer>
+              <BottomSheet />
+            </BottomSheetProvider>
+          </UserDataContext>
+        </AuthUserContext>
       </NativeBaseProvider>
     </RecoilRoot>
   );

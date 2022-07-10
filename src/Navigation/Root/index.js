@@ -8,7 +8,7 @@ import MyProfile from '../../Screens/Profile';
 
 import {GearIcon, CheckIcon} from '../../SVG';
 import {BottomSheetContext} from '../../Context/BottomSheet';
-import {AuthContext} from '../../Context/auth';
+import {AuthUserContext} from '../../Context/auth';
 import Register from '../../Screens/Register';
 import UpdateProfile from '../../Screens/Profile/Update';
 import RightHeader from '../../components/RightHeader';
@@ -24,8 +24,7 @@ export const navigationRef = createRef();
 const Root = () => {
   // const {authUser, initializing} = useContext(AuthContext);
   // const {onOpen} = useContext(BottomSheetContext);
-  const [initializing, setInitializing] = useRecoilState(initializingState);
-  const [authUser, setAuth] = useRecoilState(authState);
+  const {authUser, initializing} = useContext(AuthUserContext);
 
   if (initializing) {
     return <Loader />;

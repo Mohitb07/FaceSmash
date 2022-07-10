@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   HeartOutlinIcon,
   HeartFilledIcon,
@@ -15,6 +15,7 @@ import FastImage from 'react-native-fast-image';
 import {authState} from '../atoms/authAtom';
 import {Actionsheet, Box, ThreeDotsIcon, useDisclose} from 'native-base';
 import FeedMore from './BottomSheet/FeedMore';
+import {AuthUserContext} from '../Context/auth';
 
 const Feed = ({
   image,
@@ -31,7 +32,7 @@ const Feed = ({
   hasLiked: likedStatus,
 }) => {
   console.log('feed', postTitle);
-  const authUser = useRecoilValue(authState);
+  const {authUser} = useContext(AuthUserContext);
   const {onOpen, onClose, isOpen} = useDisclose();
   const [hasLiked, setHasLiked] = useState(likedStatus);
   const [likesCounter, setLikesCounter] = useState(likes);
@@ -44,7 +45,7 @@ const Feed = ({
     try {
       const userDocRef = firestore()
         .collection('Users')
-        .doc(authUser.uid)
+        .doc(authUser?.uid)
         .collection('postlikes')
         .doc(postId);
       const postRef = firestore().collection('Posts').doc(postId);

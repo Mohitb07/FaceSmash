@@ -1,5 +1,5 @@
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   useRecoilState,
   useRecoilValue,
@@ -12,9 +12,10 @@ import {DocumentIcon, LogoutIcon, PrivacyIcon} from '../../../SVG';
 import auth from '@react-native-firebase/auth';
 import {bottomSheetState} from '../../../atoms/bottomSheetAtom';
 import {postState} from '../../../atoms/postAtom';
+import {AuthUserContext} from '../../../Context/auth';
 
 const ProfileBottomSheet = () => {
-  const authUser = useRecoilValue(authState);
+  const {authUser} = useContext(AuthUserContext);
   const setPostState = useResetRecoilState(postState);
   const setBottom = useResetRecoilState(bottomSheetState);
 

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import {FlatList, RefreshControl} from 'react-native';
 import Feed from '../Feed';
 import PostHeader from '../PostHeader';
@@ -10,12 +10,13 @@ import {Text} from 'native-base';
 import FeedSkeleton from '../FeedSkeleton';
 import {COLORS} from '../../constants';
 import {useFocusEffect} from '@react-navigation/native';
+import {AuthUserContext} from '../../Context/auth';
 
 function CustomFlatList({navigation}) {
   console.log('flat list');
   // const [onPostLike] = usePosts();
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
-  const [authUser, setAuthUser] = useRecoilState(authState);
+  const {authUser} = useContext(AuthUserContext);
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [userLikedPosts, setUserLikedPosts] = useState([]);
@@ -73,7 +74,7 @@ function CustomFlatList({navigation}) {
     try {
       const userLikedPosts = await firestore()
         .collection('Users')
-        .doc(authUser.uid)
+        .doc(authUser?.uid)
         .collection('postlikes')
         .get();
 

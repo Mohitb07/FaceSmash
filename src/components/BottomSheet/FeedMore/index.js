@@ -1,12 +1,13 @@
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import {useRecoilValue} from 'recoil';
 import {authState} from '../../../atoms/authAtom';
 import {Actionsheet, Box, Text as NText, Icon} from 'native-base';
 import {DocumentIcon, LogoutIcon, PrivacyIcon} from '../../../SVG';
+import {AuthUserContext} from '../../../Context/auth';
 
 const FeedMore = () => {
-  const authUser = useRecoilValue(authState);
+  const {authUser} = useContext(AuthUserContext);
   return (
     <>
       <Box w="100%" h={60} px={4} justifyContent="center">

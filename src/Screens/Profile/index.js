@@ -43,11 +43,12 @@ import FastImage from 'react-native-fast-image';
 import {bottomSheetState} from '../../atoms/bottomSheetAtom';
 import {Image} from 'native-base';
 import FeedSkeleton from '../../components/FeedSkeleton';
+import {AuthUserContext} from '../../Context/auth';
 
 const MyProfile = ({route, navigation}) => {
   const {providedUserId} = route?.params || null;
   // const [onPostLike] = usePosts();
-  const authUser = useRecoilValue(authState);
+  const {authUser} = useContext(AuthUserContext);
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
   const [myRecentPosts, setMyRecentPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -101,7 +102,7 @@ const MyProfile = ({route, navigation}) => {
     try {
       const userLikedPosts = await firestore()
         .collection('Users')
-        .doc(authUser.uid)
+        .doc(authUser?.uid)
         .collection('postlikes')
         .get();
 

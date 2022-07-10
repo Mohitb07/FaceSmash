@@ -4,16 +4,16 @@ import Button from '../../../components/Button';
 import {GallaryIcon, CameraIcon, CloseIcon, CheckIcon} from '../../../SVG';
 import * as ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
-import {AuthContext} from '../../../Context/auth';
+import {AuthContext, AuthUserContext} from '../../../Context/auth';
 import {UserDataContext} from '../../../Context/userData';
 import Header from '../../../components/Header';
 import {COLORS, FONTS} from '../../../constants/theme';
-import { authState } from '../../../atoms/authAtom';
-import {useRecoilValue} from 'recoil'
+import {authState} from '../../../atoms/authAtom';
+import {useRecoilValue} from 'recoil';
 
 const UpdateProfile = ({navigation}) => {
   const [image, setImage] = useState(null);
-  const authUser = useRecoilValue(authState);
+  const {authUser} = useContext(AuthUserContext);
   const {contextUser, updateUserData} = useContext(UserDataContext);
   const [loading, setLoading] = useState(false);
 
@@ -46,7 +46,7 @@ const UpdateProfile = ({navigation}) => {
   const handleUploadImage = () => {
     setLoading(true);
     storage()
-      .ref(authUser.uid)
+      .ref(authUser?.uid)
       .putFile(image)
       .then(snapshot => {
         console.log('IMAGE UPLOADED', snapshot);

@@ -5,25 +5,25 @@ import storage from '@react-native-firebase/storage';
 import {useRecoilState} from 'recoil';
 import {authState, initializingState} from '../atoms/authAtom';
 import auth from '@react-native-firebase/auth';
+import {AuthUserContext} from './auth';
 
 export const UserDataContext = React.createContext();
 
 const UserDataProvider = props => {
   console.log('user data context render');
   const [contextUser, setContextUser] = useState({});
-  const [authUser, setAuth] = useRecoilState(authState);
-  const [initializing, setInitializing] = useRecoilState(initializingState);
+  const {authUser} = useContext(AuthUserContext);
 
-  function onAuthStateChanged(user) {
-    setAuth(user);
-    if (initializing) setInitializing(false);
-  }
+  // function onAuthStateChanged(user) {
+  //   setAuth(user);
+  //   if (initializing) setInitializing(false);
+  // }
 
-  let subscriber;
-  useEffect(() => {
-    subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  }, []);
+  // let subscriber;
+  // useEffect(() => {
+  //   subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+  //   return subscriber;
+  // }, []);
 
   useEffect(() => {
     async function getData() {
@@ -41,24 +41,24 @@ const UserDataProvider = props => {
   const updateUserData = useCallback((url, navigation, setLoading) => {
     firestore()
       .collection('Users')
-      .doc(authUser.uid)
+      .doc(authUser?.uid)
       .update({
         profilePic: url,
       })
       .then(async () => {
         const updatedUser = await firestore()
           .collection('Users')
-          .doc(authUser.uid)
+          .doc(authUser?.uid)
           .get();
         setContextUser(updatedUser.data());
         const userRef = await firestore()
           .collection('Users')
-          .doc(authUser.uid)
+          .doc(authUser?.uid)
           .get();
         console.log('user ref ⚡⚡⚡⚡⚡', userRef);
         const allPosts = await firestore()
           .collection('Posts')
-          .where('user', '==', authUser.uid)
+          .where('user', '==', authUser?.uid)
           .orderBy('createdAt', 'desc')
           .get();
 
@@ -73,7 +73,7 @@ const UserDataProvider = props => {
           console.log('updated al docs');
           setLoading(false);
           navigation.replace('Profile', {
-            providedUserId: authUser.uid,
+            providedUserId: authUser?.uid,
           });
         });
       })
