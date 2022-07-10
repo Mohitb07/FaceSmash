@@ -1,17 +1,11 @@
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  Text,
-  ActivityIndicator,
-  StyleSheet,
-} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import React, {useContext} from 'react';
 import {UserDataContext} from '../../Context/userData';
 import {AddIcon} from '../../SVG';
 import FastImage from 'react-native-fast-image';
+import {Avatar, Heading} from 'native-base';
 
-function PostHeader({navigation, loading = false}) {
+function PostHeader({navigation}) {
   const {contextUser} = useContext(UserDataContext);
   return (
     <>
@@ -23,14 +17,17 @@ function PostHeader({navigation, loading = false}) {
               providedUserId: contextUser.uid,
             })
           }>
-          {/* <Image
+          <Avatar
+            bg="lightBlue.400"
             source={{
               uri: contextUser?.profilePic,
             }}
-            style={styles.image}
-            resizeMode="cover"
-          /> */}
-          <FastImage
+            size="sm"
+            mr="3">
+            NB
+            <Avatar.Badge bg="green.500" />
+          </Avatar>
+          {/* <FastImage
             style={styles.image}
             source={{
               uri: contextUser?.profilePic,
@@ -38,7 +35,7 @@ function PostHeader({navigation, loading = false}) {
               priority: FastImage.priority.normal,
             }}
             resizeMode={FastImage.resizeMode.contain}
-          />
+          /> */}
           <View style={styles.userInfo}>
             <Text style={styles.usernameText}>{contextUser?.username}</Text>
             <Text style={styles.email}>{contextUser?.email}</Text>
@@ -54,20 +51,9 @@ function PostHeader({navigation, loading = false}) {
         </View>
       </View>
       <View style={styles.feedsContainer}>
-        <Text style={styles.feedsLabel}>Trending</Text>
+        {/* <Text style={styles.feedsLabel}>Trending</Text> */}
+        <Heading size="2xl">Trending</Heading>
       </View>
-      {loading && (
-        <View>
-          <Text
-            style={{
-              color: 'white',
-              textAlign: 'center',
-              fontSize: 30,
-            }}>
-            <ActivityIndicator />
-          </Text>
-        </View>
-      )}
     </>
   );
 }
