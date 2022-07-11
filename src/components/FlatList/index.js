@@ -17,7 +17,7 @@ function CustomFlatList({navigation}) {
   // const [onPostLike] = usePosts();
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
   const {authUser} = useContext(AuthUserContext);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [userLikedPosts, setUserLikedPosts] = useState([]);
 
@@ -26,7 +26,6 @@ function CustomFlatList({navigation}) {
       ...prev,
       posts: [],
     }));
-    setLoading(true);
     try {
       const allPosts = await firestore()
         .collection('Posts')
@@ -121,7 +120,7 @@ function CustomFlatList({navigation}) {
   return (
     <FlatList
       showsVerticalScrollIndicator={false}
-      data={[]}
+      data={postStateValue.posts}
       ListEmptyComponent={
         loading ? (
           <>
@@ -135,7 +134,7 @@ function CustomFlatList({navigation}) {
             color={COLORS.white}
             fontSize={20}
             marginTop={20}>
-            No Enough Posts
+            Not Enough Posts
           </Text>
         )
       }

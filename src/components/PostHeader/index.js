@@ -18,13 +18,12 @@ function PostHeader({navigation}) {
             })
           }>
           <Avatar
-            bg="lightBlue.400"
+            // bg="lightBlue.400"
             source={{
               uri: contextUser?.profilePic,
             }}
             size="sm"
             mr="3">
-            NB
             <Avatar.Badge bg="green.500" />
           </Avatar>
           {/* <FastImage

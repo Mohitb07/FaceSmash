@@ -1,7 +1,7 @@
-import {View, ScrollView, StyleSheet, Image} from 'react-native';
+import {ScrollView, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import React, {useContext, useState} from 'react';
 import Header from '../../components/Header';
-import {CheckIcon, CloseIcon} from '../../SVG';
+import {CheckIcon, CloseIcon, GallaryIcon} from '../../SVG';
 import {COLORS} from '../../constants';
 import StyledTextInput from '../../components/TextInput';
 import Label from '../../components/Label';
@@ -11,14 +11,32 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import {AuthContext, AuthUserContext} from '../../Context/auth';
 import {UserDataContext} from '../../Context/userData';
-import {useRecoilValue} from 'recoil';
-import {authState} from '../../atoms/authAtom';
+
+import {
+  Avatar,
+  Box,
+  Center,
+  ChevronUpIcon,
+  HStack,
+  Icon,
+  IconButton,
+  PresenceTransition,
+  SmallCloseIcon,
+  Text,
+  ThreeDotsIcon,
+  VStack,
+  View,
+  ShareIcon,
+} from 'native-base';
+import {useSetRecoilState} from 'recoil';
+import {bottomSheetState} from '../../atoms/bottomSheetAtom';
 
 const AddPost = ({navigation}) => {
   const [textAreaValue, setTextAreaValue] = useState();
   const [title, setTitle] = useState('');
   const {authUser} = useContext(AuthUserContext);
   const {contextUser} = useContext(UserDataContext);
+  const setBottomSheetStateValue = useSetRecoilState(bottomSheetState);
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -96,12 +114,19 @@ const AddPost = ({navigation}) => {
       }
     });
   };
+  const handleSheetOpen = () => {
+    setBottomSheetStateValue(prev => ({
+      ...prev,
+      isOpen: true,
+      type: 'addPostMore',
+    }));
+  };
 
   return (
     <ScrollView style={styles.container}>
       <View>
         <Header
-          label="Create Post"
+          label="Create post"
           showBackButton
           onPress={handlePostCreation}
           rightSection
@@ -112,6 +137,20 @@ const AddPost = ({navigation}) => {
           rightIcon={<CheckIcon />}
         />
         <View style={styles.innerContainer}>
+          <TouchableOpacity style={styles.leftHeader}>
+            <Avatar
+              source={{
+                uri: contextUser?.profilePic,
+              }}
+              size="md"
+              mr="3">
+              <Avatar.Badge bg="green.500" />
+            </Avatar>
+            <View style={styles.userInfo}>
+              <Text style={styles.usernameText}>{contextUser?.username}</Text>
+              <Text style={styles.email}>{contextUser?.email}</Text>
+            </View>
+          </TouchableOpacity>
           <Label label="Title" required />
           <StyledTextInput
             placeholder="Your title"
@@ -119,9 +158,9 @@ const AddPost = ({navigation}) => {
             onChangeText={text => setTitle(text)}
           />
 
-          <Label label="Description" />
+          <Label label="Description" required />
           <StyledTextInput
-            numberOfLines={4}
+            numberOfLines={6}
             placeholder="Your description"
             value={textAreaValue}
             onChangeText={text => setTextAreaValue(text)}
@@ -130,30 +169,97 @@ const AddPost = ({navigation}) => {
           />
 
           {image && (
-            <>
-              <View style={styles.imageContainer}>
-                <Image
-                  style={styles.profilePic}
-                  source={{
-                    uri: image.uri,
-                  }}
-                />
-              </View>
-              <Button
+            <Box position="relative">
+              <PresenceTransition
+                visible={!!image}
+                initial={{
+                  opacity: 0,
+                  scale: 0,
+                }}
+                animate={{
+                  opacity: 1,
+                  scale: 1,
+                  transition: {
+                    duration: 250,
+                  },
+                }}>
+                <View style={styles.imageContainer}>
+                  <Image
+                    style={styles.postImage}
+                    source={{
+                      uri: image.uri,
+                    }}
+                  />
+                </View>
+              </PresenceTransition>
+              <IconButton
                 onPress={() => setImage(null)}
-                text="Clear Image"
-                style={{marginTop: 30}}
+                position="absolute"
+                bottom="2"
+                right="40"
+                icon={<Icon as={CloseIcon} name="emoji-happy" />}
+                borderRadius="full"
+                borderColor="warmGray.400"
+                borderWidth="1"
+                _icon={{
+                  color: 'white',
+                  size: '3xl',
+                }}
+                _hover={{
+                  bg: 'white',
+                }}
+                _pressed={{
+                  bg: 'trueGray.400',
+                  _icon: {
+                    name: 'emoji-flirt',
+                  },
+                  _ios: {
+                    _icon: {
+                      size: '2xl',
+                    },
+                  },
+                }}
+                _ios={{
+                  _icon: {
+                    size: '2xl',
+                  },
+                }}
               />
-            </>
+            </Box>
           )}
           {!image && (
-            <Button
-              onPress={handleChooseGallary}
-              disabled={loading || image}
-              text="Add Image"
-              color={COLORS.neon}
-              style={{marginVertical: 20}}
-            />
+            // <Button
+            //   onPress={handleChooseGallary}
+            //   disabled={loading || image}
+            //   text="Add Image"
+            //   color={COLORS.neon}
+            //   style={{marginVertical: 20}}
+            // />
+            <VStack mt="10">
+              <Center mb="5">
+                <ChevronUpIcon />
+              </Center>
+              <HStack borderTopColor="gray.600" borderWidth="1" paddingY="3">
+                <TouchableOpacity
+                  onPress={handleChooseGallary}
+                  style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <GallaryIcon />
+                  <Text ml="5" fontSize="md">
+                    Photo/video
+                  </Text>
+                </TouchableOpacity>
+              </HStack>
+              <HStack
+                alignItems="center"
+                flexDirection="row"
+                borderTopColor="gray.600"
+                borderWidth="1"
+                paddingY="3"
+                space="5">
+                <ShareIcon />
+                <Text fontSize="md">Add Link</Text>
+              </HStack>
+            </VStack>
           )}
         </View>
       </View>
@@ -173,9 +279,32 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  profilePic: {
-    width: 350,
+  postImage: {
+    width: 360,
     height: 350,
+    borderRadius: 13,
+  },
+  clearBtn: {
+    top: 3,
+    right: 0,
+    position: 'absolute',
+  },
+  leftHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  userInfo: {
+    flexDirection: 'column',
+  },
+  usernameText: {
+    color: '#F2F2F2',
+    fontSize: 17,
+    fontWeight: 'bold',
+  },
+  email: {
+    color: '#747474',
+    fontSize: 14,
   },
 });
 

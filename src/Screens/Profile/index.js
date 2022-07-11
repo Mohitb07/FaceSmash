@@ -141,7 +141,7 @@ const MyProfile = ({route, navigation}) => {
       <View style={styles.container}>
         <FlatList
           contentContainerStyle={{paddingBottom: 20}}
-          data={[]}
+          data={myRecentPosts}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={() =>
             loading ? (
