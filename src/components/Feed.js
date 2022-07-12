@@ -1,18 +1,23 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import {
   HeartOutlinIcon,
   HeartFilledIcon,
   CommentIcon,
   CommentOutlinedIcon,
+  LinkIcon,
 } from '../SVG';
 import {COLORS} from '../constants';
 import moment from 'moment';
 import firestore from '@react-native-firebase/firestore';
-import {useRecoilValue} from 'recoil';
 
 import FastImage from 'react-native-fast-image';
-import {authState} from '../atoms/authAtom';
 import {Actionsheet, Box, ThreeDotsIcon, useDisclose} from 'native-base';
 import FeedMore from './BottomSheet/FeedMore';
 import {AuthUserContext} from '../Context/auth';
@@ -29,6 +34,7 @@ const Feed = ({
   postId = '',
   userId = '',
   post,
+  link = '',
   hasLiked: likedStatus,
 }) => {
   console.log('feed', postTitle);
@@ -148,9 +154,24 @@ const Feed = ({
 
         <View style={styles.feedInfo}>
           <View style={!image && styles.titleNuser}>
-            <TouchableOpacity>
-              <Text style={styles.feedTitle}>{postTitle}</Text>
-            </TouchableOpacity>
+            {link.length > 0 ? (
+              <TouchableOpacity
+                style={styles.linkTitle}
+                onPress={() =>
+                  navigation.navigate('Browser', {
+                    uri: link,
+                  })
+                }>
+                <LinkIcon height="14" width="14" />
+                <Text style={[styles.feedTitle, {marginLeft: 5}]}>
+                  {postTitle}
+                </Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableWithoutFeedback>
+                <Text style={styles.feedTitle}>{postTitle}</Text>
+              </TouchableWithoutFeedback>
+            )}
             <TouchableOpacity
               onPress={() =>
                 navigation.navigate('Profile', {
@@ -257,5 +278,9 @@ const styles = StyleSheet.create({
   likes: {
     color: COLORS.white,
     fontWeight: 'bold',
+  },
+  linkTitle: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
