@@ -1,27 +1,55 @@
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {FacebookIcon, GoogleIcon} from '../../SVG';
 import Label from '../../components/Label';
 import Button from '../../components/Button';
 import auth from '@react-native-firebase/auth';
 import StyledTextInput from '../../components/TextInput';
 import {COLORS} from '../../constants';
+import StyledError from '../../components/Error';
+import {FIREBASE_ERRORS} from '../../firebase/errors';
+import {useDebounce} from 'use-debounce';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const isDisabled = email.length === 0 || password.length === 0;
+  const [error, setError] = useState('');
+  const [invalidEmail, setInvalidEmail] = useState(false);
+  const [value] = useDebounce(email, 5000);
+
+  const checkIsEmailValid = string => {
+    const isEmail =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    return !string.toString().toLowerCase().match(isEmail);
+  };
 
   const onLoginAttempt = () => {
+    setError('');
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(user => {
         console.log('User logged in!', user);
       })
       .catch(err => {
-        console.log('ERROR', err);
+        console.log('ERROR', err.message);
+        setError(err.message);
       });
   };
+
+  useEffect(() => {
+    setInvalidEmail(false);
+    setError('');
+  }, [email, password]);
+
+  if (value.length > 0 && !invalidEmail) {
+    const res = checkIsEmailValid(value);
+    setInvalidEmail(res);
+  }
+
+  const isDisabled =
+    email.length === 0 || password.length === 0 || invalidEmail;
+
+  console.log('value', invalidEmail);
   return (
     <View style={styles.container}>
       <View>
@@ -39,6 +67,13 @@ const Login = ({navigation}) => {
             value={email}
             onChangeText={text => setEmail(text)}
           />
+          <StyledError
+            showErrorIcon={(email.length > 0 && invalidEmail) || Boolean(error)}
+            message={
+              (email.length > 0 && invalidEmail && 'Invalid Email') ||
+              FIREBASE_ERRORS[error]
+            }
+          />
 
           <Label label="Password" required />
           <StyledTextInput
@@ -46,6 +81,10 @@ const Login = ({navigation}) => {
             value={password}
             secure={true}
             onChangeText={text => setPassword(text)}
+          />
+          <StyledError
+            showErrorIcon={Boolean(error)}
+            message={FIREBASE_ERRORS[error]}
           />
 
           <Text style={styles.forgotPasswordText}>Forgot password ?</Text>
@@ -90,7 +129,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
-    backgroundColor: '#181920',
+    backgroundColor: COLORS.mainBackground,
     justifyContent: 'space-between',
   },
   headingContainer: {},
