@@ -6,7 +6,7 @@ import {useRecoilState} from 'recoil';
 import {postState} from '../../atoms/postAtom';
 import firestore from '@react-native-firebase/firestore';
 import {authState} from '../../atoms/authAtom';
-import {Text} from 'native-base';
+import {Text, View} from 'native-base';
 import FeedSkeleton from '../FeedSkeleton';
 import {COLORS} from '../../constants';
 import {useFocusEffect} from '@react-navigation/native';
@@ -87,6 +87,7 @@ function CustomFlatList({navigation}) {
   }, []);
 
   const onRefresh = useCallback(async () => {
+    setLoading(true);
     setRefreshing(true);
     await getPosts();
     await getUserLikedPosts();
@@ -112,6 +113,7 @@ function CustomFlatList({navigation}) {
       userId={item.user}
       hasLiked={userLikedPosts.find(post => post.postId === item.key)?.liked}
       post={item}
+      link={item?.link}
       // onDelete={onPostDelete}
       // onUpdate={onPostUpdate}
     />
@@ -136,6 +138,15 @@ function CustomFlatList({navigation}) {
             marginTop={20}>
             Not Enough Posts
           </Text>
+        )
+      }
+      ListFooterComponent={
+        postStateValue.posts.length > 0 && (
+          <View paddingY="5">
+            <Text textAlign="center" color="gray.500">
+              No More post
+            </Text>
+          </View>
         )
       }
       refreshControl={
