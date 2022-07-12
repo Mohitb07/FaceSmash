@@ -17,23 +17,27 @@ import {RecoilRoot} from 'recoil';
 import 'react-native-gesture-handler';
 import AuthUserContext from './src/Context/auth';
 import BottomSheet from './src/components/BottomSheet';
+import Toast from 'react-native-toast-message';
 
 const App = () => {
   return (
-    <RecoilRoot>
-      <NativeBaseProvider theme={theme}>
-        <AuthUserContext>
-          <UserDataContext>
-            <BottomSheetProvider>
-              <NavigationContainer ref={navigationRef}>
-                <Navigation />
-              </NavigationContainer>
-              <BottomSheet />
-            </BottomSheetProvider>
-          </UserDataContext>
-        </AuthUserContext>
-      </NativeBaseProvider>
-    </RecoilRoot>
+    <>
+      <RecoilRoot>
+        <NativeBaseProvider theme={theme}>
+          <AuthUserContext>
+            <UserDataContext>
+              <BottomSheetProvider>
+                <NavigationContainer ref={navigationRef}>
+                  <Navigation />
+                </NavigationContainer>
+                <BottomSheet />
+              </BottomSheetProvider>
+            </UserDataContext>
+          </AuthUserContext>
+        </NativeBaseProvider>
+      </RecoilRoot>
+      <Toast />
+    </>
   );
 };
 
