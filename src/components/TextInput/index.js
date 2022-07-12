@@ -11,6 +11,7 @@ const StyledTextInput = ({
   multiline = false,
   numberOfLines = 1,
   customStyles,
+  maxLength,
 }) => {
   return (
     <View style={styles.username}>
@@ -24,6 +25,7 @@ const StyledTextInput = ({
         onChangeText={onChangeText}
         multiline={multiline}
         numberOfLines={numberOfLines}
+        maxLength={maxLength}
       />
     </View>
   );
