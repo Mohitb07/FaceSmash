@@ -17,6 +17,7 @@ import AddPost from '../../Screens/AddPost';
 import BottomTab from '../BottomNavigation';
 import {useRecoilState} from 'recoil';
 import {authState, initializingState} from '../../atoms/authAtom';
+import Browser from '../../Screens/Browser';
 
 const RootStack = createNativeStackNavigator();
 export const navigationRef = createRef();
@@ -71,6 +72,11 @@ const Root = () => {
             name="Add Post"
             component={AddPost}
             options={{headerShown: false}}
+          />
+          <RootStack.Screen
+            name="Browser"
+            component={Browser}
+            options={{headerShown: true, title: ''}}
           />
         </>
       ) : (
