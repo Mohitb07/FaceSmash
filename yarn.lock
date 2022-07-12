@@ -3710,15 +3710,15 @@ escape-html@~1.0.3:
   resolved "https://registry.yarnpkg.com/escape-html/-/escape-html-1.0.3.tgz#0258eae4d3d0c0974de1c169188ef0051d1d1988"
   integrity sha1-Aljq5NPQwJdN4cFpGI7wBR0dGYg=
 
+escape-string-regexp@2.0.0, escape-string-regexp@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-2.0.0.tgz#a30304e99daa32e23b2fd20f51babd07cffca344"
+  integrity sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==
+
 escape-string-regexp@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz#1b61c0562190a8dff6ae3bb2cf0200ca130b86d4"
   integrity sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
-
-escape-string-regexp@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/escape-string-regexp/-/escape-string-regexp-2.0.0.tgz#a30304e99daa32e23b2fd20f51babd07cffca344"
-  integrity sha512-UpzcLCXolUWcNu5HtVMHYdXJjArjsF9C0aNnquZYY4uW/Vu0miy5YoWvbV345HauVvcAUnpRuhMMcqTcGOY2+w==
 
 escape-string-regexp@^4.0.0:
   version "4.0.0"
@@ -4629,7 +4629,7 @@ intl-messageformat@^9.6.12:
     "@formatjs/icu-messageformat-parser" "2.0.19"
     tslib "^2.1.0"
 
-invariant@^2.2.4:
+invariant@2.2.4, invariant@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.4.tgz#610f3c92c9359ce1db616e538008d23ff35158e6"
   integrity sha512-phJfQVBuaJM5raOpJjSfkiD6BpbCE4Ns//LaXl6wGYtUBY83nWS6Rf9tXm2e8VaK60JEjYldbPif/A2B1C2gNA==
@@ -5685,7 +5685,7 @@ lodash.clonedeep@^4.5.0:
 lodash.debounce@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
-  integrity sha1-gteb/zCmfEAF/9XiUVMArZyk168=
+  integrity sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==
 
 lodash.get@^4.4.2:
   version "4.4.2"
@@ -7060,6 +7060,11 @@ react-native-text-size@4.0.0-rc.1:
   resolved "https://registry.yarnpkg.com/react-native-text-size/-/react-native-text-size-4.0.0-rc.1.tgz#1e048d345dd6a5a8e1269e0585c1a5948c478da5"
   integrity sha512-CysqjU2jK6Yc+a+kEI222pUyTY2ywcU2HqbFqf1KHymW6OPTdvBBHqbEJKL0QiLhQaFYDbqicM+h990s9TP00g==
 
+react-native-toast-message@^2.1.5:
+  version "2.1.5"
+  resolved "https://registry.yarnpkg.com/react-native-toast-message/-/react-native-toast-message-2.1.5.tgz#550acb9c6c0f1ee49c6b57b65a56d34e297eb723"
+  integrity sha512-mk3rELtBEhrhWBCN6CTaw0gypgL9ZNauX3xx1LUs4uee9vc0pVsghrKxO57vroUCcNL2hDeZSLJWdQNMCkGeaQ==
+
 react-native-ui-lib@^6.16.0:
   version "6.16.0"
   resolved "https://registry.yarnpkg.com/react-native-ui-lib/-/react-native-ui-lib-6.16.0.tgz#ce2a97fef0dd1c7a775e8992dff148095e2dd262"
@@ -7079,6 +7084,14 @@ react-native-ui-lib@^6.16.0:
     react-native-text-size "4.0.0-rc.1"
     semver "^5.5.0"
     url-parse "^1.2.0"
+
+react-native-webview@^11.22.6:
+  version "11.22.6"
+  resolved "https://registry.yarnpkg.com/react-native-webview/-/react-native-webview-11.22.6.tgz#4030d8a8881e40fc17d596215675499178d30423"
+  integrity sha512-boF9s7zT6dmnZmJxlEgQmblxpoqAhcC2aqBnY1qF56BEVt+imhVQ9w3S3zX+jsEaSsbNe5SssBJW7Bgb6oA7eg==
+  dependencies:
+    escape-string-regexp "2.0.0"
+    invariant "2.2.4"
 
 react-native@0.67.3:
   version "0.67.3"
@@ -8219,6 +8232,11 @@ url-parse@^1.2.0:
   dependencies:
     querystringify "^2.1.1"
     requires-port "^1.0.0"
+
+use-debounce@^8.0.1:
+  version "8.0.1"
+  resolved "https://registry.yarnpkg.com/use-debounce/-/use-debounce-8.0.1.tgz#5f3e11b067bdf9f2c554a20b4764e38b48022664"
+  integrity sha512-6tGAFJKJ0qCalecaV7/gm/M6n238nmitNppvR89ff1yfwSFjwFKR7IQZzIZf1KZRQhqNireBzytzU6jgb29oVg==
 
 use-memo-one@^1.1.1:
   version "1.1.2"
