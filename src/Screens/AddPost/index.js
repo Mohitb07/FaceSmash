@@ -1,7 +1,7 @@
 import {ScrollView, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import React, {useContext, useState} from 'react';
 import Header from '../../components/Header';
-import {CheckIcon, CloseIcon, GallaryIcon} from '../../SVG';
+import {CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '../../SVG';
 import {COLORS} from '../../constants';
 import StyledTextInput from '../../components/TextInput';
 import Label from '../../components/Label';
@@ -36,9 +36,12 @@ const AddPost = ({navigation}) => {
   const [title, setTitle] = useState('');
   const {authUser} = useContext(AuthUserContext);
   const {contextUser} = useContext(UserDataContext);
-  const setBottomSheetStateValue = useSetRecoilState(bottomSheetState);
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showLink, setShowLink] = useState(false);
+  const [link, setLink] = useState('');
+
+  console.log('add post render', link);
 
   const handlePostCreation = () => {
     setLoading(true);
@@ -63,6 +66,7 @@ const AddPost = ({navigation}) => {
                   userProfile: contextUser.profilePic,
                   username: contextUser.username,
                   likes: 0,
+                  link: link,
                   createdAt: new Date(),
                 })
                 .then(() => {
@@ -89,6 +93,7 @@ const AddPost = ({navigation}) => {
           userProfile: contextUser.profilePic,
           username: contextUser.username,
           likes: 0,
+          link: link,
           createdAt: new Date(),
         })
         .then(() => {
@@ -114,23 +119,27 @@ const AddPost = ({navigation}) => {
       }
     });
   };
-  const handleSheetOpen = () => {
-    setBottomSheetStateValue(prev => ({
-      ...prev,
-      isOpen: true,
-      type: 'addPostMore',
-    }));
+
+  const linkText = showLink ? 'Remove Link' : 'Add Link';
+
+  const handleLink = () => {
+    if (showLink) {
+      setShowLink(false);
+      setLink('');
+    } else {
+      setShowLink(true);
+    }
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View>
         <Header
           label="Create post"
           showBackButton
           onPress={handlePostCreation}
           rightSection
-          disabled={!title || !textAreaValue}
+          disabled={!title || !textAreaValue || (showLink && !link)}
           loading={loading}
           navigation={navigation}
           leftIcon={<CloseIcon />}
@@ -151,25 +160,42 @@ const AddPost = ({navigation}) => {
               <Text style={styles.email}>{contextUser?.email}</Text>
             </View>
           </TouchableOpacity>
-          <Label label="Title" required />
+          <Label label="Title" required labelStyle={{fontSize: 15}} />
           <StyledTextInput
             placeholder="Your title"
             value={title}
+            maxLength={30}
             onChangeText={text => setTitle(text)}
           />
 
-          <Label label="Description" required />
+          <Label label="Description" required labelStyle={{fontSize: 15}} />
           <StyledTextInput
             numberOfLines={6}
             placeholder="Your description"
             value={textAreaValue}
             onChangeText={text => setTextAreaValue(text)}
             multiline={true}
+            maxLength={100}
             customStyles={{textAlignVertical: 'top'}}
           />
 
+          {showLink && (
+            <>
+              <Label label="Link" labelStyle={{fontSize: 15}} />
+              <StyledTextInput
+                placeholder="Link here"
+                value={link}
+                maxLength={100}
+                onChangeText={text => setLink(text)}
+              />
+            </>
+          )}
+
           {image && (
-            <Box position="relative">
+            <Box
+              style={styles.imageContainer}
+              position="relative"
+              justifyContent="center">
               <PresenceTransition
                 visible={!!image}
                 initial={{
@@ -183,84 +209,79 @@ const AddPost = ({navigation}) => {
                     duration: 250,
                   },
                 }}>
-                <View style={styles.imageContainer}>
-                  <Image
-                    style={styles.postImage}
-                    source={{
-                      uri: image.uri,
-                    }}
-                  />
-                </View>
-              </PresenceTransition>
-              <IconButton
-                onPress={() => setImage(null)}
-                position="absolute"
-                bottom="2"
-                right="40"
-                icon={<Icon as={CloseIcon} name="emoji-happy" />}
-                borderRadius="full"
-                borderColor="warmGray.400"
-                borderWidth="1"
-                _icon={{
-                  color: 'white',
-                  size: '3xl',
-                }}
-                _hover={{
-                  bg: 'white',
-                }}
-                _pressed={{
-                  bg: 'trueGray.400',
-                  _icon: {
-                    name: 'emoji-flirt',
-                  },
-                  _ios: {
+                <Image
+                  style={styles.postImage}
+                  source={{
+                    uri: image.uri,
+                  }}
+                />
+
+                <IconButton
+                  onPress={() => setImage(null)}
+                  style={styles.clearBtn}
+                  icon={<Icon as={CloseIcon} name="emoji-happy" />}
+                  borderRadius="full"
+                  backgroundColor={COLORS.transparentBlack5}
+                  _icon={{
+                    color: 'warmGray.400',
+                    size: '3xl',
+                  }}
+                  _hover={{
+                    bg: 'warmGray.400',
+                  }}
+                  _pressed={{
+                    bg: 'black',
+                    _icon: {
+                      name: 'emoji-flirt',
+                    },
+                    _ios: {
+                      _icon: {
+                        size: '2xl',
+                      },
+                    },
+                  }}
+                  _ios={{
                     _icon: {
                       size: '2xl',
                     },
-                  },
-                }}
-                _ios={{
-                  _icon: {
-                    size: '2xl',
-                  },
-                }}
-              />
+                  }}
+                />
+              </PresenceTransition>
             </Box>
           )}
-          {!image && (
-            // <Button
-            //   onPress={handleChooseGallary}
-            //   disabled={loading || image}
-            //   text="Add Image"
-            //   color={COLORS.neon}
-            //   style={{marginVertical: 20}}
-            // />
-            <VStack mt="10">
-              <Center mb="5">
-                <ChevronUpIcon />
-              </Center>
-              <HStack borderTopColor="gray.600" borderWidth="1" paddingY="3">
-                <TouchableOpacity
-                  onPress={handleChooseGallary}
-                  style={{flexDirection: 'row', alignItems: 'center'}}>
-                  <GallaryIcon />
-                  <Text ml="5" fontSize="md">
-                    Photo/video
-                  </Text>
-                </TouchableOpacity>
-              </HStack>
-              <HStack
-                alignItems="center"
-                flexDirection="row"
-                borderTopColor="gray.600"
-                borderWidth="1"
-                paddingY="3"
-                space="5">
-                <ShareIcon />
-                <Text fontSize="md">Add Link</Text>
-              </HStack>
-            </VStack>
-          )}
+          <VStack mt="10">
+            <Center mb="5">
+              <ChevronUpIcon />
+            </Center>
+            <HStack borderTopColor="gray.600" borderTopWidth="1" paddingY="3">
+              <TouchableOpacity
+                disabled={!!image || loading}
+                onPress={handleChooseGallary}
+                style={{flexDirection: 'row', alignItems: 'center'}}>
+                <PhotoIcon />
+                <Text
+                  color={image || loading ? 'gray.700' : 'white'}
+                  ml="5"
+                  fontSize="md">
+                  Photo/video
+                </Text>
+              </TouchableOpacity>
+            </HStack>
+            <HStack borderTopColor="gray.600" borderTopWidth="1" paddingY="3">
+              <TouchableOpacity
+                disabled={loading}
+                onPress={handleLink}
+                style={{flexDirection: 'row', alignItems: 'center'}}>
+                <LinkIcon />
+                <Text
+                  color={loading ? 'gray.700' : 'white'}
+                  ml="5"
+                  fontSize="md">
+                  {linkText}
+                </Text>
+              </TouchableOpacity>
+            </HStack>
+          </VStack>
         </View>
       </View>
     </ScrollView>
@@ -276,17 +297,17 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   imageContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    // alignItems: 'center',
   },
   postImage: {
-    width: 360,
+    // width: 360,
     height: 350,
     borderRadius: 13,
   },
   clearBtn: {
-    top: 3,
-    right: 0,
+    top: 2,
+    right: 10,
     position: 'absolute',
   },
   leftHeader: {
