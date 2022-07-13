@@ -30,6 +30,7 @@ import {
 } from 'native-base';
 import {useSetRecoilState} from 'recoil';
 import {bottomSheetState} from '../../atoms/bottomSheetAtom';
+import Toast from 'react-native-toast-message';
 
 const AddPost = ({navigation}) => {
   const [textAreaValue, setTextAreaValue] = useState();
@@ -70,17 +71,30 @@ const AddPost = ({navigation}) => {
                   createdAt: new Date(),
                 })
                 .then(() => {
+                  Toast.show({
+                    type: 'success',
+                    text1: 'Post Created',
+                    text2: 'Refresh the feed to see the latest changes',
+                  });
                   navigation.navigate('Home');
                 });
             })
             .catch(err => {
               setLoading(false);
-              console.log('image download error', err);
+              Toast.show({
+                type: 'error',
+                text1: 'Image Upload Error',
+                text2: err.message,
+              });
             });
         })
         .catch(err => {
           setLoading(false);
-          console.log('IMAGE UPLOAD ERROR', err);
+          Toast.show({
+            type: 'error',
+            text1: 'Image Upload Error',
+            text2: err.message,
+          });
         });
     } else {
       firestore()
@@ -98,10 +112,20 @@ const AddPost = ({navigation}) => {
         })
         .then(() => {
           setLoading(false);
+          Toast.show({
+            type: 'success',
+            text1: 'Post Created',
+            text2: 'Refresh the feed to see the latest changes',
+          });
           navigation.navigate('Home');
         })
         .catch(err => {
           setLoading(false);
+          Toast.show({
+            type: 'error',
+            text1: 'Post Creation Error',
+            text2: err.message,
+          });
           console.log('error posting', err);
         });
     }
@@ -110,9 +134,18 @@ const AddPost = ({navigation}) => {
   const handleChooseGallary = () => {
     ImagePicker.launchImageLibrary({}, response => {
       if (response.didCancel) {
+        Toast.show({
+          type: 'info',
+          text1: 'Image Processing',
+          text2: 'Cancelled image selection process',
+        });
         setImage(null);
       } else if (response.error) {
-        console.log('Image picker error', response.error);
+        Toast.show({
+          type: 'error',
+          text1: 'Image selection Error',
+          text2: response.errorMessage,
+        });
       } else {
         console.log('IMAGE META DATA', response);
         setImage(response.assets[0]);
@@ -297,6 +330,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   imageContainer: {
+    marginTop: 10,
     // justifyContent: 'center',
     // alignItems: 'center',
   },
