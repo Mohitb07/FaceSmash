@@ -152,7 +152,7 @@ const MyProfile = ({route, navigation}) => {
                 color={COLORS.white}
                 fontSize={20}
                 marginTop={20}>
-                No Enough Posts
+                Not Enough Posts
               </NText>
             )
           }

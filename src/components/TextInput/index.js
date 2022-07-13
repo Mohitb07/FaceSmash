@@ -14,11 +14,11 @@ const StyledTextInput = ({
   maxLength,
 }) => {
   return (
-    <View style={styles.username}>
+    <View style={[styles.inputFieldContainer, error && styles.error]}>
       {icon}
       <TextInput
         placeholderTextColor="#BEBEBE"
-        style={[styles.inputField, error && styles.error, customStyles]}
+        style={[styles.inputField, customStyles]}
         placeholder={placeholder}
         value={value}
         secureTextEntry={secure}
@@ -43,13 +43,15 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#252A34',
   },
-  username: {
+  inputFieldContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     borderRadius: 8,
     backgroundColor: '#252A34',
+    borderColor: '#252A34',
+    borderWidth: 0.7,
     paddingHorizontal: 5,
-    marginBottom: 15,
+    marginBottom: 4,
   },
   error: {
     borderColor: 'red',
