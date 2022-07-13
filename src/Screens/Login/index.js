@@ -14,8 +14,6 @@ const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [invalidEmail, setInvalidEmail] = useState(false);
-  const [value] = useDebounce(email, 5000);
 
   const checkIsEmailValid = string => {
     const isEmail =
@@ -37,86 +35,85 @@ const Login = ({navigation}) => {
   };
 
   useEffect(() => {
-    setInvalidEmail(false);
     setError('');
   }, [email, password]);
 
-  if (value.length > 0 && !invalidEmail) {
-    const res = checkIsEmailValid(value);
-    setInvalidEmail(res);
-  }
+  const invalidEmail = checkIsEmailValid(email);
 
   const isDisabled =
     email.length === 0 || password.length === 0 || invalidEmail;
 
-  console.log('value', invalidEmail);
   return (
     <View style={styles.container}>
-      <View>
-        <View style={styles.headingContainer}>
-          <Text style={styles.heading}>Welcome Back!</Text>
-          <Text style={styles.subtitle}>
-            We're happy to see. You can Login and continue consulting your
-            problem or read some tips.
-          </Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <Label label="Email" required />
-          <StyledTextInput
-            placeholder="@gmail.com"
-            value={email}
-            onChangeText={text => setEmail(text)}
-          />
-          <StyledError
-            showErrorIcon={(email.length > 0 && invalidEmail) || Boolean(error)}
-            message={
-              (email.length > 0 && invalidEmail && 'Invalid Email') ||
-              FIREBASE_ERRORS[error]
-            }
-          />
+      <View style={styles.container}>
+        <View>
+          <View style={styles.headingContainer}>
+            <Text style={styles.heading}>Welcome Back!</Text>
+            <Text style={styles.subtitle}>
+              We're happy to see. You can Login and continue consulting your
+              problem or read some tips.
+            </Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <Label label="Email" required />
+            <StyledTextInput
+              placeholder="@gmail.com"
+              value={email}
+              onChangeText={text => setEmail(text)}
+            />
+            <StyledError
+              showErrorIcon={
+                (email.length > 0 && invalidEmail) || Boolean(error)
+              }
+              message={
+                (email.length > 0 && invalidEmail && 'Invalid Email') ||
+                FIREBASE_ERRORS[error]
+              }
+            />
 
-          <Label label="Password" required />
-          <StyledTextInput
-            placeholder="Your Password"
-            value={password}
-            secure={true}
-            onChangeText={text => setPassword(text)}
-          />
-          <StyledError
-            showErrorIcon={Boolean(error)}
-            message={FIREBASE_ERRORS[error]}
-          />
+            <Label label="Password" required />
+            <StyledTextInput
+              placeholder="Your Password"
+              value={password}
+              secure={true}
+              onChangeText={text => setPassword(text)}
+            />
+            <StyledError
+              showErrorIcon={Boolean(error)}
+              message={FIREBASE_ERRORS[error]}
+            />
 
-          <Text style={styles.forgotPasswordText}>Forgot password ?</Text>
+            <Text style={styles.forgotPasswordText}>Forgot password ?</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.footerContainer}>
-        <Button
-          color={COLORS.neon}
-          disabled={isDisabled}
-          text="Sign In"
-          onPress={onLoginAttempt}
-        />
-        <View style={styles.divider}>
-          <View style={styles.line}></View>
-          <Text style={styles.text}>or Sign in with</Text>
-          <View style={styles.line}></View>
-        </View>
-        <View style={styles.socialContainer}>
-          <TouchableOpacity style={styles.socialBtn}>
-            <FacebookIcon />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.socialBtn}>
-            <GoogleIcon />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.signupTextContainer}>
-          <Text style={styles.text}>I don't have an account</Text>
-          <Text
-            onPress={() => navigation.navigate('Sign Up')}
-            style={styles.signupText}>
-            Sign Up
-          </Text>
+        <View style={styles.footerContainer}>
+          <Button
+            color={COLORS.neon}
+            disabled={isDisabled}
+            text="Sign In"
+            onPress={onLoginAttempt}
+          />
+          <View style={styles.divider}>
+            <View style={styles.line}></View>
+            <Text style={styles.text}>or Sign in with</Text>
+            <View style={styles.line}></View>
+          </View>
+          <View style={styles.socialContainer}>
+            <TouchableOpacity style={styles.socialBtn}>
+              <FacebookIcon />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.socialBtn}>
+              <GoogleIcon />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.signupTextContainer}>
+            <Text style={styles.text}>I don't have an account</Text>
+            <Text
+              onPress={() => navigation.navigate('Sign Up')}
+              style={styles.signupText}>
+              Sign Up
+            </Text>
+          </View>
         </View>
       </View>
     </View>
@@ -129,7 +126,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 15,
-    backgroundColor: COLORS.mainBackground,
+    backgroundColor: COLORS.background,
     justifyContent: 'space-between',
   },
   headingContainer: {},

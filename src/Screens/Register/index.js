@@ -5,21 +5,24 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FacebookIcon, GoogleIcon} from '../../SVG';
 import Label from '../../components/Label';
 import Button from '../../components/Button';
 import StyledTextInput from '../../components/TextInput';
 import {useRegister} from '../../hooks/register';
 import {COLORS} from '../../constants';
+import {FIREBASE_ERRORS} from '../../firebase/errors';
+import StyledError from '../../components/Error';
 
 const SignUp = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
+  const [charactersLeft, setCharactersLeft] = useState(30);
 
-  const onRegisterAttempt = useRegister();
+  const {onRegisterAttempt, error, setError} = useRegister();
 
   const isDisabled =
     email.length === 0 ||
@@ -28,13 +31,40 @@ const SignUp = ({navigation}) => {
     username.length === 0 ||
     password !== confirmPassword;
 
+  const confirmPasswordErrorMsg =
+    confirmPassword.length > 0 &&
+    confirmPassword !== password &&
+    'Password do not match';
+
   const signUpAttempt = () => {
     onRegisterAttempt({email, password, username});
   };
 
+  useEffect(() => {
+    setError(prev => ({
+      ...prev,
+      password: '',
+    }));
+  }, [password]);
+
+  useEffect(() => {
+    setError(prev => ({
+      ...prev,
+      email: '',
+    }));
+  }, [email]);
+
+  const handleUsername = text => {
+    if (text.length > 30) return;
+    setUsername(text);
+    setCharactersLeft(30 - text.length);
+  };
+
   return (
-    <ScrollView>
-      <View style={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      showsVerticalScrollIndicator={false}>
+      <View>
         <View>
           <View style={styles.headingContainer}>
             <Text style={styles.heading}>Create an Account</Text>
@@ -47,8 +77,18 @@ const SignUp = ({navigation}) => {
             <Label label="Username" required />
             <StyledTextInput
               value={username}
-              onChangeText={text => setUsername(text)}
+              maxLength={30}
+              onChangeText={handleUsername}
               placeholder="Your Username"
+            />
+            <StyledError
+              // showErrorIcon={Boolean(error.username)}
+              errorStyle={{
+                color: charactersLeft > 0 ? 'white' : 'red',
+                fontSize: 10,
+                marginLeft: 15,
+              }}
+              message={`${charactersLeft} characters remaining`}
             />
 
             <Label label="Email" required />
@@ -56,6 +96,10 @@ const SignUp = ({navigation}) => {
               value={email}
               onChangeText={text => setEmail(text)}
               placeholder="@gmail.com"
+            />
+            <StyledError
+              showErrorIcon={Boolean(error.email)}
+              message={FIREBASE_ERRORS[error.email]}
             />
 
             <Label label="Password" required />
@@ -65,6 +109,10 @@ const SignUp = ({navigation}) => {
               onChangeText={text => setPassword(text)}
               placeholder="Your Password"
             />
+            <StyledError
+              showErrorIcon={Boolean(error.password)}
+              message={FIREBASE_ERRORS[error.password]}
+            />
 
             <Label label="Confirm Password" required />
             <StyledTextInput
@@ -72,7 +120,11 @@ const SignUp = ({navigation}) => {
               value={confirmPassword}
               onChangeText={text => setConfirmPassword(text)}
               placeholder="Confirm Your Password"
-              error={confirmPassword.length > 0 && password !== confirmPassword}
+              error={Boolean(confirmPasswordErrorMsg)}
+            />
+            <StyledError
+              showErrorIcon={Boolean(confirmPasswordErrorMsg)}
+              message={confirmPasswordErrorMsg}
             />
           </View>
         </View>
@@ -114,8 +166,8 @@ export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    padding: 15,
+    // flex: 1,
+    padding: 25,
     backgroundColor: '#181920',
     justifyContent: 'space-between',
   },
