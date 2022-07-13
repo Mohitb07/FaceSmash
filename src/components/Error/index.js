@@ -9,9 +9,9 @@ export default function StyledError({
   type = 'info',
 }) {
   return (
-    <View style={[styles.errorContainer, errorStyle]}>
+    <View style={styles.errorContainer}>
       {showErrorIcon && <InfoOutlineIcon style={styles.errorIcon} />}
-      <Text style={styles.error}>{message}</Text>
+      <Text style={[styles.error, errorStyle]}>{message}</Text>
     </View>
   );
 }
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 5,
+    marginVertical: 3,
   },
 
   error: {
