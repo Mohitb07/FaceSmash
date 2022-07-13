@@ -1,8 +1,15 @@
-import React from 'react';
+import React, {useState} from 'react';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import Toast from 'react-native-toast-message';
 
 export function useRegister() {
+  const [error, setError] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  });
   const onRegisterAttempt = ({email = '', password = '', username = ''}) => {
     auth()
       .createUserWithEmailAndPassword(email, password)
@@ -25,20 +32,37 @@ export function useRegister() {
           })
           .then(() => {
             console.log('User added!');
+            Toast.show({
+              type: 'success',
+              text1: 'Account Created',
+              text2: 'Your account created successfully  👋',
+            });
           });
       })
       .catch(error => {
-        if (error.code === 'auth/email-already-in-use') {
-          console.log('That email address is already in use!');
+        console.log('error', error.message);
+        if (error.code === 'auth/weak-password') {
+          setError(prev => ({
+            ...prev,
+            password: error.message,
+          }));
+        } else if (
+          error.code === 'auth/email-already-in-use' ||
+          'auth/invalid-email'
+        ) {
+          setError(prev => ({
+            ...prev,
+            email: error.message,
+          }));
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: 'Registration Error',
+            text2: error.message,
+          });
         }
-
-        if (error.code === 'auth/invalid-email') {
-          console.log('That email address is invalid!');
-        }
-
-        console.error(error);
       });
   };
 
-  return onRegisterAttempt;
+  return {onRegisterAttempt, error, setError};
 }
