@@ -1,15 +1,10 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ImageBackground,
-  Dimensions,
-  StatusBar,
-} from 'react-native';
 import React from 'react';
-import Button from '../../components/Button';
+import {ImageBackground, StatusBar, Text, View} from 'react-native';
+
 import LinearGradient from 'react-native-linear-gradient';
-import {COLORS, SIZES, FONTS} from '../../constants';
+
+import Button from '../../components/Button';
+import {COLORS, FONTS, SIZES} from '../../constants';
 
 const GetStarted = ({navigation}) => {
   function renderHeader() {

@@ -1,25 +1,21 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import React, {useCallback, useEffect, useState} from 'react';
-import {FacebookIcon, GoogleIcon} from '../../SVG';
-import Label from '../../components/Label';
-import Button from '../../components/Button';
+import React, {useEffect, useState} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+
 import auth from '@react-native-firebase/auth';
+
+import Button from '../../components/Button';
+import StyledError from '../../components/Error';
+import Label from '../../components/Label';
 import StyledTextInput from '../../components/TextInput';
 import {COLORS} from '../../constants';
-import StyledError from '../../components/Error';
 import {FIREBASE_ERRORS} from '../../firebase/errors';
-import {useDebounce} from 'use-debounce';
+import {FacebookIcon, GoogleIcon} from '../../SVG';
+import {checkIsEmailValid} from '../../utils';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-
-  const checkIsEmailValid = string => {
-    const isEmail =
-      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    return !string.toString().toLowerCase().match(isEmail);
-  };
 
   const onLoginAttempt = () => {
     setError('');

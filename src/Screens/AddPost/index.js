@@ -1,17 +1,9 @@
-import {ScrollView, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import React, {useContext, useState} from 'react';
-import Header from '../../components/Header';
-import {CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '../../SVG';
-import {COLORS} from '../../constants';
-import StyledTextInput from '../../components/TextInput';
-import Label from '../../components/Label';
-import Button from '../../components/Button';
-import * as ImagePicker from 'react-native-image-picker';
+import {Image, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
+
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import {AuthContext, AuthUserContext} from '../../Context/auth';
-import {UserDataContext} from '../../Context/userData';
-
+import Toast from 'react-native-toast-message';
 import {
   Avatar,
   Box,
@@ -21,38 +13,39 @@ import {
   Icon,
   IconButton,
   PresenceTransition,
-  SmallCloseIcon,
   Text,
-  ThreeDotsIcon,
-  VStack,
   View,
-  ShareIcon,
+  VStack,
 } from 'native-base';
-import {useSetRecoilState} from 'recoil';
-import {bottomSheetState} from '../../atoms/bottomSheetAtom';
-import Toast from 'react-native-toast-message';
+
+import Header from '../../components/Header';
+import Label from '../../components/Label';
+import StyledTextInput from '../../components/TextInput';
+import {COLORS} from '../../constants';
+import {AuthUserContext} from '../../Context/auth';
+import {UserDataContext} from '../../Context/userData';
+import {CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '../../SVG';
+import useSelectImage from '../../hooks/useSelectImage';
 
 const AddPost = ({navigation}) => {
   const [textAreaValue, setTextAreaValue] = useState();
   const [title, setTitle] = useState('');
   const {authUser} = useContext(AuthUserContext);
   const {contextUser} = useContext(UserDataContext);
-  const [image, setImage] = useState(null);
+  const {selectedImage, handleChooseGallary, clearImage} = useSelectImage();
   const [loading, setLoading] = useState(false);
   const [showLink, setShowLink] = useState(false);
   const [link, setLink] = useState('');
 
-  console.log('add post render', link);
-
   const handlePostCreation = () => {
     setLoading(true);
-    if (image) {
+    if (selectedImage) {
       storage()
-        .ref(image.fileName)
-        .putFile(image.uri)
+        .ref(selectedImage.fileName)
+        .putFile(selectedImage)
         .then(snapshot => {
           console.log('IMAGE UPLOADED', snapshot);
-          const imageRef = storage().ref(image.fileName);
+          const imageRef = storage().ref(selectedImage.fileName);
           imageRef
             .getDownloadURL()
             .then(url => {
@@ -83,7 +76,7 @@ const AddPost = ({navigation}) => {
               setLoading(false);
               Toast.show({
                 type: 'error',
-                text1: 'Image Upload Error',
+                text1: 'Post Creation Error',
                 text2: err.message,
               });
             });
@@ -130,29 +123,6 @@ const AddPost = ({navigation}) => {
         });
     }
   };
-
-  const handleChooseGallary = () => {
-    ImagePicker.launchImageLibrary({}, response => {
-      if (response.didCancel) {
-        Toast.show({
-          type: 'info',
-          text1: 'Image Processing',
-          text2: 'Cancelled image selection process',
-        });
-        setImage(null);
-      } else if (response.error) {
-        Toast.show({
-          type: 'error',
-          text1: 'Image selection Error',
-          text2: response.errorMessage,
-        });
-      } else {
-        console.log('IMAGE META DATA', response);
-        setImage(response.assets[0]);
-      }
-    });
-  };
-
   const linkText = showLink ? 'Remove Link' : 'Add Link';
 
   const handleLink = () => {
@@ -224,13 +194,13 @@ const AddPost = ({navigation}) => {
             </>
           )}
 
-          {image && (
+          {selectedImage && (
             <Box
               style={styles.imageContainer}
               position="relative"
               justifyContent="center">
               <PresenceTransition
-                visible={!!image}
+                visible={!!selectedImage}
                 initial={{
                   opacity: 0,
                   scale: 0,
@@ -245,12 +215,12 @@ const AddPost = ({navigation}) => {
                 <Image
                   style={styles.postImage}
                   source={{
-                    uri: image.uri,
+                    uri: selectedImage,
                   }}
                 />
 
                 <IconButton
-                  onPress={() => setImage(null)}
+                  onPress={clearImage}
                   style={styles.clearBtn}
                   icon={<Icon as={CloseIcon} name="emoji-happy" />}
                   borderRadius="full"
@@ -288,12 +258,12 @@ const AddPost = ({navigation}) => {
             </Center>
             <HStack borderTopColor="gray.600" borderTopWidth="1" paddingY="3">
               <TouchableOpacity
-                disabled={!!image || loading}
+                disabled={!!selectedImage || loading}
                 onPress={handleChooseGallary}
                 style={{flexDirection: 'row', alignItems: 'center'}}>
                 <PhotoIcon />
                 <Text
-                  color={image || loading ? 'gray.700' : 'white'}
+                  color={selectedImage || loading ? 'gray.700' : 'white'}
                   ml="5"
                   fontSize="md">
                   Photo/video

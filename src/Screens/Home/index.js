@@ -1,15 +1,14 @@
 import React from 'react';
 import {StyleSheet, View} from 'react-native';
 
-import CustomFlatList from '../../components/FlatList';
+import HomeFeed from '../../components/FlatList/HomeFeed';
+import {COLORS} from '../../constants';
 
 const Home = ({navigation}) => {
-  console.log('home rendered');
-
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
-        <CustomFlatList navigation={navigation} />
+        <HomeFeed navigation={navigation} />
       </View>
     </View>
   );
@@ -19,7 +18,7 @@ export default React.memo(Home);
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#141414',
+    backgroundColor: COLORS.mainBackground,
     paddingHorizontal: 20,
   },
   innerContainer: {
