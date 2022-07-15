@@ -1,19 +1,20 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
 import React, {useEffect, useState} from 'react';
-import {FacebookIcon, GoogleIcon} from '../../SVG';
-import Label from '../../components/Label';
+import {
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+
 import Button from '../../components/Button';
+import StyledError from '../../components/Error';
+import Label from '../../components/Label';
 import StyledTextInput from '../../components/TextInput';
-import {useRegister} from '../../hooks/register';
 import {COLORS} from '../../constants';
 import {FIREBASE_ERRORS} from '../../firebase/errors';
-import StyledError from '../../components/Error';
+import {useRegister} from '../../hooks/register';
+import {FacebookIcon, GoogleIcon} from '../../SVG';
 
 const SignUp = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -82,7 +83,6 @@ const SignUp = ({navigation}) => {
               placeholder="Your Username"
             />
             <StyledError
-              // showErrorIcon={Boolean(error.username)}
               errorStyle={{
                 color: charactersLeft > 0 ? 'white' : 'red',
                 fontSize: 10,
@@ -166,12 +166,10 @@ export default SignUp;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
     padding: 25,
-    backgroundColor: '#181920',
+    backgroundColor: COLORS.background,
     justifyContent: 'space-between',
   },
-  headingContainer: {},
   heading: {
     fontSize: 25,
     fontWeight: 'bold',
