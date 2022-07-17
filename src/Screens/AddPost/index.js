@@ -41,11 +41,11 @@ const AddPost = ({navigation}) => {
     setLoading(true);
     if (selectedImage) {
       storage()
-        .ref(selectedImage.fileName)
+        .ref(selectedImage)
         .putFile(selectedImage)
         .then(snapshot => {
           console.log('IMAGE UPLOADED', snapshot);
-          const imageRef = storage().ref(selectedImage.fileName);
+          const imageRef = storage().ref(selectedImage);
           imageRef
             .getDownloadURL()
             .then(url => {
