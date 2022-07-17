@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import auth from '@react-native-firebase/auth';
 
-import Button from '../../components/Button';
+// import Button from '../../components/Button';
 import StyledError from '../../components/Error';
 import Label from '../../components/Label';
 import StyledTextInput from '../../components/TextInput';
@@ -11,20 +11,25 @@ import {COLORS} from '../../constants';
 import {FIREBASE_ERRORS} from '../../firebase/errors';
 import {FacebookIcon, GoogleIcon} from '../../SVG';
 import {checkIsEmailValid} from '../../utils';
+import {Button} from 'native-base';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const onLoginAttempt = () => {
+    setLoading(true);
     setError('');
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(user => {
+        setLoading(false);
         console.log('User logged in!', user);
       })
       .catch(err => {
+        setLoading(false);
         console.log('ERROR', err.message);
         setError(err.message);
       });
@@ -83,12 +88,26 @@ const Login = ({navigation}) => {
           </View>
         </View>
         <View style={styles.footerContainer}>
-          <Button
+          {/* <Button
             color={COLORS.neon}
             disabled={isDisabled}
             text="Sign In"
             onPress={onLoginAttempt}
-          />
+          /> */}
+          <Button
+            height="12"
+            backgroundColor={isDisabled ? 'primary.900' : 'primary.500'}
+            borderRadius="full"
+            _text={{
+              color: '#1F2937',
+              fontWeight: 700,
+            }}
+            disabled={isDisabled}
+            isLoading={loading}
+            onPress={onLoginAttempt}
+            isLoadingText="Logging In">
+            Sign In
+          </Button>
           <View style={styles.divider}>
             <View style={styles.line}></View>
             <Text style={styles.text}>or Sign in with</Text>
