@@ -4,12 +4,10 @@ import Button from '../../../components/Button';
 import {GallaryIcon, CameraIcon, CloseIcon, CheckIcon} from '../../../SVG';
 import * as ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
-import {AuthContext, AuthUserContext} from '../../../Context/auth';
+import {AuthUserContext} from '../../../Context/auth';
 import {UserDataContext} from '../../../Context/userData';
 import Header from '../../../components/Header';
-import {COLORS, FONTS} from '../../../constants/theme';
-import {authState} from '../../../atoms/authAtom';
-import {useRecoilValue} from 'recoil';
+import {COLORS} from '../../../constants/theme';
 
 const UpdateProfile = ({navigation}) => {
   const [image, setImage] = useState(null);
@@ -46,7 +44,7 @@ const UpdateProfile = ({navigation}) => {
   const handleUploadImage = () => {
     setLoading(true);
     storage()
-      .ref(authUser?.uid)
+      .ref(authUser.uid)
       .putFile(image)
       .then(snapshot => {
         console.log('IMAGE UPLOADED', snapshot);
@@ -55,7 +53,7 @@ const UpdateProfile = ({navigation}) => {
           .getDownloadURL()
           .then(url => {
             console.log('UPLOADED IMAGE URL', url);
-            updateUserData(url, navigation, setLoading);
+            updateUserData(url, navigation, setLoading, authUser.uid);
           })
           .catch(err => {
             console.log('image download error', err);
