@@ -2,8 +2,9 @@ import React from 'react';
 import {ImageBackground, StatusBar, Text, View} from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
+import {Button} from 'native-base';
 
-import Button from '../../components/Button';
+// import Button from '../../components/Button';
 import {COLORS, FONTS, SIZES} from '../../constants';
 
 const GetStarted = ({navigation}) => {
@@ -64,11 +65,22 @@ const GetStarted = ({navigation}) => {
             flex: 1,
             justifyContent: 'center',
           }}>
-          <Button
+          {/* <Button
             text="Get Started"
             onPress={() => navigation.navigate('Login')}
             color={COLORS.neon}
-          />
+          /> */}
+          <Button
+            height="12"
+            borderRadius="full"
+            backgroundColor={COLORS.neon}
+            _text={{
+              color: '#1F2937',
+              fontWeight: 700,
+            }}
+            onPress={() => navigation.navigate('Login')}>
+            Get Started
+          </Button>
         </View>
       </View>
     );
