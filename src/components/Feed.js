@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
+
 import {
   HeartOutlinIcon,
   HeartFilledIcon,
@@ -13,12 +14,12 @@ import {
   CommentOutlinedIcon,
   LinkIcon,
 } from '../SVG';
-import {COLORS} from '../constants';
 import moment from 'moment';
 import firestore from '@react-native-firebase/firestore';
-
 import FastImage from 'react-native-fast-image';
-import {Actionsheet, Box, ThreeDotsIcon, useDisclose} from 'native-base';
+
+import {Actionsheet, Box, Image, ThreeDotsIcon, useDisclose} from 'native-base';
+import {COLORS} from '../constants';
 import FeedMore from './BottomSheet/FeedMore';
 import {AuthUserContext} from '../Context/auth';
 
@@ -142,11 +143,13 @@ const Feed = ({
                 <CommentOutlinedIcon style={{marginLeft: 4}} />
               </TouchableOpacity>
             </View>
-            <View>
-              <TouchableOpacity onPress={onOpen}>
-                <ThreeDotsIcon />
-              </TouchableOpacity>
-            </View>
+            {authUser?.uid === userId && (
+              <View>
+                <TouchableOpacity onPress={onOpen}>
+                  <ThreeDotsIcon />
+                </TouchableOpacity>
+              </View>
+            )}
           </Box>
 
           <Text style={styles.likes}>{likesCounter} likes</Text>
@@ -179,13 +182,10 @@ const Feed = ({
                 })
               }
               style={styles.userInfo}>
-              <FastImage
+              <Image
                 style={styles.userProfile}
-                source={{
-                  uri: userProfilePic,
-                  priority: FastImage.priority.normal,
-                }}
-                resizeMode={FastImage.resizeMode.contain}
+                source={{uri: userProfilePic}}
+                alt={username}
               />
               <View>
                 <Text style={styles.usernameText}>{username}</Text>
