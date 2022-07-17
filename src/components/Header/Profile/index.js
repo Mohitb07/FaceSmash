@@ -1,11 +1,13 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {Button, HStack, Icon, Image, Text as NText} from 'native-base';
 import {EditIcon, VerificationIcon} from '../../../SVG';
 import {COLORS} from '../../../constants';
 import firestore from '@react-native-firebase/firestore';
+import {AuthUserContext} from '../../../Context/auth';
 
 const ProfileHeader = ({userId, navigation, totalPosts}) => {
+  const {authUser} = useContext(AuthUserContext);
   const [userData, setUserData] = useState([]);
 
   useEffect(() => {
@@ -81,14 +83,16 @@ const ProfileHeader = ({userId, navigation, totalPosts}) => {
           <Text style={styles.btnText}>Post</Text>
           <Text style={styles.btnBadge}>{totalPosts}</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.btnPost, styles.btnBackground]}
-          onPress={() => navigation.navigate('Update Profile')}>
-          <EditIcon />
-          <Text style={[styles.btnText, {color: COLORS.transparentBlack7}]}>
-            Edit Profile
-          </Text>
-        </TouchableOpacity>
+        {authUser?.uid === userId && (
+          <TouchableOpacity
+            style={[styles.btnPost, styles.btnBackground]}
+            onPress={() => navigation.navigate('Update Profile')}>
+            <EditIcon />
+            <Text style={[styles.btnText, {color: COLORS.transparentBlack7}]}>
+              Edit Profile
+            </Text>
+          </TouchableOpacity>
+        )}
       </View>
       <Text style={styles.activityLabel}>Recent Activity</Text>
     </View>
@@ -171,6 +175,7 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     flexDirection: 'row',
+    justifyContent: 'center',
   },
   activityLabel: {
     color: '#F2F2F2',
