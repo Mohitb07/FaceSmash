@@ -10,7 +10,9 @@ export function useRegister() {
     password: '',
     confirmPassword: '',
   });
+  const [loading, setLoading] = useState(false);
   const onRegisterAttempt = ({email = '', password = '', username = ''}) => {
+    setLoading(true);
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(user => {
@@ -40,6 +42,7 @@ export function useRegister() {
           });
       })
       .catch(error => {
+        setLoading(false);
         console.log('error', error.message);
         if (error.code === 'auth/weak-password') {
           setError(prev => ({
@@ -64,5 +67,5 @@ export function useRegister() {
       });
   };
 
-  return {onRegisterAttempt, error, setError};
+  return {onRegisterAttempt, error, setError, loading};
 }
