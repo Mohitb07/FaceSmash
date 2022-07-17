@@ -7,7 +7,9 @@ import {
   View,
 } from 'react-native';
 
-import Button from '../../components/Button';
+import {Button} from 'native-base';
+
+// import Button from '../../components/Button';
 import StyledError from '../../components/Error';
 import Label from '../../components/Label';
 import StyledTextInput from '../../components/TextInput';
@@ -23,7 +25,7 @@ const SignUp = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [charactersLeft, setCharactersLeft] = useState(30);
 
-  const {onRegisterAttempt, error, setError} = useRegister();
+  const {onRegisterAttempt, error, setError, loading} = useRegister();
 
   const isDisabled =
     email.length === 0 ||
@@ -129,12 +131,27 @@ const SignUp = ({navigation}) => {
           </View>
         </View>
         <View style={styles.footerContainer}>
-          <Button
+          {/* <Button
             disabled={isDisabled}
             text="Sign Up"
             onPress={signUpAttempt}
             color={COLORS.neon}
-          />
+          /> */}
+
+          <Button
+            height="12"
+            backgroundColor={isDisabled ? 'primary.900' : 'primary.500'}
+            borderRadius="full"
+            _text={{
+              color: '#1F2937',
+              fontWeight: 700,
+            }}
+            disabled={isDisabled}
+            isLoading={loading}
+            onPress={signUpAttempt}
+            isLoadingText="Signing Up">
+            Sign Up
+          </Button>
           <View style={styles.divider}>
             <View style={styles.line}></View>
             <Text style={styles.text}>or Sign in with</Text>
