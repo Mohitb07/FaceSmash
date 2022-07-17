@@ -9,11 +9,11 @@ export const theme = extendTheme({
       200: '#A2D4EC',
       300: '#7AC1E4',
       400: '#47A9DA',
-      500: '#0088CC',
-      600: '#007AB8',
+      500: '#AFE41F',
+      600: '#bad419',
       700: '#006BA1',
       800: '#005885',
-      900: '#003F5E',
+      900: '#7ca314',
     },
     // Redefinig only one shade, rest of the color will remain same.
     amber: {
