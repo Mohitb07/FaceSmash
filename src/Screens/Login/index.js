@@ -1,5 +1,11 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  KeyboardAvoidingView,
+} from 'react-native';
 
 import auth from '@react-native-firebase/auth';
 
@@ -45,7 +51,7 @@ const Login = ({navigation}) => {
     email.length === 0 || password.length === 0 || invalidEmail;
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView style={styles.container}>
       <View style={styles.container}>
         <View>
           <View style={styles.headingContainer}>
@@ -88,19 +94,14 @@ const Login = ({navigation}) => {
           </View>
         </View>
         <View style={styles.footerContainer}>
-          {/* <Button
-            color={COLORS.neon}
-            disabled={isDisabled}
-            text="Sign In"
-            onPress={onLoginAttempt}
-          /> */}
           <Button
             height="12"
             backgroundColor={isDisabled ? 'primary.900' : 'primary.500'}
             borderRadius="full"
             _text={{
               color: '#1F2937',
-              fontWeight: 700,
+              // fontWeight: 700,
+              fontFamily: 'Lato-Heavy',
             }}
             disabled={isDisabled}
             isLoading={loading}
@@ -131,7 +132,7 @@ const Login = ({navigation}) => {
           </View>
         </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -147,12 +148,14 @@ const styles = StyleSheet.create({
   headingContainer: {},
   heading: {
     fontSize: 25,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     color: '#fff',
+    fontFamily: 'Lato-Heavy',
   },
   subtitle: {
     color: '#BEBEBE',
     marginTop: 15,
+    fontFamily: 'Lato-Medium',
   },
   inputContainer: {
     marginTop: 25,
@@ -169,6 +172,7 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     color: COLORS.neon,
     textAlign: 'right',
+    fontFamily: 'Lato-Regular',
   },
   divider: {
     flexDirection: 'row',
@@ -184,6 +188,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#BEBEBE',
+    fontFamily: 'Lato-Regular',
   },
   socialContainer: {
     flexDirection: 'row',
@@ -205,5 +210,6 @@ const styles = StyleSheet.create({
     color: COLORS.neon,
     fontWeight: 'bold',
     marginLeft: 5,
+    fontFamily: 'Lato-Semibold',
   },
 });

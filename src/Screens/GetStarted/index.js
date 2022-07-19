@@ -17,7 +17,7 @@ const GetStarted = ({navigation}) => {
         <ImageBackground
           style={{flex: 1, justifyContent: 'flex-end'}}
           resizeMode="cover"
-          source={require('../../assets/getStartedBg.jpg')}>
+          source={require('../../../assets/getStartedBg.jpg')}>
           <LinearGradient
             start={{x: 0, y: 0}}
             end={{x: 0, y: 1}}
@@ -33,6 +33,7 @@ const GetStarted = ({navigation}) => {
                 color: COLORS.white,
                 ...FONTS.largeTitle,
                 lineHeight: 45,
+                fontFamily: 'Lato-Medium',
               }}>
               Connect with your friends
             </Text>
@@ -55,6 +56,7 @@ const GetStarted = ({navigation}) => {
             width: '70%',
             color: COLORS.gray,
             ...FONTS.body3,
+            fontFamily: 'Lato-Regular',
           }}>
           Connect with your friends and family to see who’s around and what
           they’re up to.
@@ -76,7 +78,8 @@ const GetStarted = ({navigation}) => {
             backgroundColor={COLORS.neon}
             _text={{
               color: '#1F2937',
-              fontWeight: 700,
+              // fontWeight: 700,
+              fontFamily: 'Lato-Heavy',
             }}
             onPress={() => navigation.navigate('Login')}>
             Get Started

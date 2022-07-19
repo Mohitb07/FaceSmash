@@ -27,6 +27,7 @@ const styles = StyleSheet.create({
   error: {
     fontSize: 13,
     color: 'red',
+    fontFamily: 'Lato-Medium',
   },
 
   errorIcon: {

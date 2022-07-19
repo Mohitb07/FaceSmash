@@ -265,6 +265,7 @@ const AddPost = ({navigation}) => {
                 <Text
                   color={selectedImage || loading ? 'gray.700' : 'white'}
                   ml="5"
+                  fontFamily="Lato-Regular"
                   fontSize="md">
                   Photo/video
                 </Text>
@@ -279,6 +280,7 @@ const AddPost = ({navigation}) => {
                 <Text
                   color={loading ? 'gray.700' : 'white'}
                   ml="5"
+                  fontFamily="Lato-Regular"
                   fontSize="md">
                   {linkText}
                 </Text>

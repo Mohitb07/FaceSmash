@@ -1,6 +1,6 @@
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
-import {Button, HStack, Icon, Image, Text as NText} from 'native-base';
+import {Box, Button, HStack, Icon, Image, Text as NText} from 'native-base';
 import {EditIcon, VerificationIcon} from '../../../SVG';
 import {COLORS} from '../../../constants';
 import firestore from '@react-native-firebase/firestore';
@@ -42,9 +42,15 @@ const ProfileHeader = ({userId, navigation, totalPosts}) => {
           }}
           mb="3.5"
         />
-        <HStack alignItems="center" justifyContent="center" ml="6">
-          <Text style={styles.textFullName}>{userData[0]?.username}</Text>
-          {userData[0]?.username && <Icon as={VerificationIcon} ml="2" />}
+        <HStack alignItems="center">
+          <Text
+            ellipsizeMode="middle"
+            numberOfLines={1}
+            style={styles.textFullName}>
+            {userData[0]?.username}
+          </Text>
+          {/* { && <Icon as={VerificationIcon} ml="2" />} */}
+          <Icon as={userData[0]?.username ? VerificationIcon : null} ml="2" />
         </HStack>
         <NText textAlign="center" color="gray.400">
           {userData[0]?.email}
@@ -55,7 +61,7 @@ const ProfileHeader = ({userId, navigation, totalPosts}) => {
           isLoading={false}
           borderRadius="full"
           width="1/2">
-          <NText fontWeight="semibold" color={COLORS.transparentBlack7}>
+          <NText fontFamily="Lato-Heavy" color={COLORS.transparentBlack7}>
             Follow
           </NText>
         </Button>
@@ -78,7 +84,7 @@ const ProfileHeader = ({userId, navigation, totalPosts}) => {
           <Text style={styles.bio}>Inspiring Designers Globally 🌎</Text>
         </View> */}
 
-      <View style={styles.btnContainer}>
+      <Box style={styles.btnContainer}>
         <TouchableOpacity style={styles.btnPost}>
           <Text style={styles.btnText}>Post</Text>
           <Text style={styles.btnBadge}>{totalPosts}</Text>
@@ -93,7 +99,7 @@ const ProfileHeader = ({userId, navigation, totalPosts}) => {
             </Text>
           </TouchableOpacity>
         )}
-      </View>
+      </Box>
       <Text style={styles.activityLabel}>Recent Activity</Text>
     </View>
   );
@@ -112,6 +118,8 @@ const styles = StyleSheet.create({
     color: '#E5E5E5',
     fontSize: 23,
     marginBottom: 5,
+    fontFamily: 'Lato-Semibold',
+    letterSpacing: 1,
   },
   userInfo: {
     flexDirection: 'column',
@@ -150,6 +158,7 @@ const styles = StyleSheet.create({
     width: '50%',
     flexDirection: 'row',
     justifyContent: 'center',
+    flexGrow: 1,
     borderColor: '#171719',
     borderWidth: 5,
     alignItems: 'center',
@@ -180,8 +189,9 @@ const styles = StyleSheet.create({
   activityLabel: {
     color: '#F2F2F2',
     fontSize: 25,
-    fontWeight: 'bold',
     marginTop: 20,
+    fontFamily: 'Lato-Heavy',
+    color: 'white',
   },
   fullNameContainer: {
     flexDirection: 'row',
