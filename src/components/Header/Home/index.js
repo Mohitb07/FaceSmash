@@ -42,6 +42,7 @@ function PostHeader({navigation}) {
 
         <View style={styles.rightHeader}>
           <TouchableOpacity
+            hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}
             onPress={() => navigation.navigate('Add Post')}
             style={styles.searchIcon}>
             <AddIcon />
@@ -50,7 +51,7 @@ function PostHeader({navigation}) {
       </View>
       <View style={styles.feedsContainer}>
         {/* <Text style={styles.feedsLabel}>Trending</Text> */}
-        <Heading size="2xl">Trending</Heading>
+        <Text style={styles.heading}>Trending</Text>
       </View>
     </>
   );
@@ -110,5 +111,10 @@ const styles = StyleSheet.create({
     color: '#F2F2F2',
     fontSize: 35,
     fontWeight: 'bold',
+  },
+  heading: {
+    fontFamily: 'Lato-Heavy',
+    color: 'white',
+    fontSize: 30,
   },
 });
