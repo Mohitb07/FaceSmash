@@ -145,7 +145,9 @@ const Feed = ({
             </View>
             {authUser?.uid === userId && (
               <View>
-                <TouchableOpacity onPress={onOpen}>
+                <TouchableOpacity
+                  hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}
+                  onPress={onOpen}>
                   <ThreeDotsIcon />
                 </TouchableOpacity>
               </View>
@@ -200,7 +202,7 @@ const Feed = ({
           </Text>
         </View>
       </View>
-      <Actionsheet isOpen={isOpen} onClose={onClose}>
+      <Actionsheet disableOverlay isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content>
           <FeedMore />
         </Actionsheet.Content>
@@ -234,7 +236,8 @@ const styles = StyleSheet.create({
   feedTitle: {
     fontSize: 20,
     color: '#F2F2F2',
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
+    fontFamily: 'Lato-Heavy',
     lineHeight: 23,
   },
   usernameText: {
@@ -271,13 +274,14 @@ const styles = StyleSheet.create({
   },
   description: {
     color: '#747474',
+    fontFamily: 'Lato-Semibold',
   },
   titleNuser: {
     flexDirection: 'column-reverse',
   },
   likes: {
     color: COLORS.white,
-    fontWeight: 'bold',
+    fontWeight: '700',
   },
   linkTitle: {
     flexDirection: 'row',
