@@ -113,7 +113,11 @@ function CustomFlatList({navigation}) {
         )
       }
       refreshControl={
-        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        <RefreshControl
+          progressBackgroundColor={COLORS.neon}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
+        />
       }
       ListHeaderComponent={
         <HomeHeader navigation={navigation} loading={loading} />

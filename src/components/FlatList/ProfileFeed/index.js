@@ -1,12 +1,15 @@
 import firestore from '@react-native-firebase/firestore';
-import {Text as NText} from 'native-base';
+import {Text as NText, View, VStack} from 'native-base';
+
 import React, {useEffect, useState} from 'react';
+
 import {FlatList} from 'react-native';
 import {COLORS} from '../../../constants';
 import useLikedPosts from '../../../hooks/useLikedPosts';
 import Feed from '../../Feed';
 import FeedSkeleton from '../../FeedSkeleton';
 import ProfileHeader from '../../Header/Profile';
+import {SecondaryDocumentIcon} from '../../../SVG';
 
 const ProfileFeed = ({userId, navigation}) => {
   const {userLikedPosts} = useLikedPosts();
@@ -43,13 +46,18 @@ const ProfileFeed = ({userId, navigation}) => {
         loading ? (
           <FeedSkeleton />
         ) : (
-          <NText
-            textAlign="center"
-            color={COLORS.white}
-            fontSize={20}
-            marginTop={20}>
-            Not Enough Posts
-          </NText>
+          <VStack alignItems="center">
+            <SecondaryDocumentIcon width={90} height={90} />
+            <NText
+              textAlign="center"
+              color={COLORS.white}
+              fontSize={20}
+              fontFamily="Lato-Semibold"
+              // marginTop={20}
+            >
+              Not Enough Posts
+            </NText>
+          </VStack>
         )
       }
       keyExtractor={item => item.key}
@@ -59,6 +67,15 @@ const ProfileFeed = ({userId, navigation}) => {
           navigation={navigation}
           totalPosts={myRecentPosts?.length}
         />
+      }
+      ListFooterComponent={
+        myRecentPosts?.length > 0 && (
+          <View paddingY="4">
+            <NText textAlign="center" color="gray.500">
+              No More post
+            </NText>
+          </View>
+        )
       }
       renderItem={({item}) => (
         <Feed
