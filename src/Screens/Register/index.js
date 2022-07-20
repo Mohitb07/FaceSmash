@@ -1,22 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 
 import {Button} from 'native-base';
 
-// import Button from '../../components/Button';
 import StyledError from '../../components/Error';
 import Label from '../../components/Label';
 import StyledTextInput from '../../components/TextInput';
 import {COLORS} from '../../constants';
 import {FIREBASE_ERRORS} from '../../firebase/errors';
 import {useRegister} from '../../hooks/register';
-import {FacebookIcon, GoogleIcon} from '../../SVG';
+import AuthFooter from '../../components/AuthFooter';
 
 const SignUp = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -131,13 +124,6 @@ const SignUp = ({navigation}) => {
           </View>
         </View>
         <View style={styles.footerContainer}>
-          {/* <Button
-            disabled={isDisabled}
-            text="Sign Up"
-            onPress={signUpAttempt}
-            color={COLORS.neon}
-          /> */}
-
           <Button
             height="12"
             backgroundColor={isDisabled ? 'primary.900' : 'primary.500'}
@@ -152,27 +138,12 @@ const SignUp = ({navigation}) => {
             isLoadingText="Signing Up">
             Sign Up
           </Button>
-          <View style={styles.divider}>
-            <View style={styles.line}></View>
-            <Text style={styles.text}>or Sign in with</Text>
-            <View style={styles.line}></View>
-          </View>
-          <View style={styles.socialContainer}>
-            <TouchableOpacity style={styles.socialBtn}>
-              <FacebookIcon />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialBtn}>
-              <GoogleIcon />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.signupTextContainer}>
-            <Text style={styles.text}>Already have an account ?</Text>
-            <Text
-              onPress={() => navigation.navigate('Login')}
-              style={styles.signupText}>
-              Sign In
-            </Text>
-          </View>
+          <AuthFooter
+            navigation={navigation}
+            navigateTo="Login"
+            navigationText="Sign Up"
+            description="Already a member ?"
+          />
         </View>
       </View>
     </ScrollView>
@@ -202,41 +173,5 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     color: COLORS.neon,
     textAlign: 'right',
-  },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  line: {
-    marginVertical: 25,
-    width: '30%',
-    height: 1,
-    backgroundColor: '#BEBEBE',
-    marginHorizontal: 10,
-  },
-  text: {
-    color: '#BEBEBE',
-  },
-  socialContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginTop: 8,
-  },
-  socialBtn: {
-    backgroundColor: '#252A34',
-    padding: 13,
-    borderRadius: 50,
-  },
-  signupTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 15,
-  },
-  signupText: {
-    color: COLORS.neon,
-    fontWeight: 'bold',
-    marginLeft: 5,
   },
 });

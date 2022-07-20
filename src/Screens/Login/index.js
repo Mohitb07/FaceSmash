@@ -1,23 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  KeyboardAvoidingView,
-} from 'react-native';
+import {StyleSheet, Text, View, KeyboardAvoidingView} from 'react-native';
 
 import auth from '@react-native-firebase/auth';
 
-// import Button from '../../components/Button';
 import StyledError from '../../components/Error';
 import Label from '../../components/Label';
 import StyledTextInput from '../../components/TextInput';
 import {COLORS} from '../../constants';
 import {FIREBASE_ERRORS} from '../../firebase/errors';
-import {FacebookIcon, GoogleIcon} from '../../SVG';
 import {checkIsEmailValid} from '../../utils';
 import {Button} from 'native-base';
+import AuthFooter from '../../components/AuthFooter';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -31,7 +24,6 @@ const Login = ({navigation}) => {
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(user => {
-        setLoading(false);
         console.log('User logged in!', user);
       })
       .catch(err => {
@@ -50,15 +42,16 @@ const Login = ({navigation}) => {
   const isDisabled =
     email.length === 0 || password.length === 0 || invalidEmail;
 
+  const invalidEmailError = email.length > 0 && invalidEmail;
+
   return (
-    <KeyboardAvoidingView style={styles.container}>
+    <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
       <View style={styles.container}>
         <View>
           <View style={styles.headingContainer}>
             <Text style={styles.heading}>Welcome Back!</Text>
             <Text style={styles.subtitle}>
-              We're happy to see. You can Login and continue consulting your
-              problem or read some tips.
+              We're happy to see. Login now and connect with your friends.
             </Text>
           </View>
           <View style={styles.inputContainer}>
@@ -69,12 +62,9 @@ const Login = ({navigation}) => {
               onChangeText={text => setEmail(text)}
             />
             <StyledError
-              showErrorIcon={
-                (email.length > 0 && invalidEmail) || Boolean(error)
-              }
+              showErrorIcon={invalidEmailError || Boolean(error)}
               message={
-                (email.length > 0 && invalidEmail && 'Invalid Email') ||
-                FIREBASE_ERRORS[error]
+                (invalidEmailError && 'Invalid Email') || FIREBASE_ERRORS[error]
               }
             />
 
@@ -100,7 +90,6 @@ const Login = ({navigation}) => {
             borderRadius="full"
             _text={{
               color: '#1F2937',
-              // fontWeight: 700,
               fontFamily: 'Lato-Heavy',
             }}
             disabled={isDisabled}
@@ -109,27 +98,12 @@ const Login = ({navigation}) => {
             isLoadingText="Logging In">
             Sign In
           </Button>
-          <View style={styles.divider}>
-            <View style={styles.line}></View>
-            <Text style={styles.text}>or Sign in with</Text>
-            <View style={styles.line}></View>
-          </View>
-          <View style={styles.socialContainer}>
-            <TouchableOpacity style={styles.socialBtn}>
-              <FacebookIcon />
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.socialBtn}>
-              <GoogleIcon />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.signupTextContainer}>
-            <Text style={styles.text}>I don't have an account</Text>
-            <Text
-              onPress={() => navigation.navigate('Sign Up')}
-              style={styles.signupText}>
-              Sign Up
-            </Text>
-          </View>
+          <AuthFooter
+            navigation={navigation}
+            navigateTo="Sign Up"
+            navigationText="Sign Up"
+            description="I don't have an account"
+          />
         </View>
       </View>
     </KeyboardAvoidingView>
@@ -148,7 +122,6 @@ const styles = StyleSheet.create({
   headingContainer: {},
   heading: {
     fontSize: 25,
-    // fontWeight: 'bold',
     color: '#fff',
     fontFamily: 'Lato-Heavy',
   },
@@ -173,43 +146,6 @@ const styles = StyleSheet.create({
     color: COLORS.neon,
     textAlign: 'right',
     fontFamily: 'Lato-Regular',
-  },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  line: {
-    marginVertical: 25,
-    width: '30%',
-    height: 1,
-    backgroundColor: '#BEBEBE',
-    marginHorizontal: 10,
-  },
-  text: {
-    color: '#BEBEBE',
-    fontFamily: 'Lato-Regular',
-  },
-  socialContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    marginTop: 8,
-  },
-  socialBtn: {
-    backgroundColor: '#252A34',
-    padding: 13,
-    borderRadius: 50,
-  },
-  signupTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginVertical: 15,
-  },
-  signupText: {
-    color: COLORS.neon,
-    fontWeight: 'bold',
-    marginLeft: 5,
-    fontFamily: 'Lato-Semibold',
+    paddingBottom: 12,
   },
 });
