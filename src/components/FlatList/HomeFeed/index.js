@@ -12,7 +12,7 @@ import FeedSkeleton from '../../FeedSkeleton';
 import {COLORS} from '../../../constants';
 import useLikedPosts from '../../../hooks/useLikedPosts';
 
-function CustomFlatList({navigation}) {
+function HomeFeed({navigation}) {
   const [postStateValue, setPostStateValue] = useRecoilState(postState);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -127,4 +127,4 @@ function CustomFlatList({navigation}) {
   );
 }
 
-export default React.memo(CustomFlatList);
+export default React.memo(HomeFeed);
