@@ -37,62 +37,48 @@ const AddPost = ({navigation}) => {
   const [showLink, setShowLink] = useState(false);
   const [link, setLink] = useState('');
 
-  const handlePostCreation = () => {
+  const handlePostCreation = async () => {
     setLoading(true);
     if (selectedImage) {
-      storage()
-        .ref(selectedImage)
-        .putFile(selectedImage)
-        .then(snapshot => {
-          console.log('IMAGE UPLOADED', snapshot);
-          const imageRef = storage().ref(selectedImage);
-          imageRef
-            .getDownloadURL()
-            .then(url => {
-              console.log('UPLOADED IMAGE URL', url);
-              firestore()
-                .collection('Posts')
-                .add({
-                  title: title,
-                  description: textAreaValue,
-                  image: url,
-                  user: authUser?.uid,
-                  userProfile: contextUser.profilePic,
-                  username: contextUser.username,
-                  likes: 0,
-                  link: link,
-                  createdAt: new Date(),
-                })
-                .then(() => {
-                  Toast.show({
-                    type: 'success',
-                    text1: 'Post Created',
-                    text2: 'Refresh the feed to see the latest changes',
-                  });
-                  navigation.navigate('Home');
-                });
-            })
-            .catch(err => {
-              setLoading(false);
-              Toast.show({
-                type: 'error',
-                text1: 'Post Creation Error',
-                text2: err.message,
-              });
-            });
-        })
-        .catch(err => {
+      try {
+        await storage().ref(selectedImage).putFile(selectedImage);
+        const imageURL = await storage().ref(selectedImage).getDownloadURL();
+
+        if (!imageURL) {
+          throw new Error('Image Upload failed');
+        }
+        try {
+          await firestore().collection('Posts').add({
+            title: title,
+            description: textAreaValue,
+            image: imageURL,
+            user: authUser?.uid,
+            userProfile: contextUser.profilePic,
+            username: contextUser.username,
+            likes: 0,
+            link: link,
+            createdAt: new Date(),
+          });
+          navigation.navigate('Home');
+        } catch (error) {
           setLoading(false);
           Toast.show({
             type: 'error',
-            text1: 'Image Upload Error',
+            text1: 'Post Creation Error',
             text2: err.message,
           });
+        }
+      } catch (err) {
+        setLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: '',
+          text2: err.message,
         });
+      }
     } else {
-      firestore()
-        .collection('Posts')
-        .add({
+      try {
+        await firestore().collection('Posts').add({
           title: title,
           description: textAreaValue,
           image: null,
@@ -102,25 +88,16 @@ const AddPost = ({navigation}) => {
           likes: 0,
           link: link,
           createdAt: new Date(),
-        })
-        .then(() => {
-          setLoading(false);
-          Toast.show({
-            type: 'success',
-            text1: 'Post Created',
-            text2: 'Refresh the feed to see the latest changes',
-          });
-          navigation.navigate('Home');
-        })
-        .catch(err => {
-          setLoading(false);
-          Toast.show({
-            type: 'error',
-            text1: 'Post Creation Error',
-            text2: err.message,
-          });
-          console.log('error posting', err);
         });
+        navigation.navigate('Home');
+      } catch (error) {
+        setLoading(false);
+        Toast.show({
+          type: 'error',
+          text1: 'Post Creation Error',
+          text2: err.message,
+        });
+      }
     }
   };
   const linkText = showLink ? 'Remove Link' : 'Add Link';
