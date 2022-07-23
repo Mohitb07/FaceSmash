@@ -1,11 +1,10 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {createRef, useContext} from 'react';
+import React, {createRef, useContext, useEffect} from 'react';
 
 import GetStarted from '../../Screens/GetStarted';
 import Home from '../../Screens/Home';
 import Login from '../../Screens/Login';
 import MyProfile from '../../Screens/Profile';
-
 import Loader from '../../components/Loader';
 import {AuthUserContext} from '../../Context/auth';
 import AddPost from '../../Screens/AddPost';
