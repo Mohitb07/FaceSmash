@@ -166,7 +166,7 @@ function HomeFeed({navigation}) {
         )
       }
       onEndReached={retrieveMore}
-      onEndReachedThreshold={0}
+      onEndReachedThreshold={0.5}
       refreshControl={
         <RefreshControl
           progressBackgroundColor={COLORS.neon}
