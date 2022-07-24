@@ -24,15 +24,29 @@ import StyledTextInput from '../../components/TextInput';
 import {COLORS} from '../../constants';
 import {AuthUserContext} from '../../Context/auth';
 import {UserDataContext} from '../../Context/userData';
-import {CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '../../SVG';
+import {
+  CheckIcon,
+  CloseIcon,
+  GallaryIcon,
+  LinkIcon,
+  PhotoIcon,
+} from '../../SVG';
 import useSelectImage from '../../hooks/useSelectImage';
 
-const AddPost = ({navigation}) => {
+const AddPost = ({route, navigation}) => {
+  const routeData = route?.params || {};
+
+  let getterImage = {...routeData};
+
+  const image = getterImage?.selectedImage;
+
+  console.log('selectedFromnav', imageFromNav);
   const [textAreaValue, setTextAreaValue] = useState();
   const [title, setTitle] = useState('');
   const {authUser} = useContext(AuthUserContext);
   const {contextUser} = useContext(UserDataContext);
   const {selectedImage, handleChooseGallary, clearImage} = useSelectImage();
+  const [imageFromNav, setImageFromNav] = useState(image);
   const [loading, setLoading] = useState(false);
   const [showLink, setShowLink] = useState(false);
   const [link, setLink] = useState('');
@@ -111,6 +125,11 @@ const AddPost = ({navigation}) => {
     }
   };
 
+  const handleClear = () => {
+    clearImage();
+    setImageFromNav('');
+  };
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View>
@@ -171,13 +190,13 @@ const AddPost = ({navigation}) => {
             </>
           )}
 
-          {selectedImage && (
+          {(selectedImage || !!imageFromNav) && (
             <Box
               style={styles.imageContainer}
               position="relative"
               justifyContent="center">
               <PresenceTransition
-                visible={!!selectedImage}
+                visible={!!imageFromNav || !!selectedImage}
                 initial={{
                   opacity: 0,
                   scale: 0,
@@ -192,12 +211,12 @@ const AddPost = ({navigation}) => {
                 <Image
                   style={styles.postImage}
                   source={{
-                    uri: selectedImage,
+                    uri: imageFromNav || selectedImage,
                   }}
                 />
 
                 <IconButton
-                  onPress={clearImage}
+                  onPress={handleClear}
                   style={styles.clearBtn}
                   icon={<Icon as={CloseIcon} name="emoji-happy" />}
                   borderRadius="full"
@@ -235,12 +254,16 @@ const AddPost = ({navigation}) => {
             </Center>
             <HStack borderTopColor="gray.600" borderTopWidth="1" paddingY="3">
               <TouchableOpacity
-                disabled={!!selectedImage || loading}
-                onPress={handleChooseGallary}
+                disabled={!!selectedImage || !!imageFromNav || loading}
+                onPress={() => handleChooseGallary(false)}
                 style={{flexDirection: 'row', alignItems: 'center'}}>
-                <PhotoIcon />
+                <PhotoIcon width="24" height="24" />
                 <Text
-                  color={selectedImage || loading ? 'gray.700' : 'white'}
+                  color={
+                    selectedImage || !!imageFromNav || loading
+                      ? 'gray.700'
+                      : 'white'
+                  }
                   ml="5"
                   fontFamily="Lato-Regular"
                   fontSize="md">

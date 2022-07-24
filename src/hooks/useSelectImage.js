@@ -5,7 +5,7 @@ import Toast from 'react-native-toast-message';
 
 const useSelectImage = () => {
   const [selectedImage, setSelectedImage] = useState(null);
-  const handleChooseGallary = () => {
+  const handleChooseGallary = (navigate = false, navigation) => {
     ImagePicker.launchImageLibrary({}, response => {
       if (response.didCancel) {
         Toast.show({
@@ -23,6 +23,10 @@ const useSelectImage = () => {
         });
       } else {
         setSelectedImage(response.assets[0].uri);
+        navigate &&
+          navigation.navigate('Add Post', {
+            selectedImage: response.assets[0].uri,
+          });
       }
     });
   };
