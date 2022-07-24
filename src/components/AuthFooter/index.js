@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     marginVertical: 15,
   },
   signupText: {
-    color: COLORS.neon,
+    color: COLORS.primary,
     fontWeight: 'bold',
     marginLeft: 5,
     fontFamily: 'Lato-Semibold',

@@ -86,10 +86,10 @@ const Login = ({navigation}) => {
         <View style={styles.footerContainer}>
           <Button
             height="12"
-            backgroundColor={isDisabled ? 'primary.900' : 'primary.500'}
+            backgroundColor={isDisabled ? 'primary.900' : 'primary.700'}
             borderRadius="full"
             _text={{
-              color: '#1F2937',
+              color: COLORS.white2,
               fontFamily: 'Lato-Heavy',
             }}
             disabled={isDisabled}
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
   },
   forgotPasswordText: {
-    color: COLORS.neon,
+    color: COLORS.primary,
     textAlign: 'right',
     fontFamily: 'Lato-Regular',
     paddingBottom: 12,

@@ -57,11 +57,11 @@ const ProfileHeader = ({userId, navigation, totalPosts}) => {
         </NText>
         <Button
           mt="7"
-          backgroundColor={COLORS.neon}
+          backgroundColor={COLORS.primary}
           isLoading={false}
           borderRadius="full"
           width="1/2">
-          <NText fontFamily="Lato-Heavy" color={COLORS.transparentBlack7}>
+          <NText fontFamily="Lato-Heavy" color={COLORS.white2}>
             Follow
           </NText>
         </Button>
@@ -94,7 +94,7 @@ const ProfileHeader = ({userId, navigation, totalPosts}) => {
             style={[styles.btnPost, styles.btnBackground]}
             onPress={() => navigation.navigate('Update Profile')}>
             <EditIcon />
-            <Text style={[styles.btnText, {color: COLORS.transparentBlack7}]}>
+            <Text style={[styles.btnText, {color: COLORS.white2}]}>
               Edit Profile
             </Text>
           </TouchableOpacity>
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   btnBackground: {
-    backgroundColor: COLORS.neon,
+    backgroundColor: COLORS.primary,
   },
   btnText: {
     color: 'white',
@@ -174,7 +174,7 @@ const styles = StyleSheet.create({
   },
   btnBadge: {
     backgroundColor: COLORS.background,
-    color: COLORS.neon,
+    color: COLORS.primary,
     fontSize: 10,
     paddingHorizontal: 5,
     paddingVertical: 2,

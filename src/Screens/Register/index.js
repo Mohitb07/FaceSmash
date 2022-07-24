@@ -170,8 +170,4 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginVertical: 25,
   },
-  forgotPasswordText: {
-    color: COLORS.neon,
-    textAlign: 'right',
-  },
 });
