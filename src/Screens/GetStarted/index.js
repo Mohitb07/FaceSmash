@@ -67,18 +67,12 @@ const GetStarted = ({navigation}) => {
             flex: 1,
             justifyContent: 'center',
           }}>
-          {/* <Button
-            text="Get Started"
-            onPress={() => navigation.navigate('Login')}
-            color={COLORS.neon}
-          /> */}
           <Button
             height="12"
             borderRadius="full"
-            backgroundColor={COLORS.neon}
+            backgroundColor={COLORS.primary}
             _text={{
-              color: '#1F2937',
-              // fontWeight: 700,
+              color: COLORS.white2,
               fontFamily: 'Lato-Heavy',
             }}
             onPress={() => navigation.navigate('Login')}>

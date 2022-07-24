@@ -1,7 +1,13 @@
 import {View, Text, StyleSheet, Image} from 'react-native';
 import React, {useState, useContext} from 'react';
 import Button from '../../../components/Button';
-import {GallaryIcon, CameraIcon, CloseIcon, CheckIcon} from '../../../SVG';
+import {
+  GallaryIcon,
+  CameraIcon,
+  CloseIcon,
+  CheckIcon,
+  PhotoIcon,
+} from '../../../SVG';
 import * as ImagePicker from 'react-native-image-picker';
 import storage from '@react-native-firebase/storage';
 import {AuthUserContext} from '../../../Context/auth';
@@ -96,14 +102,14 @@ const UpdateProfile = ({navigation}) => {
             onPress={handleChooseGallary}
             style={styles.customBtn}
             text="Open Gallary"
-            color={COLORS.primary}
+            color={COLORS.secondary}
             textStyle={[styles.customBtnText, {color: 'white'}]}
-            icon={<GallaryIcon />}
+            icon={<PhotoIcon height="15" width="15" />}
           />
           <Button
             onPress={handleTakePhoto}
             style={[styles.customBtn]}
-            color={COLORS.neon}
+            color={COLORS.primary}
             text="Take Now"
             textStyle={styles.customBtnText}
             icon={<CameraIcon />}
@@ -161,5 +167,6 @@ const styles = StyleSheet.create({
   },
   customBtnText: {
     fontSize: 12,
+    color: COLORS.white2,
   },
 });
