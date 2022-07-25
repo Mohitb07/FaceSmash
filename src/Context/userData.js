@@ -33,6 +33,8 @@ const UserDataProvider = props => {
     getData();
   }, [authUser]);
 
+  console.log('context User data', contextUser);
+
   const updateUserData = useCallback(
     async (url, navigation, setLoading, userId) => {
       console.log('authuser insdier', userId);
