@@ -2,7 +2,7 @@ import React from 'react';
 import {ImageBackground, StatusBar, Text, View} from 'react-native';
 
 import LinearGradient from 'react-native-linear-gradient';
-import {Button} from 'native-base';
+import {Button, View as NView, Text as NText} from 'native-base';
 
 // import Button from '../../components/Button';
 import {COLORS, FONTS, SIZES} from '../../constants';
@@ -35,8 +35,29 @@ const GetStarted = ({navigation}) => {
                 lineHeight: 45,
                 fontFamily: 'Lato-Medium',
               }}>
-              Connect with your friends
+              Connect with
             </Text>
+            <NView alignItems="center" flexDirection="row">
+              <NText
+                fontFamily="Lato-Bold"
+                color={COLORS.primary}
+                fontSize="4xl">
+                Face
+                <NText
+                  fontFamily="Lato-Bold"
+                  color={COLORS.white2}
+                  fontSize="4xl">
+                  Smash
+                </NText>
+              </NText>
+              <NView
+                ml="4"
+                bgColor={COLORS.primary}
+                height="3"
+                width="3"
+                fontFamily="Lato-Bold"
+                rounded="full"></NView>
+            </NView>
           </LinearGradient>
         </ImageBackground>
       </View>
@@ -67,7 +88,7 @@ const GetStarted = ({navigation}) => {
             flex: 1,
             justifyContent: 'center',
           }}>
-          <Button
+          {/* <Button
             height="12"
             borderRadius="full"
             backgroundColor={COLORS.primary}
@@ -77,7 +98,25 @@ const GetStarted = ({navigation}) => {
             }}
             onPress={() => navigation.navigate('Login')}>
             Get Started
-          </Button>
+          </Button> */}
+          <NView
+            borderColor={COLORS.white2}
+            borderWidth={2}
+            padding="0.5"
+            rounded="full">
+            <Button
+              height="12"
+              borderRadius="full"
+              backgroundColor={COLORS.white2}
+              borderColor={COLORS.white2}
+              onPress={() => navigation.navigate('Login')}
+              _text={{
+                color: COLORS.background,
+                fontFamily: 'Lato-Black',
+              }}>
+              Get Started
+            </Button>
+          </NView>
         </View>
       </View>
     );
