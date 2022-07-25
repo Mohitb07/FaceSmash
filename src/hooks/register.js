@@ -11,8 +11,14 @@ export function useRegister() {
     confirmPassword: '',
   });
   const [loading, setLoading] = useState(false);
-  const onRegisterAttempt = ({email = '', password = '', username = ''}) => {
+  const onRegisterAttempt = ({
+    email = '',
+    password = '',
+    username = '',
+    setFocus,
+  }) => {
     setLoading(true);
+    setFocus(true);
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(user => {
