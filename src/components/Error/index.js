@@ -21,13 +21,15 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 3,
+    marginLeft: 3,
+    marginTop: 2,
   },
 
   error: {
     fontSize: 13,
     color: 'red',
     fontFamily: 'Lato-Medium',
+    marginLeft: 5,
   },
 
   errorIcon: {
