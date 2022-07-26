@@ -13,6 +13,7 @@ import {FacebookIcon, GoogleIcon} from '../../SVG';
 import StyledError from '../../components/Error';
 import {FIREBASE_ERRORS} from '../../firebase/errors';
 import {useRegister} from '../../hooks/register';
+import StyledButton from '../../components/Button';
 
 const Register = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -20,7 +21,6 @@ const Register = ({navigation}) => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [username, setUsername] = useState('');
   const [charactersLeft, setCharactersLeft] = useState(30);
-  const [focus, setFocus] = useState(false);
 
   const {onRegisterAttempt, error, setError, loading} = useRegister();
 
@@ -29,7 +29,8 @@ const Register = ({navigation}) => {
     password.length === 0 ||
     confirmPassword.length === 0 ||
     username.length === 0 ||
-    password !== confirmPassword;
+    password !== confirmPassword ||
+    loading;
 
   const confirmPasswordErrorMsg =
     confirmPassword.length > 0 &&
@@ -37,7 +38,7 @@ const Register = ({navigation}) => {
     'Password do not match';
 
   const signUpAttempt = () => {
-    onRegisterAttempt({email, password, username, setFocus});
+    onRegisterAttempt({email, password, username});
   };
 
   useEffect(() => {
@@ -58,20 +59,6 @@ const Register = ({navigation}) => {
     if (text.length > 30) return;
     setUsername(text);
     setCharactersLeft(30 - text.length);
-  };
-
-  const isFocus = !focus &&
-    !isDisabled && {
-      borderColor: COLORS.white2,
-      borderWidth: 2,
-      rounded: 'full',
-    };
-
-  const defaultFocus = {
-    borderColor: COLORS.transparent,
-    borderWidth: 2,
-    rounded: 'full',
-    padding: '0.5',
   };
 
   return (
@@ -160,23 +147,13 @@ const Register = ({navigation}) => {
         color="primary.400">
         Forgot Password ?
       </Text> */}
-
-      <View {...defaultFocus} {...isFocus} mt="3">
-        <Button
-          height="12"
-          borderRadius="full"
-          onPress={signUpAttempt}
-          backgroundColor={isDisabled ? COLORS.gray : COLORS.white2}
-          borderColor={COLORS.white2}
-          disabled={isDisabled}
-          isLoading={loading}
-          _text={{
-            color: COLORS.background,
-            fontFamily: 'Lato-Regular',
-          }}>
-          Sign Up
-        </Button>
-      </View>
+      <StyledButton
+        onPress={signUpAttempt}
+        text="Sign Up"
+        color={isDisabled ? COLORS.gray : COLORS.white2}
+        loader={loading}
+        disabled={isDisabled}
+      />
       <Text my="6" textAlign="center" fontFamily="Lato-Regular">
         Or, login with...
       </Text>
