@@ -145,23 +145,14 @@ function PostHeader({navigation}) {
           borderRadius="full"
           maxWidth="2/3"
           ml="-4"
-          // maxHeight="5/6"
           placeholder={'Write something here...' + '\n' + 'यहाँ कुछ लिखो...'}
           placeholderTextColor={COLORS.white2}
-          // padding="4"
-          // paddingX="2"
-          // textAlignVertical="top"
           fontSize="md"
         />
         <TouchableOpacity onPress={handleGetImageThenNavigate}>
           <PhotoIcon width="30" height="30" />
         </TouchableOpacity>
       </NView>
-      {/* <View style={styles.feedsContainer}>
-        <NText fontSize="2xl" fontFamily="Lato-Bold">
-          Activities
-        </NText>
-      </View> */}
     </NView>
   );
 }

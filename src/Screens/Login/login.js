@@ -14,9 +14,9 @@ import {FacebookIcon, GoogleIcon} from '../../SVG';
 import {checkIsEmailValid} from '../../utils';
 import StyledError from '../../components/Error';
 import {FIREBASE_ERRORS} from '../../firebase/errors';
+import StyledButton from '../../components/Button';
 
 const Login = ({navigation}) => {
-  const [focus, setFocus] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -25,7 +25,6 @@ const Login = ({navigation}) => {
   const onLoginAttempt = () => {
     setLoading(true);
     setError('');
-    setFocus(true);
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(user => {
@@ -45,23 +44,9 @@ const Login = ({navigation}) => {
   const invalidEmail = checkIsEmailValid(email);
 
   const isDisabled =
-    email.length === 0 || password.length === 0 || invalidEmail;
+    email.length === 0 || password.length === 0 || invalidEmail || loading;
 
   const invalidEmailError = email.length > 0 && invalidEmail;
-
-  const isFocus = !focus &&
-    !isDisabled && {
-      borderColor: COLORS.white2,
-      borderWidth: 2,
-      rounded: 'full',
-    };
-
-  const defaultFocus = {
-    borderColor: COLORS.transparent,
-    borderWidth: 2,
-    rounded: 'full',
-    padding: '0.5',
-  };
 
   return (
     <ScrollView
@@ -126,11 +111,15 @@ const Login = ({navigation}) => {
         Forgot Password ?
       </Text>
 
-      <View {...defaultFocus} {...isFocus}>
+      {/* <TouchableOpacity
+        style={[
+          styles.btnDefault,
+          isDisabled && {borderColor: COLORS.transparent},
+        ]}>
         <Button
+          onPress={onLoginAttempt}
           height="12"
           borderRadius="full"
-          onPress={onLoginAttempt}
           backgroundColor={isDisabled ? COLORS.gray : COLORS.white2}
           borderColor={COLORS.white2}
           disabled={isDisabled}
@@ -141,7 +130,14 @@ const Login = ({navigation}) => {
           }}>
           Login
         </Button>
-      </View>
+      </TouchableOpacity> */}
+      <StyledButton
+        onPress={onLoginAttempt}
+        text="Login"
+        color={isDisabled ? COLORS.gray : COLORS.white2}
+        loader={loading}
+        disabled={isDisabled}
+      />
       <Text my="6" textAlign="center" fontFamily="Lato-Regular">
         Or, login with...
       </Text>
@@ -173,7 +169,7 @@ export default Login;
 const styles = StyleSheet.create({
   container: {
     padding: 25,
-    paddingTop: 0,
+    paddingTop: 10,
     // paddingBottom: 20,
     backgroundColor: COLORS.mainBackground,
   },
@@ -182,9 +178,17 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 20,
     color: 'white',
+    borderColor: COLORS.transparent,
+    borderWidth: 1,
   },
   textInputError: {
     borderColor: 'red',
     borderWidth: 1,
+  },
+  btnDefault: {
+    borderColor: COLORS.white2,
+    borderWidth: 2,
+    borderRadius: 50,
+    padding: 2,
   },
 });
