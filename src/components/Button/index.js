@@ -1,12 +1,13 @@
+import React from 'react';
 import {
   Text,
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native';
-import React from 'react';
-import LinearGradient from 'react-native-linear-gradient';
+
 import {COLORS} from '../../constants';
+import {View} from 'native-base';
 
 const Button = ({
   onPress = () => {},
@@ -19,29 +20,35 @@ const Button = ({
   loader = false,
 }) => {
   return (
-    <TouchableOpacity
-      disabled={disabled}
-      style={[
-        styles.btn,
-        color && {backgroundColor: color},
-        disabled && styles.disabled,
-        customStyle,
-      ]}
-      onPress={onPress}>
-      {icon && icon}
-      {loader ? (
-        <ActivityIndicator />
-      ) : (
-        <Text
-          style={[
-            styles.btnText,
-            disabled && styles.disabled,
-            customTextStyle,
-          ]}>
-          {text}
-        </Text>
-      )}
-    </TouchableOpacity>
+    <View
+      borderColor={disabled ? COLORS.transparent : COLORS.white2}
+      padding="0.5"
+      borderWidth="2"
+      rounded="full">
+      <TouchableOpacity
+        disabled={disabled}
+        style={[
+          styles.btn,
+          color && {backgroundColor: color},
+          disabled && styles.disabled,
+          customStyle,
+        ]}
+        onPress={onPress}>
+        {icon && icon}
+        {loader ? (
+          <ActivityIndicator color={COLORS.primary} />
+        ) : (
+          <Text
+            style={[
+              styles.btnText,
+              disabled && styles.disabled,
+              customTextStyle,
+            ]}>
+            {text}
+          </Text>
+        )}
+      </TouchableOpacity>
+    </View>
   );
 };
 
@@ -50,8 +57,8 @@ export default Button;
 const styles = StyleSheet.create({
   btnText: {
     textAlign: 'center',
-    fontSize: 15,
-    fontWeight: 'bold',
+    fontSize: 13,
+    fontFamily: 'Lato-Semibold',
     color: COLORS.transparentBlack7,
     marginHorizontal: 10,
   },
@@ -60,10 +67,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 15,
-    borderRadius: 8,
-  },
-  disabled: {
-    backgroundColor: '#000',
-    color: '#B2B2B2',
+    borderRadius: 50,
   },
 });
