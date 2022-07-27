@@ -1,15 +1,4 @@
-import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
-
-import {Button} from 'native-base';
-
-import StyledError from '../../components/Error';
-import Label from '../../components/Label';
-import StyledTextInput from '../../components/TextInput';
-import {COLORS} from '../../constants';
-import {FIREBASE_ERRORS} from '../../firebase/errors';
-import {useRegister} from '../../hooks/register';
-import AuthFooter from '../../components/AuthFooter';
+import React from 'react';
 import Register from './Register';
 
 const SignUp = ({navigation}) => {

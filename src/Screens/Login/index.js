@@ -1,17 +1,6 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View, KeyboardAvoidingView} from 'react-native';
+import React from 'react';
 
-import auth from '@react-native-firebase/auth';
-
-import StyledError from '../../components/Error';
-import Label from '../../components/Label';
-import StyledTextInput from '../../components/TextInput';
-import {COLORS} from '../../constants';
-import {FIREBASE_ERRORS} from '../../firebase/errors';
-import {checkIsEmailValid} from '../../utils';
-import {Button} from 'native-base';
-import AuthFooter from '../../components/AuthFooter';
-import Login from './login';
+import Login from './Login';
 
 const LoginOld = ({navigation}) => {
   // const [email, setEmail] = useState('');
