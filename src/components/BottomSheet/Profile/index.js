@@ -1,18 +1,12 @@
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
-import React, {useContext} from 'react';
-import {
-  useRecoilState,
-  useRecoilValue,
-  useResetRecoilState,
-  useSetRecoilState,
-} from 'recoil';
-import {authState, initializingState} from '../../../atoms/authAtom';
-import {Actionsheet, Box, Text as NText} from 'native-base';
-import {DocumentIcon, LogoutIcon, PrivacyIcon} from '../../../SVG';
 import auth from '@react-native-firebase/auth';
+import {Actionsheet, Box, Text as NText} from 'native-base';
+import React, {useContext} from 'react';
+import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {useResetRecoilState} from 'recoil';
 import {bottomSheetState} from '../../../atoms/bottomSheetAtom';
 import {postState} from '../../../atoms/postAtom';
 import {AuthUserContext} from '../../../Context/auth';
+import {DocumentIcon, LogoutIcon, PrivacyIcon} from '../../../SVG';
 
 const ProfileBottomSheet = () => {
   const {authUser} = useContext(AuthUserContext);

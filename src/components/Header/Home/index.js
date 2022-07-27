@@ -1,19 +1,19 @@
+import React, {useContext} from 'react';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+
 import {
   Avatar,
-  Heading,
   HStack,
+  Input,
+  ScrollView,
   Text as NText,
   View as NView,
-  ScrollView,
-  TextField,
-  Input,
 } from 'native-base';
-import React, {useContext} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+
 import {COLORS} from '../../../constants';
 import {UserDataContext} from '../../../Context/userData';
 import useSelectImage from '../../../hooks/useSelectImage';
-import {AddIcon, GallaryIcon, PhotoIcon, SearchIcon} from '../../../SVG';
+import {PhotoIcon, SearchIcon} from '../../../SVG';
 import Story from '../../Story';
 
 function PostHeader({navigation}) {
@@ -61,27 +61,6 @@ function PostHeader({navigation}) {
   return (
     <NView mb="10">
       <View style={styles.headerContainer}>
-        {/* <TouchableOpacity
-          style={styles.leftHeader}
-          onPress={() =>
-            navigation.navigate('Profile', {
-              providedUserId: contextUser.uid,
-            })
-          }>
-          <Avatar
-            source={{
-              uri: contextUser?.profilePic,
-            }}
-            size="sm"
-            mr="3">
-            <Avatar.Badge bg="green.500" />
-          </Avatar>
-  
-          <View style={styles.userInfo}>
-            <Text style={styles.usernameText}>{contextUser?.username}</Text>
-            <Text style={styles.email}>{contextUser?.email}</Text>
-          </View>
-        </TouchableOpacity> */}
         <NView alignItems="center" flexDirection="row">
           <NText fontFamily="Lato-Bold" color={COLORS.primary} fontSize="2xl">
             Face
@@ -124,7 +103,7 @@ function PostHeader({navigation}) {
       </ScrollView>
 
       <NView
-        justifyContent="space-between"
+        justifyContent="space-around"
         flexDirection="row"
         alignItems="center">
         <TouchableOpacity
@@ -144,10 +123,13 @@ function PostHeader({navigation}) {
           onPressIn={() => navigation.navigate('Add Post')}
           borderRadius="full"
           maxWidth="2/3"
-          ml="-4"
-          placeholder={'Write something here...' + '\n' + 'यहाँ कुछ लिखो...'}
+          // ml="-4"
+          placeholder={
+            '  Write something here...' + '\n' + '  यहाँ कुछ लिखो...'
+          }
           placeholderTextColor={COLORS.white2}
           fontSize="md"
+          padding="3"
         />
         <TouchableOpacity onPress={handleGetImageThenNavigate}>
           <PhotoIcon width="30" height="30" />
