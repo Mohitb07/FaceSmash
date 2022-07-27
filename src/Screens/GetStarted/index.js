@@ -16,8 +16,8 @@ const GetStarted = ({navigation}) => {
         }}>
         <ImageBackground
           style={{flex: 1, justifyContent: 'flex-end'}}
-          resizeMode="cover"
-          source={require('../../../assets/getStartedBg.jpg')}>
+          resizeMode="contain"
+          source={require('../../../assets/giving-rupiah-coin.png')}>
           <LinearGradient
             start={{x: 0, y: 0}}
             end={{x: 0, y: 1}}

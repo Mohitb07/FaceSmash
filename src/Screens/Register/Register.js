@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import {View, Text, HStack, VStack, Button, Divider, Image} from 'native-base';
+import {View, Text, HStack, VStack, Divider, Image} from 'native-base';
 
 import {COLORS} from '../../constants';
 import {FacebookIcon, GoogleIcon} from '../../SVG';
@@ -71,7 +71,7 @@ const Register = ({navigation}) => {
             height: 200,
             width: 200,
           }}
-          source={require('../../../assets/login.png')}
+          source={require('../../../assets/register.png')}
           alt="Illustration"
         />
       </View>

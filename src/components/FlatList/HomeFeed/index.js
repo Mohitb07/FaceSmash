@@ -169,9 +169,10 @@ function HomeFeed({navigation}) {
       onEndReachedThreshold={0.5}
       refreshControl={
         <RefreshControl
-          progressBackgroundColor={COLORS.neon}
+          progressBackgroundColor={COLORS.primary}
           refreshing={refreshing}
           onRefresh={onRefresh}
+          colors={[COLORS.white2]}
         />
       }
       ListHeaderComponent={

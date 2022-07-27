@@ -52,16 +52,13 @@ const Login = ({navigation}) => {
     <ScrollView
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.container}>
-      <View
-        // backgroundColor="amber.100"
-        alignItems="center"
-        justifyContent="center">
+      <View alignItems="center" justifyContent="center">
         <Image
           style={{
             height: 200,
             width: 200,
           }}
-          source={require('../../../assets/login.png')}
+          source={require('../../../assets/login2.png')}
           alt="Illustration"
         />
       </View>

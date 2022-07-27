@@ -1,4 +1,5 @@
-import React from 'react';
+import {useDisclose} from 'native-base';
+import React, {useContext} from 'react';
 import {StyleSheet, View} from 'react-native';
 
 import {useSetRecoilState} from 'recoil';
@@ -7,6 +8,9 @@ import {bottomSheetState} from '../../atoms/bottomSheetAtom';
 import ProfileFeed from '../../components/FlatList/ProfileFeed';
 import Header from '../../components/Header';
 import {COLORS} from '../../constants';
+import BottomSheetProvider, {
+  BottomSheetContext,
+} from '../../Context/BottomSheet';
 import {GearIcon} from '../../SVG';
 
 const MyProfile = ({route, navigation}) => {
@@ -22,7 +26,7 @@ const MyProfile = ({route, navigation}) => {
   };
 
   return (
-    <>
+    <BottomSheetProvider>
       <Header
         showBackButton={true}
         navigation={navigation}
@@ -35,7 +39,7 @@ const MyProfile = ({route, navigation}) => {
       <View style={styles.container}>
         <ProfileFeed userId={providedUserId} navigation={navigation} />
       </View>
-    </>
+    </BottomSheetProvider>
   );
 };
 
