@@ -4,7 +4,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  ImageBackground,
 } from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 
@@ -20,7 +19,6 @@ import firestore from '@react-native-firebase/firestore';
 import FastImage from 'react-native-fast-image';
 import {
   Actionsheet,
-  Box,
   HStack,
   Image,
   ThreeDotsIcon,
@@ -29,10 +27,9 @@ import {
   VStack,
 } from 'native-base';
 
-import {COLORS, SIZES} from '../constants';
+import {COLORS} from '../constants';
 import FeedMore from './BottomSheet/FeedMore';
 import {AuthUserContext} from '../Context/auth';
-import LinearGradient from 'react-native-linear-gradient';
 
 const Feed = ({
   image,
@@ -123,112 +120,6 @@ const Feed = ({
   const updateUIBasedOnImage = !!image ? 'column-reverse' : 'column';
 
   return (
-    // <LinearGradient
-    //   start={{x: 0, y: 1}}
-    //   end={{x: 0, y: 10}}
-    //   colors={['#262A2D', '#2F3033']}
-    //   style={styles.container}>
-    //   <View
-    //     style={[styles.innerContainer, !image && styles.innerContainerReverse]}>
-    //     {!!image && (
-    //       <View style={styles.imageContainer}>
-    //         <FastImage
-    //           style={styles.image}
-    //           source={{
-    //             uri: image,
-    //             priority: FastImage.priority.normal,
-    //           }}
-    //         />
-    //       </View>
-    //     )}
-
-    //     <View>
-    //       <Box
-    //         flexDirection="row"
-    //         alignItems="center"
-    //         justifyContent="space-between">
-    //         <View
-    //           style={{
-    //             flexDirection: 'row',
-    //             paddingVertical: 10,
-    //             alignItems: 'center',
-    //           }}>
-    //           <TouchableOpacity onPress={handleLikes}>
-    //             {hasLiked ? <HeartFilledIcon /> : <HeartOutlinIcon />}
-    //           </TouchableOpacity>
-    //           <TouchableOpacity>
-    //             <CommentOutlinedIcon style={{marginLeft: 4}} />
-    //           </TouchableOpacity>
-    //         </View>
-    //       </Box>
-
-    //       <Text style={styles.likes}>{likesCounter} likes</Text>
-    //     </View>
-
-    //     <View style={Boolean(image) && styles.feedInfo}>
-    //       <View style={!image && styles.titleNuser}>
-    //         {link.length > 0 ? (
-    //           <TouchableOpacity
-    //             style={styles.linkTitle}
-    //             onPress={() =>
-    //               navigation.navigate('Browser', {
-    //                 uri: link,
-    //               })
-    //             }>
-    //             <LinkIcon height="14" width="14" />
-    //             <Text style={[styles.feedTitle, {marginLeft: 5}]}>
-    //               {postTitle}
-    //             </Text>
-    //           </TouchableOpacity>
-    //         ) : (
-    //           <TouchableWithoutFeedback>
-    //             <Text style={styles.feedTitle}>{postTitle}</Text>
-    //           </TouchableWithoutFeedback>
-    //         )}
-    //         <NView style={styles.userInfo}>
-    //           <TouchableOpacity
-    //             onPress={() =>
-    //               navigation.navigate('Profile', {
-    //                 providedUserId: userId,
-    //               })
-    //             }
-    //             style={{flexDirection: 'row', alignItems: 'center'}}>
-    //             <Image
-    //               style={styles.userProfile}
-    //               source={{uri: userProfilePic}}
-    //               alt={username}
-    //             />
-    //             <View>
-    //               <Text style={styles.usernameText}>{username}</Text>
-    //               <Text style={styles.timePosted}>
-    //                 {moment(createdAt?.toDate()).fromNow()}
-    //               </Text>
-    //             </View>
-    //           </TouchableOpacity>
-    //           {authUser?.uid === userId && (
-    //             <TouchableOpacity onPress={onOpen}>
-    //               <NView
-    //                 backgroundColor={COLORS.transparentGray}
-    //                 padding="3"
-    //                 rounded="full"
-    //                 hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
-    //                 <ThreeDotsIcon />
-    //               </NView>
-    //             </TouchableOpacity>
-    //           )}
-    //         </NView>
-    //       </View>
-    //       <Text style={styles.description} numberOfLines={2}>
-    //         {description}
-    //       </Text>
-    //     </View>
-    //   </View>
-    //   <Actionsheet disableOverlay isOpen={isOpen} onClose={onClose}>
-    //     <Actionsheet.Content>
-    //       <FeedMore />
-    //     </Actionsheet.Content>
-    //   </Actionsheet>
-    // </LinearGradient>
     <NView style={styles.container}>
       <NView style={styles.userInfo}>
         <TouchableOpacity
