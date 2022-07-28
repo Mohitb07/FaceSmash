@@ -40,7 +40,6 @@ const AddPost = ({route, navigation}) => {
 
   const image = getterImage?.selectedImage;
 
-  console.log('selectedFromnav', imageFromNav);
   const [textAreaValue, setTextAreaValue] = useState();
   const [title, setTitle] = useState('');
   const {authUser} = useContext(AuthUserContext);
@@ -51,12 +50,18 @@ const AddPost = ({route, navigation}) => {
   const [showLink, setShowLink] = useState(false);
   const [link, setLink] = useState('');
 
+  console.log('selectedFromnav', imageFromNav);
+
   const handlePostCreation = async () => {
     setLoading(true);
-    if (selectedImage) {
+    if (selectedImage || imageFromNav) {
       try {
-        await storage().ref(selectedImage).putFile(selectedImage);
-        const imageURL = await storage().ref(selectedImage).getDownloadURL();
+        await storage()
+          .ref(selectedImage || imageFromNav)
+          .putFile(selectedImage || imageFromNav);
+        const imageURL = await storage()
+          .ref(selectedImage || imageFromNav)
+          .getDownloadURL();
 
         if (!imageURL) {
           throw new Error('Image Upload failed');
