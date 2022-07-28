@@ -1,72 +1,42 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Text, View} from 'native-base';
 
-import {ActivityIndicator, FlatList, RefreshControl} from 'react-native';
-import {useRecoilState} from 'recoil';
+import {FlatList, RefreshControl} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 
 import Feed from '../../Feed';
 import HomeHeader from '../../Header/Home';
-import {postState} from '../../../atoms/postAtom';
 import FeedSkeleton from '../../FeedSkeleton';
 import {COLORS} from '../../../constants';
 import useLikedPosts from '../../../hooks/useLikedPosts';
+import usePostsQuery from '../../../hooks/usePostsQuery';
 
 const LIMIT = 5;
 
 function HomeFeed({navigation}) {
-  const [postStateValue, setPostStateValue] = useRecoilState(postState);
-  const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const {userLikedPosts, refetch} = useLikedPosts();
-  const [lastVisible, setLastVisible] = useState(null);
+  const {
+    postStateValue,
+    loading,
+    lastVisible,
+    getPosts,
+    setPostStateValue,
+    setLoading,
+    setLastVisible,
+  } = usePostsQuery();
 
-  const getPosts = useCallback(async () => {
-    console.log('get posts called');
-    setPostStateValue(prev => ({
-      ...prev,
-      posts: [],
-    }));
-    try {
-      const allPosts = await firestore()
-        .collection('Posts')
-        .orderBy('createdAt', 'desc')
-        .limit(LIMIT)
-        .get();
-
-      const latestPost = [];
-      allPosts.docs.map(item => {
-        latestPost.push({
-          ...item.data(),
-          key: item.id,
-        });
-      });
-
-      let lastVisibleDoc = allPosts.docs[allPosts.docs.length - 1];
-
-      console.log('last visible doc id in getPosts', lastVisibleDoc);
-
-      setPostStateValue(prev => ({
-        ...prev,
-        posts: latestPost,
-      }));
-      setLastVisible(lastVisibleDoc);
-      setLoading(false);
-    } catch (error) {
-      console.log('getPosts error', error);
-      setLoading(false);
-    }
+  useEffect(() => {
+    getPosts();
   }, []);
 
   const retrieveMore = async () => {
-    console.log('invoked');
-    console.log('before invocation lastVisible value', lastVisible);
     if (!lastVisible) {
       setLoading(false);
       return;
     }
+    setLoading(true);
     try {
-      setLoading(true);
       const allPosts = await firestore()
         .collection('Posts')
         .orderBy('createdAt', 'desc')
@@ -81,11 +51,7 @@ function HomeFeed({navigation}) {
           key: item.id,
         });
       });
-
       let lastVisibleDoc = allPosts.docs[allPosts.docs.length - 1];
-
-      console.log('final result', [...postStateValue.posts, ...latestPost]);
-
       setPostStateValue(prev => ({
         ...prev,
         posts: [...postStateValue.posts, ...latestPost],
@@ -93,19 +59,16 @@ function HomeFeed({navigation}) {
       setLastVisible(lastVisibleDoc);
       setLoading(false);
     } catch (error) {
-      throw new Error('Retrieve More Error', error.message);
+      console.log('getPosts error', error);
+      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    getPosts();
-  }, [getPosts]);
 
   const onRefresh = useCallback(async () => {
     setLoading(true);
     setRefreshing(true);
     await getPosts();
-    refetch();
+    refetch(); //on refresh refetch all liked posts of the current user
     setRefreshing(false);
   }, []);
 
