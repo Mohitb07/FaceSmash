@@ -1,19 +1,15 @@
-import {View, Text, StyleSheet, Image} from 'react-native';
-import React, {useState, useContext} from 'react';
+import React, {useContext, useState} from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import Button from '../../../components/Button';
-import {
-  GallaryIcon,
-  CameraIcon,
-  CloseIcon,
-  CheckIcon,
-  PhotoIcon,
-} from '../../../SVG';
-import * as ImagePicker from 'react-native-image-picker';
+import {CheckIcon, CloseIcon} from '../../../SVG';
+import {HStack, View as NView} from 'native-base';
+
 import storage from '@react-native-firebase/storage';
-import {AuthUserContext} from '../../../Context/auth';
-import {UserDataContext} from '../../../Context/userData';
+import * as ImagePicker from 'react-native-image-picker';
 import Header from '../../../components/Header';
 import {COLORS} from '../../../constants/theme';
+import {AuthUserContext} from '../../../Context/auth';
+import {UserDataContext} from '../../../Context/userData';
 
 const UpdateProfile = ({navigation}) => {
   const [image, setImage] = useState(null);
@@ -97,24 +93,20 @@ const UpdateProfile = ({navigation}) => {
           <Text style={styles.email}>{contextUser?.email}</Text>
         </View>
 
-        <View style={styles.btnContainer}>
+        <HStack space="10">
           <Button
-            onPress={handleChooseGallary}
-            style={styles.customBtn}
             text="Open Gallary"
-            color={COLORS.secondary}
-            textStyle={[styles.customBtnText, {color: 'white'}]}
-            icon={<PhotoIcon height="15" width="15" />}
+            onPress={handleChooseGallary}
+            color={COLORS.white2}
           />
           <Button
-            onPress={handleTakePhoto}
-            style={[styles.customBtn]}
-            color={COLORS.primary}
             text="Take Now"
-            textStyle={styles.customBtnText}
-            icon={<CameraIcon />}
+            onPress={handleTakePhoto}
+            color={COLORS.primary}
+            textStyle={{color: 'white'}}
+            showRing={false}
           />
-        </View>
+        </HStack>
       </View>
     </>
   );
