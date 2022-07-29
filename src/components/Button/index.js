@@ -18,11 +18,13 @@ const Button = ({
   style: customStyle = {},
   textStyle: customTextStyle = [],
   loader = false,
+  showRing = true,
 }) => {
   return (
     <View
-      borderColor={disabled ? COLORS.transparent : COLORS.white2}
+      borderColor={disabled || !showRing ? COLORS.transparent : COLORS.white2}
       padding="0.5"
+      flexGrow={1}
       borderWidth="2"
       rounded="full">
       <TouchableOpacity
