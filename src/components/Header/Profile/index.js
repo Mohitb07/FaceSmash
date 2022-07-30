@@ -126,12 +126,12 @@ const ProfileHeader = ({userId, navigation, totalPosts}) => {
     //      </Box>
     //      <Text style={styles.activityLabel}>Recent Activity</Text>
     //    </View>
-    <Box my="10" mt="7">
+    <Box my="2">
       <HStack alignItems="center" justifyContent="space-between">
         <FastImage
           style={{
-            width: 100,
-            height: 100,
+            width: 80,
+            height: 80,
             borderRadius: 100,
           }}
           source={{
@@ -141,72 +141,68 @@ const ProfileHeader = ({userId, navigation, totalPosts}) => {
           resizeMode={FastImage.resizeMode.cover}
         />
 
-        <VStack space="3">
-          <HStack alignItems="center" space="10">
-            <View>
-              <Text fontSize="md" fontFamily="Lato-Bold" textAlign="center">
-                {totalPosts}
+        <HStack alignItems="center" space="8">
+          <View>
+            <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
+              {totalPosts}
+            </Text>
+            <Text color={COLORS.gray} fontFamily="Lato-Regular">
+              Posts
+            </Text>
+          </View>
+          <View>
+            <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
+              {userData[0]?.followers?.length}
+            </Text>
+            <Text color={COLORS.gray} fontFamily="Lato-Regular">
+              Followers
+            </Text>
+          </View>
+          <View>
+            <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
+              {userData[0]?.followings?.length}
+            </Text>
+            <Text color={COLORS.gray} fontFamily="Lato-Regular">
+              Following
+            </Text>
+          </View>
+        </HStack>
+        {/* <HStack justifyContent="space-evenly">
+            <TouchableOpacity>
+              <Text
+                fontSize="sm"
+                color={COLORS.primary}
+                fontFamily="Lato-Heavy">
+                Follow
               </Text>
-              <Text color={COLORS.gray} fontFamily="Lato-Regular">
-                Posts
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <Text
+                fontSize="sm"
+                color={COLORS.primary}
+                fontFamily="Lato-Heavy">
+                Message
               </Text>
-            </View>
-            <View>
-              <Text fontSize="md" fontFamily="Lato-Bold" textAlign="center">
-                {userData[0]?.followers?.length}
-              </Text>
-              <Text color={COLORS.gray} fontFamily="Lato-Regular">
-                Followers
-              </Text>
-            </View>
-            <View>
-              <Text fontSize="md" fontFamily="Lato-Bold" textAlign="center">
-                {userData[0]?.followings?.length}
-              </Text>
-              <Text color={COLORS.gray} fontFamily="Lato-Regular">
-                Following
-              </Text>
-            </View>
-          </HStack>
-          <Center>
-            <HStack space="10">
-              <Pressable>
-                <Text
-                  fontSize="md"
-                  color={COLORS.primary}
-                  fontFamily="Lato-Heavy">
-                  Follow
-                </Text>
-              </Pressable>
-              <Pressable>
-                <Text
-                  fontSize="md"
-                  color={COLORS.primary}
-                  fontFamily="Lato-Heavy">
-                  Message
-                </Text>
-              </Pressable>
-            </HStack>
-          </Center>
-        </VStack>
+            </TouchableOpacity>
+          </HStack> */}
       </HStack>
 
       <View my="5">
-        <Text fontSize="2xl" fontFamily="Lato-Regular">
+        <Text fontSize="lg" letterSpacing="lg" fontFamily="Lato-Regular">
           {userData[0]?.username}
         </Text>
         <HStack alignItems="center">
-          <Text fontSize="md" color={COLORS.gray} fontFamily="Lato-Regular">
+          <Text fontSize="sm" color={COLORS.gray} fontFamily="Lato-Regular">
             Delhi, India
           </Text>
-          <Divider thickness="2" h="4" mx="5" orientation="vertical" />
-          <Text fontSize="md" color={COLORS.gray} fontFamily="Lato-Regular">
+          <Divider thickness="2" h="3" mx="5" orientation="vertical" />
+          <Text fontSize="sm" color={COLORS.gray} fontFamily="Lato-Regular">
             UX Designer - Apple
           </Text>
         </HStack>
         <Text
           mt="1"
-          fontSize="md"
+          fontSize="sm"
           color={COLORS.gray}
           fontFamily="Lato-Regular">
           {userData[0]?.email}
@@ -220,6 +216,7 @@ const ProfileHeader = ({userId, navigation, totalPosts}) => {
           color={COLORS.white2}
           textStyle={{fontSize: 15, fontFamily: 'Lato-Heavy'}}
           style={{padding: 12}}
+          showRing={false}
         />
         {authUser?.uid === userId && (
           <TouchableOpacity
@@ -237,7 +234,7 @@ const ProfileHeader = ({userId, navigation, totalPosts}) => {
         <HStack alignItems="center" space="5">
           <Flex direction="row" align="center">
             <GridIcon height="23" width="23" />
-            <Text ml="3" fontSize="md" fontFamily="Lato-Semibold">
+            <Text ml="3" fontSize="sm" fontFamily="Lato-Heavy">
               Activity
             </Text>
           </Flex>
@@ -246,7 +243,7 @@ const ProfileHeader = ({userId, navigation, totalPosts}) => {
             <Text
               color={COLORS.gray}
               ml="3"
-              fontSize="md"
+              fontSize="sm"
               fontFamily="Lato-Regular">
               About
             </Text>
