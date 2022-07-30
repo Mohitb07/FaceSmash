@@ -98,13 +98,19 @@ const UpdateProfile = ({navigation}) => {
             text="Open Gallary"
             onPress={handleChooseGallary}
             color={COLORS.white2}
+            showRing={false}
+            textStyle={{fontFamily: 'Lato-Heavy'}}
           />
           <Button
             text="Take Now"
             onPress={handleTakePhoto}
             color={COLORS.primary}
-            textStyle={{color: 'white'}}
             showRing={false}
+            textStyle={{
+              // fontSize: 15,
+              fontFamily: 'Lato-Heavy',
+              color: COLORS.white2,
+            }}
           />
         </HStack>
       </View>
