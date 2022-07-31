@@ -1,29 +1,26 @@
-import {useDisclose} from 'native-base';
-import React, {useContext} from 'react';
-import {StyleSheet, View} from 'react-native';
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
 
-import {useSetRecoilState} from 'recoil';
+import {useSetRecoilState} from 'recoil'
 
-import {bottomSheetState} from '../../atoms/bottomSheetAtom';
-import ProfileFeed from '../../components/FlatList/ProfileFeed';
-import Header from '../../components/Header';
-import {COLORS} from '../../constants';
-import BottomSheetProvider, {
-  BottomSheetContext,
-} from '../../Context/BottomSheet';
-import {GearIcon} from '../../SVG';
+import {bottomSheetState} from '../../atoms/bottomSheetAtom'
+import ProfileFeed from '../../components/FlatList/ProfileFeed'
+import Header from '../../components/Header'
+import {COLORS} from '../../constants'
+import BottomSheetProvider from '../../Context/BottomSheet'
+import {GearIcon} from '../../SVG'
 
 const MyProfile = ({route, navigation}) => {
-  const {providedUserId} = route?.params || null;
-  const setBottomSheetStateValue = useSetRecoilState(bottomSheetState);
+  const {providedUserId} = route?.params || null
+  const setBottomSheetStateValue = useSetRecoilState(bottomSheetState)
 
   const handleModalState = () => {
     setBottomSheetStateValue(prev => ({
       ...prev,
       type: 'profile',
       isOpen: true,
-    }));
-  };
+    }))
+  }
 
   return (
     <BottomSheetProvider>
@@ -40,10 +37,10 @@ const MyProfile = ({route, navigation}) => {
         <ProfileFeed userId={providedUserId} navigation={navigation} />
       </View>
     </BottomSheetProvider>
-  );
-};
+  )
+}
 
-export default MyProfile;
+export default MyProfile
 
 const styles = StyleSheet.create({
   container: {
@@ -51,4 +48,4 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.mainBackground,
     paddingHorizontal: 15,
   },
-});
+})

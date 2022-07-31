@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 
-import Login from './Login';
+import Login from './Login'
 
 const LoginOld = ({navigation}) => {
   // const [email, setEmail] = useState('');
@@ -99,7 +99,7 @@ const LoginOld = ({navigation}) => {
     // </KeyboardAvoidingView>
     // );
     <Login navigation={navigation} />
-  );
-};
+  )
+}
 
-export default LoginOld;
+export default LoginOld

@@ -1,52 +1,47 @@
-import React, {useEffect, useState} from 'react';
-import {
-  TextInput,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useEffect, useState} from 'react'
+import {ScrollView, StyleSheet, TextInput} from 'react-native'
 
-import {View, Text, HStack, VStack, Button, Divider, Image} from 'native-base';
-import auth from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth'
+import {Divider, HStack, Image, Text, View, VStack} from 'native-base'
 
-import {COLORS} from '../../constants';
-import {FacebookIcon, GoogleIcon} from '../../SVG';
-import {checkIsEmailValid} from '../../utils';
-import StyledError from '../../components/Error';
-import {FIREBASE_ERRORS} from '../../firebase/errors';
-import StyledButton from '../../components/Button';
+import StyledButton from '../../components/Button'
+import StyledError from '../../components/Error'
+import {COLORS} from '../../constants'
+import {FIREBASE_ERRORS} from '../../firebase/errors'
+import {FacebookIcon, GoogleIcon} from '../../SVG'
+import {checkIsEmailValid} from '../../utils'
 
 const Login = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const onLoginAttempt = () => {
-    setLoading(true);
-    setError('');
+    setLoading(true)
+    setError('')
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(user => {
-        console.log('User logged in!', user);
+        console.log('User logged in!', user)
       })
       .catch(err => {
-        setLoading(false);
-        console.log('ERROR', err.message);
-        setError(err.message);
-      });
-  };
+        setLoading(false)
+        console.log('ERROR', err.message)
+        setError(err.message)
+      })
+  }
 
   useEffect(() => {
-    setError('');
-  }, [email, password]);
+    setError('')
+  }, [email, password])
 
-  const invalidEmail = checkIsEmailValid(email);
+  const invalidEmail = checkIsEmailValid(email)
 
   const isDisabled =
-    email.length === 0 || password.length === 0 || invalidEmail || loading;
+    email.length === 0 || password.length === 0 || invalidEmail || loading
 
-  const invalidEmailError = email.length > 0 && invalidEmail;
+  const invalidEmailError = email.length > 0 && invalidEmail
 
   return (
     <ScrollView
@@ -108,26 +103,6 @@ const Login = ({navigation}) => {
         Forgot Password ?
       </Text>
 
-      {/* <TouchableOpacity
-        style={[
-          styles.btnDefault,
-          isDisabled && {borderColor: COLORS.transparent},
-        ]}>
-        <Button
-          onPress={onLoginAttempt}
-          height="12"
-          borderRadius="full"
-          backgroundColor={isDisabled ? COLORS.gray : COLORS.white2}
-          borderColor={COLORS.white2}
-          disabled={isDisabled}
-          isLoading={loading}
-          _text={{
-            color: COLORS.background,
-            fontFamily: 'Lato-Regular',
-          }}>
-          Login
-        </Button>
-      </TouchableOpacity> */}
       <StyledButton
         onPress={onLoginAttempt}
         text="Login"
@@ -158,10 +133,10 @@ const Login = ({navigation}) => {
         </Text>
       </Text>
     </ScrollView>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
 
 const styles = StyleSheet.create({
   container: {
@@ -188,4 +163,4 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     padding: 2,
   },
-});
+})

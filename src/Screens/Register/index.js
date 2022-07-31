@@ -1,5 +1,5 @@
-import React from 'react';
-import Register from './Register';
+import React from 'react'
+import Register from './Register'
 
 const SignUp = ({navigation}) => {
   // const [email, setEmail] = useState('');
@@ -138,7 +138,7 @@ const SignUp = ({navigation}) => {
     //   </View>
     // </ScrollView>
     <Register navigation={navigation} />
-  );
-};
+  )
+}
 
-export default SignUp;
+export default SignUp

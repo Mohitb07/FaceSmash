@@ -1,9 +1,8 @@
-import React, {useContext, useState} from 'react';
-import {Image, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useContext, useState} from 'react'
+import {Image, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 
-import firestore from '@react-native-firebase/firestore';
-import storage from '@react-native-firebase/storage';
-import Toast from 'react-native-toast-message';
+import firestore from '@react-native-firebase/firestore'
+import storage from '@react-native-firebase/storage'
 import {
   Avatar,
   Box,
@@ -16,55 +15,50 @@ import {
   Text,
   View,
   VStack,
-} from 'native-base';
+} from 'native-base'
+import Toast from 'react-native-toast-message'
 
-import Header from '../../components/Header';
-import Label from '../../components/Label';
-import StyledTextInput from '../../components/TextInput';
-import {COLORS} from '../../constants';
-import {AuthUserContext} from '../../Context/auth';
-import {UserDataContext} from '../../Context/userData';
-import {
-  CheckIcon,
-  CloseIcon,
-  GallaryIcon,
-  LinkIcon,
-  PhotoIcon,
-} from '../../SVG';
-import useSelectImage from '../../hooks/useSelectImage';
+import Header from '../../components/Header'
+import Label from '../../components/Label'
+import StyledTextInput from '../../components/TextInput'
+import {COLORS} from '../../constants'
+import {AuthUserContext} from '../../Context/auth'
+import {UserDataContext} from '../../Context/userData'
+import useSelectImage from '../../hooks/useSelectImage'
+import {CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '../../SVG'
 
 const AddPost = ({route, navigation}) => {
-  const routeData = route?.params || {};
+  const routeData = route?.params || {}
 
-  let getterImage = {...routeData};
+  let getterImage = {...routeData}
 
-  const image = getterImage?.selectedImage;
+  const image = getterImage?.selectedImage
 
-  const [textAreaValue, setTextAreaValue] = useState();
-  const [title, setTitle] = useState('');
-  const {authUser} = useContext(AuthUserContext);
-  const {contextUser} = useContext(UserDataContext);
-  const {selectedImage, handleChooseGallary, clearImage} = useSelectImage();
-  const [imageFromNav, setImageFromNav] = useState(image);
-  const [loading, setLoading] = useState(false);
-  const [showLink, setShowLink] = useState(false);
-  const [link, setLink] = useState('');
+  const [textAreaValue, setTextAreaValue] = useState()
+  const [title, setTitle] = useState('')
+  const {authUser} = useContext(AuthUserContext)
+  const {contextUser} = useContext(UserDataContext)
+  const {selectedImage, handleChooseGallary, clearImage} = useSelectImage()
+  const [imageFromNav, setImageFromNav] = useState(image)
+  const [loading, setLoading] = useState(false)
+  const [showLink, setShowLink] = useState(false)
+  const [link, setLink] = useState('')
 
-  console.log('selectedFromnav', imageFromNav);
+  console.log('selectedFromnav', imageFromNav)
 
   const handlePostCreation = async () => {
-    setLoading(true);
+    setLoading(true)
     if (selectedImage || imageFromNav) {
       try {
         await storage()
           .ref(selectedImage || imageFromNav)
-          .putFile(selectedImage || imageFromNav);
+          .putFile(selectedImage || imageFromNav)
         const imageURL = await storage()
           .ref(selectedImage || imageFromNav)
-          .getDownloadURL();
+          .getDownloadURL()
 
         if (!imageURL) {
-          throw new Error('Image Upload failed');
+          throw new Error('Image Upload failed')
         }
         try {
           await firestore().collection('Posts').add({
@@ -77,23 +71,23 @@ const AddPost = ({route, navigation}) => {
             likes: 0,
             link: link,
             createdAt: new Date(),
-          });
-          navigation.navigate('Home');
+          })
+          navigation.navigate('Home')
         } catch (error) {
-          setLoading(false);
+          setLoading(false)
           Toast.show({
             type: 'error',
             text1: 'Post Creation Error',
             text2: err.message,
-          });
+          })
         }
       } catch (err) {
-        setLoading(false);
+        setLoading(false)
         Toast.show({
           type: 'error',
           text1: '',
           text2: err.message,
-        });
+        })
       }
     } else {
       try {
@@ -107,33 +101,33 @@ const AddPost = ({route, navigation}) => {
           likes: 0,
           link: link,
           createdAt: new Date(),
-        });
-        navigation.navigate('Home');
+        })
+        navigation.navigate('Home')
       } catch (error) {
-        setLoading(false);
+        setLoading(false)
         Toast.show({
           type: 'error',
           text1: 'Post Creation Error',
           text2: err.message,
-        });
+        })
       }
     }
-  };
-  const linkText = showLink ? 'Remove Link' : 'Add Link';
+  }
+  const linkText = showLink ? 'Remove Link' : 'Add Link'
 
   const handleLink = () => {
     if (showLink) {
-      setShowLink(false);
-      setLink('');
+      setShowLink(false)
+      setLink('')
     } else {
-      setShowLink(true);
+      setShowLink(true)
     }
-  };
+  }
 
   const handleClear = () => {
-    clearImage();
-    setImageFromNav('');
-  };
+    clearImage()
+    setImageFromNav('')
+  }
 
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
@@ -295,8 +289,8 @@ const AddPost = ({route, navigation}) => {
         </View>
       </View>
     </ScrollView>
-  );
-};
+  )
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -338,6 +332,6 @@ const styles = StyleSheet.create({
     color: '#747474',
     fontSize: 14,
   },
-});
+})
 
-export default AddPost;
+export default AddPost

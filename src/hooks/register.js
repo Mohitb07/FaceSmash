@@ -1,7 +1,7 @@
-import React, {useState} from 'react';
-import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
-import Toast from 'react-native-toast-message';
+import React, {useState} from 'react'
+import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
+import Toast from 'react-native-toast-message'
 
 export function useRegister() {
   const [error, setError] = useState({
@@ -9,14 +9,14 @@ export function useRegister() {
     email: '',
     password: '',
     confirmPassword: '',
-  });
-  const [loading, setLoading] = useState(false);
+  })
+  const [loading, setLoading] = useState(false)
   const onRegisterAttempt = ({email = '', password = '', username = ''}) => {
-    setLoading(true);
+    setLoading(true)
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(user => {
-        console.log('inside user', user.user.metadata);
+        console.log('inside user', user.user.metadata)
         firestore()
           .collection('Users')
           .doc(user.user.uid)
@@ -33,22 +33,22 @@ export function useRegister() {
               'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG3eLpTAMWO-mtILepXLwg68-IChyGcXJgog&usqp=CAU',
           })
           .then(() => {
-            console.log('User added!');
+            console.log('User added!')
             Toast.show({
               type: 'success',
               text1: 'Account Created',
               text2: 'Your account created successfully  👋',
-            });
-          });
+            })
+          })
       })
       .catch(error => {
-        setLoading(false);
-        console.log('error', error.message);
+        setLoading(false)
+        console.log('error', error.message)
         if (error.code === 'auth/weak-password') {
           setError(prev => ({
             ...prev,
             password: error.message,
-          }));
+          }))
         } else if (
           error.code === 'auth/email-already-in-use' ||
           'auth/invalid-email'
@@ -56,16 +56,16 @@ export function useRegister() {
           setError(prev => ({
             ...prev,
             email: error.message,
-          }));
+          }))
         } else {
           Toast.show({
             type: 'error',
             text1: 'Registration Error',
             text2: error.message,
-          });
+          })
         }
-      });
-  };
+      })
+  }
 
-  return {onRegisterAttempt, error, setError, loading};
+  return {onRegisterAttempt, error, setError, loading}
 }

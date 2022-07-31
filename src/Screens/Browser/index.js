@@ -1,10 +1,10 @@
-import React from 'react';
+import React from 'react'
 
-import {WebView} from 'react-native-webview';
+import {WebView} from 'react-native-webview'
 
 const Browser = ({route}) => {
-  const {uri} = route?.params || '';
-  return <WebView source={{uri: uri}} />;
-};
+  const {uri} = route?.params || ''
+  return <WebView source={{uri: uri}} />
+}
 
-export default Browser;
+export default Browser

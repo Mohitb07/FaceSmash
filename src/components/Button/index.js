@@ -1,13 +1,13 @@
-import React from 'react';
+import React from 'react'
 import {
   Text,
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
-} from 'react-native';
+} from 'react-native'
 
-import {COLORS} from '../../constants';
-import {View} from 'native-base';
+import {COLORS} from '../../constants'
+import {PresenceTransition, View} from 'native-base'
 
 const Button = ({
   onPress = () => {},
@@ -19,6 +19,7 @@ const Button = ({
   textStyle: customTextStyle = [],
   loader = false,
   showRing = true,
+  loadingText = 'Loading...',
 }) => {
   return (
     <View
@@ -27,34 +28,54 @@ const Button = ({
       flexGrow={1}
       borderWidth="2"
       rounded="full">
-      <TouchableOpacity
-        disabled={disabled}
-        style={[
-          styles.btn,
-          color && {backgroundColor: color},
-          disabled && styles.disabled,
-          customStyle,
-        ]}
-        onPress={onPress}>
-        {icon && icon}
-        {loader ? (
-          <ActivityIndicator color={COLORS.primary} />
-        ) : (
-          <Text
-            style={[
-              styles.btnText,
-              disabled && styles.disabled,
-              customTextStyle,
-            ]}>
-            {text}
-          </Text>
-        )}
-      </TouchableOpacity>
+      <PresenceTransition
+        visible={true}
+        initial={{
+          opacity: 0,
+        }}
+        animate={{
+          opacity: 1,
+          transition: {
+            duration: 250,
+          },
+        }}>
+        <TouchableOpacity
+          disabled={disabled}
+          style={[
+            styles.btn,
+            color && {backgroundColor: color},
+            disabled && styles.disabled,
+            customStyle,
+          ]}
+          onPress={onPress}>
+          {icon && icon}
+          {loader ? (
+            // <ActivityIndicator color={COLORS.primary} />
+            <Text
+              style={[
+                styles.btnText,
+                disabled && styles.disabled,
+                customTextStyle,
+              ]}>
+              {loadingText}
+            </Text>
+          ) : (
+            <Text
+              style={[
+                styles.btnText,
+                disabled && styles.disabled,
+                customTextStyle,
+              ]}>
+              {text}
+            </Text>
+          )}
+        </TouchableOpacity>
+      </PresenceTransition>
     </View>
-  );
-};
+  )
+}
 
-export default Button;
+export default Button
 
 const styles = StyleSheet.create({
   btnText: {
@@ -71,4 +92,4 @@ const styles = StyleSheet.create({
     padding: 15,
     borderRadius: 50,
   },
-});
+})
