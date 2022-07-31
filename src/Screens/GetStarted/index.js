@@ -1,11 +1,11 @@
-import React from 'react';
-import {ImageBackground, StatusBar, Text, View} from 'react-native';
+import React from 'react'
+import {ImageBackground, StatusBar, Text, View} from 'react-native'
 
-import LinearGradient from 'react-native-linear-gradient';
-import {Button, View as NView, Text as NText} from 'native-base';
+import {Button, Text as NText, View as NView} from 'native-base'
+import LinearGradient from 'react-native-linear-gradient'
 
 // import Button from '../../components/Button';
-import {COLORS, FONTS, SIZES} from '../../constants';
+import {COLORS, FONTS, SIZES} from '../../constants'
 
 const GetStarted = ({navigation}) => {
   function renderHeader() {
@@ -61,7 +61,7 @@ const GetStarted = ({navigation}) => {
           </LinearGradient>
         </ImageBackground>
       </View>
-    );
+    )
   }
 
   function renderDetail() {
@@ -88,17 +88,6 @@ const GetStarted = ({navigation}) => {
             flex: 1,
             justifyContent: 'center',
           }}>
-          {/* <Button
-            height="12"
-            borderRadius="full"
-            backgroundColor={COLORS.primary}
-            _text={{
-              color: COLORS.white2,
-              fontFamily: 'Lato-Heavy',
-            }}
-            onPress={() => navigation.navigate('Login')}>
-            Get Started
-          </Button> */}
           <NView
             borderColor={COLORS.white2}
             borderWidth={2}
@@ -119,7 +108,7 @@ const GetStarted = ({navigation}) => {
           </NView>
         </View>
       </View>
-    );
+    )
   }
   return (
     <View
@@ -132,7 +121,7 @@ const GetStarted = ({navigation}) => {
       {renderHeader()}
       {renderDetail()}
     </View>
-  );
-};
+  )
+}
 
-export default GetStarted;
+export default GetStarted

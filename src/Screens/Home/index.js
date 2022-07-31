@@ -1,8 +1,8 @@
-import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import React from 'react'
+import {StyleSheet, View} from 'react-native'
 
-import HomeFeed from '../../components/FlatList/HomeFeed';
-import {COLORS} from '../../constants';
+import HomeFeed from '../../components/FlatList/HomeFeed'
+import {COLORS} from '../../constants'
 
 const Home = ({navigation}) => {
   return (
@@ -11,9 +11,9 @@ const Home = ({navigation}) => {
         <HomeFeed navigation={navigation} />
       </View>
     </View>
-  );
-};
-export default React.memo(Home);
+  )
+}
+export default React.memo(Home)
 
 const styles = StyleSheet.create({
   container: {
@@ -25,4 +25,4 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 10,
   },
-});
+})

@@ -1,70 +1,70 @@
-import React, {useContext, useState} from 'react';
-import {Image, StyleSheet, Text, View} from 'react-native';
-import Button from '../../../components/Button';
-import {CheckIcon, CloseIcon} from '../../../SVG';
-import {HStack, View as NView} from 'native-base';
+import {HStack} from 'native-base'
+import React, {useContext, useState} from 'react'
+import {Image, StyleSheet, Text, View} from 'react-native'
+import Button from '../../../components/Button'
+import {CheckIcon, CloseIcon} from '../../../SVG'
 
-import storage from '@react-native-firebase/storage';
-import * as ImagePicker from 'react-native-image-picker';
-import Header from '../../../components/Header';
-import {COLORS} from '../../../constants/theme';
-import {AuthUserContext} from '../../../Context/auth';
-import {UserDataContext} from '../../../Context/userData';
+import storage from '@react-native-firebase/storage'
+import * as ImagePicker from 'react-native-image-picker'
+import Header from '../../../components/Header'
+import {COLORS} from '../../../constants/theme'
+import {AuthUserContext} from '../../../Context/auth'
+import {UserDataContext} from '../../../Context/userData'
 
 const UpdateProfile = ({navigation}) => {
-  const [image, setImage] = useState(null);
-  const {authUser} = useContext(AuthUserContext);
-  const {contextUser, updateUserData} = useContext(UserDataContext);
-  const [loading, setLoading] = useState(false);
+  const [image, setImage] = useState(null)
+  const {authUser} = useContext(AuthUserContext)
+  const {contextUser, updateUserData} = useContext(UserDataContext)
+  const [loading, setLoading] = useState(false)
 
-  const disabled = !image;
+  const disabled = !image
 
   const handleChooseGallary = () => {
     ImagePicker.launchImageLibrary({}, response => {
       if (response.didCancel) {
-        setImage(null);
+        setImage(null)
       } else if (response.error) {
-        console.log('Image picker error', response.error);
+        console.log('Image picker error', response.error)
       } else {
-        setImage(response.assets[0].uri);
+        setImage(response.assets[0].uri)
       }
-    });
-  };
+    })
+  }
 
   const handleTakePhoto = () => {
     ImagePicker.launchCamera({}, response => {
       if (response.didCancel) {
-        setImage(null);
+        setImage(null)
       } else if (response.error) {
-        console.log('Image picker error', response.error);
+        console.log('Image picker error', response.error)
       } else {
-        setImage(response.assets[0].uri);
+        setImage(response.assets[0].uri)
       }
-    });
-  };
+    })
+  }
 
   const handleUploadImage = () => {
-    setLoading(true);
+    setLoading(true)
     storage()
       .ref(authUser.uid)
       .putFile(image)
       .then(snapshot => {
-        console.log('IMAGE UPLOADED', snapshot);
-        const imageRef = storage().ref(authUser.uid);
+        console.log('IMAGE UPLOADED', snapshot)
+        const imageRef = storage().ref(authUser.uid)
         imageRef
           .getDownloadURL()
           .then(url => {
-            console.log('UPLOADED IMAGE URL', url);
-            updateUserData(url, navigation, setLoading, authUser.uid);
+            console.log('UPLOADED IMAGE URL', url)
+            updateUserData(url, navigation, setLoading, authUser.uid)
           })
           .catch(err => {
-            console.log('image download error', err);
-          });
+            console.log('image download error', err)
+          })
       })
       .catch(err => {
-        console.log('IMAGE UPLOAD ERROR', err);
-      });
-  };
+        console.log('IMAGE UPLOAD ERROR', err)
+      })
+  }
 
   return (
     <>
@@ -115,10 +115,10 @@ const UpdateProfile = ({navigation}) => {
         </HStack>
       </View>
     </>
-  );
-};
+  )
+}
 
-export default UpdateProfile;
+export default UpdateProfile
 
 const styles = StyleSheet.create({
   container: {
@@ -167,4 +167,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: COLORS.white2,
   },
-});
+})

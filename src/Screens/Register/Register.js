@@ -1,28 +1,23 @@
-import React, {useEffect, useState} from 'react';
-import {
-  TextInput,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import React, {useEffect, useState} from 'react'
+import {ScrollView, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
 
-import {View, Text, HStack, VStack, Divider, Image} from 'native-base';
+import {Divider, HStack, Image, Text, View, VStack} from 'native-base'
 
-import {COLORS} from '../../constants';
-import {FacebookIcon, GoogleIcon} from '../../SVG';
-import StyledError from '../../components/Error';
-import {FIREBASE_ERRORS} from '../../firebase/errors';
-import {useRegister} from '../../hooks/register';
-import StyledButton from '../../components/Button';
+import StyledButton from '../../components/Button'
+import StyledError from '../../components/Error'
+import {COLORS} from '../../constants'
+import {FIREBASE_ERRORS} from '../../firebase/errors'
+import {useRegister} from '../../hooks/register'
+import {FacebookIcon, GoogleIcon} from '../../SVG'
 
 const Register = ({navigation}) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [username, setUsername] = useState('');
-  const [charactersLeft, setCharactersLeft] = useState(30);
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [username, setUsername] = useState('')
+  const [charactersLeft, setCharactersLeft] = useState(30)
 
-  const {onRegisterAttempt, error, setError, loading} = useRegister();
+  const {onRegisterAttempt, error, setError, loading} = useRegister()
 
   const isDisabled =
     email.length === 0 ||
@@ -30,36 +25,36 @@ const Register = ({navigation}) => {
     confirmPassword.length === 0 ||
     username.length === 0 ||
     password !== confirmPassword ||
-    loading;
+    loading
 
   const confirmPasswordErrorMsg =
     confirmPassword.length > 0 &&
     confirmPassword !== password &&
-    'Password do not match';
+    'Password do not match'
 
   const signUpAttempt = () => {
-    onRegisterAttempt({email, password, username});
-  };
+    onRegisterAttempt({email, password, username})
+  }
 
   useEffect(() => {
     setError(prev => ({
       ...prev,
       password: '',
-    }));
-  }, [password]);
+    }))
+  }, [password])
 
   useEffect(() => {
     setError(prev => ({
       ...prev,
       email: '',
-    }));
-  }, [email]);
+    }))
+  }, [email])
 
   const handleUsername = text => {
-    if (text.length > 30) return;
-    setUsername(text);
-    setCharactersLeft(30 - text.length);
-  };
+    if (text.length > 30) return
+    setUsername(text)
+    setCharactersLeft(30 - text.length)
+  }
 
   return (
     <ScrollView
@@ -140,13 +135,6 @@ const Register = ({navigation}) => {
           <StyledError message={confirmPasswordErrorMsg} />
         </View>
       </VStack>
-      {/* <Text
-        fontFamily="Lato-Regular"
-        textAlign="right"
-        my="5"
-        color="primary.400">
-        Forgot Password ?
-      </Text> */}
       <StyledButton
         onPress={signUpAttempt}
         text="Sign Up"
@@ -181,10 +169,10 @@ const Register = ({navigation}) => {
         </Text>
       </Text>
     </ScrollView>
-  );
-};
+  )
+}
 
-export default Register;
+export default Register
 
 const styles = StyleSheet.create({
   container: {
@@ -205,4 +193,4 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderWidth: 1,
   },
-});
+})

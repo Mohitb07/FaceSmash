@@ -1,21 +1,21 @@
-import firestore from '@react-native-firebase/firestore';
-import {Text as NText, View, VStack} from 'native-base';
+import firestore from '@react-native-firebase/firestore'
+import {Text as NText, View, VStack} from 'native-base'
 
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState} from 'react'
 
-import {FlatList} from 'react-native';
-import {COLORS} from '../../../constants';
-import useLikedPosts from '../../../hooks/useLikedPosts';
-import Feed from '../../Feed';
-import FeedSkeleton from '../../FeedSkeleton';
-import ProfileHeader from '../../Header/Profile';
-import {SecondaryDocumentIcon} from '../../../SVG';
+import {FlatList} from 'react-native'
+import {COLORS} from '../../../constants'
+import useLikedPosts from '../../../hooks/useLikedPosts'
+import Feed from '../../Feed'
+import FeedSkeleton from '../../FeedSkeleton'
+import ProfileHeader from '../../Header/Profile'
+import {SecondaryDocumentIcon} from '../../../SVG'
 
 const ProfileFeed = ({userId, navigation}) => {
-  const {userLikedPosts} = useLikedPosts();
-  const [myRecentPosts, setMyRecentPosts] = useState([]);
+  const {userLikedPosts} = useLikedPosts()
+  const [myRecentPosts, setMyRecentPosts] = useState([])
 
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     firestore()
@@ -24,18 +24,18 @@ const ProfileFeed = ({userId, navigation}) => {
       .orderBy('createdAt', 'desc')
       .get()
       .then(querySnapshot => {
-        const allRecentPosts = [];
+        const allRecentPosts = []
         querySnapshot.forEach(doc => {
           allRecentPosts.push({
             ...doc.data(),
             key: doc.id,
-          });
-        });
+          })
+        })
 
-        setMyRecentPosts(allRecentPosts);
-        setLoading(false);
-      });
-  }, []);
+        setMyRecentPosts(allRecentPosts)
+        setLoading(false)
+      })
+  }, [])
 
   return (
     <FlatList
@@ -44,7 +44,7 @@ const ProfileFeed = ({userId, navigation}) => {
       showsVerticalScrollIndicator={false}
       ListEmptyComponent={() =>
         loading ? (
-          <FeedSkeleton />
+          <FeedSkeleton mt="5" />
         ) : (
           <VStack alignItems="center">
             <SecondaryDocumentIcon width={90} height={90} />
@@ -69,7 +69,8 @@ const ProfileFeed = ({userId, navigation}) => {
         />
       }
       ListFooterComponent={
-        myRecentPosts?.length > 0 && (
+        myRecentPosts?.length > 0 &&
+        !loading && (
           <View paddingY="4">
             <NText textAlign="center" color="gray.500">
               No More post
@@ -95,7 +96,7 @@ const ProfileFeed = ({userId, navigation}) => {
         />
       )}
     />
-  );
-};
+  )
+}
 
-export default ProfileFeed;
+export default ProfileFeed

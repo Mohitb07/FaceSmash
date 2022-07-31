@@ -6,28 +6,25 @@
  * @flow strict-local
  */
 
-import React, {useEffect, Suspense} from 'react';
-import {ActivityIndicator} from 'react-native';
+import React, {Suspense, useEffect} from 'react'
 
-import {NativeBaseProvider} from 'native-base';
-import {RecoilRoot} from 'recoil';
-import {NavigationContainer} from '@react-navigation/native';
-import SplashScreen from 'react-native-splash-screen';
-const Toast = React.lazy(() => import('react-native-toast-message'));
-import 'react-native-gesture-handler';
+import {NavigationContainer} from '@react-navigation/native'
+import {NativeBaseProvider} from 'native-base'
+import 'react-native-gesture-handler'
+import SplashScreen from 'react-native-splash-screen'
+import {RecoilRoot} from 'recoil'
+const Toast = React.lazy(() => import('react-native-toast-message'))
 
-import Navigation, {navigationRef} from './src/Navigation/Root';
-import UserDataContext from './src/Context/userData';
-import BottomSheetProvider from './src/Context/BottomSheet';
-import {theme} from './src/theme';
-import AuthUserContext from './src/Context/auth';
-import Loader from './src/components/Loader';
-const BottomSheet = React.lazy(() => import('./src/components/BottomSheet'));
+import Loader from './src/components/Loader'
+import AuthUserContext from './src/Context/auth'
+import UserDataContext from './src/Context/userData'
+import Navigation, {navigationRef} from './src/Navigation/Root'
+import {theme} from './src/theme'
 
 const App = () => {
   useEffect(() => {
-    SplashScreen.hide();
-  }, []);
+    SplashScreen.hide()
+  }, [])
 
   return (
     <Suspense fallback={<Loader />}>
@@ -44,7 +41,7 @@ const App = () => {
       </RecoilRoot>
       <Toast />
     </Suspense>
-  );
-};
+  )
+}
 
-export default App;
+export default App
