@@ -3,9 +3,9 @@
 It's a social media platform where users can interact with friends or family. It's a native application for both android and ios
 
 ## Screenshots
-
-![App Screenshot](./assets/mockups/m1.png) ![App Screenshot](./assets/mockups/m2.png) ![App Screenshot](./assets/mockups/m3.png)
-
+[![m1.png](https://i.postimg.cc/MTtvZLtW/m1.png)](https://postimg.cc/1nn9JJLT)
+[![m2.png](https://i.postimg.cc/B67V0SW4/m2.png)](https://postimg.cc/ZB3cPhKM)
+[![m3.png](https://i.postimg.cc/j5y48RsM/m3.png)](https://postimg.cc/5YNzydQz)
 ## Features
 
 - Email and Password based authentication with refresh token
