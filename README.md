@@ -4,7 +4,7 @@ It's a social media platform where users can interact with friends or family. It
 
 ## Screenshots
 
-![App Screenshot](./assets/mockups/m2.png) ![App Screenshot](./assets/mockups/m3.png)
+![App Screenshot](./assets/mockups/m1.png) ![App Screenshot](./assets/mockups/m2.png) ![App Screenshot](./assets/mockups/m3.png)
 
 ## Features
 
