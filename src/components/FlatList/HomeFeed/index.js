@@ -1,76 +1,23 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {Text, View} from 'native-base';
+import {Text, View} from 'native-base'
+import React from 'react'
 
-import {FlatList, RefreshControl} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+import {FlatList, RefreshControl} from 'react-native'
 
-import Feed from '../../Feed';
-import HomeHeader from '../../Header/Home';
-import FeedSkeleton from '../../FeedSkeleton';
-import {COLORS} from '../../../constants';
-import useLikedPosts from '../../../hooks/useLikedPosts';
-import usePostsQuery from '../../../hooks/usePostsQuery';
-
-const LIMIT = 5;
+import {COLORS} from '../../../constants'
+import usePostsQuery from '../../../hooks/usePostsQuery'
+import Feed from '../../Feed'
+import FeedSkeleton from '../../FeedSkeleton'
+import HomeHeader from '../../Header/Home'
 
 function HomeFeed({navigation}) {
-  const [refreshing, setRefreshing] = useState(false);
-  const {userLikedPosts, refetch} = useLikedPosts();
   const {
     postStateValue,
     loading,
-    lastVisible,
-    getPosts,
-    setPostStateValue,
-    setLoading,
-    setLastVisible,
-  } = usePostsQuery();
-
-  useEffect(() => {
-    getPosts();
-  }, []);
-
-  const retrieveMore = async () => {
-    if (!lastVisible) {
-      setLoading(false);
-      return;
-    }
-    setLoading(true);
-    try {
-      const allPosts = await firestore()
-        .collection('Posts')
-        .orderBy('createdAt', 'desc')
-        .startAfter(lastVisible)
-        .limit(LIMIT)
-        .get();
-
-      const latestPost = [];
-      allPosts.docs.map(item => {
-        latestPost.push({
-          ...item.data(),
-          key: item.id,
-        });
-      });
-      let lastVisibleDoc = allPosts.docs[allPosts.docs.length - 1];
-      setPostStateValue(prev => ({
-        ...prev,
-        posts: [...postStateValue.posts, ...latestPost],
-      }));
-      setLastVisible(lastVisibleDoc);
-      setLoading(false);
-    } catch (error) {
-      console.log('getPosts error', error);
-      setLoading(false);
-    }
-  };
-
-  const onRefresh = useCallback(async () => {
-    setLoading(true);
-    setRefreshing(true);
-    await getPosts();
-    refetch(); //on refresh refetch all liked posts of the current user
-    setRefreshing(false);
-  }, []);
+    onRefresh,
+    userLikedPosts,
+    refreshing,
+    retrieveMore,
+  } = usePostsQuery()
 
   const renderItem = ({item}) => (
     <Feed
@@ -92,7 +39,7 @@ function HomeFeed({navigation}) {
       // onDelete={onPostDelete}
       // onUpdate={onPostUpdate}
     />
-  );
+  )
 
   return (
     <FlatList
@@ -128,8 +75,8 @@ function HomeFeed({navigation}) {
           </View>
         )
       }
-      onEndReached={retrieveMore}
-      onEndReachedThreshold={0.5}
+      onEndReached={() => retrieveMore()}
+      onEndReachedThreshold={0.1}
       refreshControl={
         <RefreshControl
           progressBackgroundColor={COLORS.primary}
@@ -144,7 +91,7 @@ function HomeFeed({navigation}) {
       renderItem={renderItem}
       refreshing={loading}
     />
-  );
+  )
 }
 
-export default React.memo(HomeFeed);
+export default React.memo(HomeFeed)
