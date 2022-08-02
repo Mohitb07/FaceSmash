@@ -23,29 +23,38 @@ import {
   UserIcon,
 } from '../../../SVG'
 import StyledButton from '../../Button'
+import {UserDataContext} from '../../../Context/userData'
 
 const ProfileHeader = ({userId, navigation, totalPosts = 0}) => {
   const {authUser} = useContext(AuthUserContext)
+  const {contextUser, updateUserData} = useContext(UserDataContext)
   const [userData, setUserData] = useState([])
   const [isConnected, setIsConnected] = useState(false)
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    firestore()
-      .collection('Users')
-      .where('uid', '==', userId)
-      .get()
-      .then(doc => {
-        const profileData = []
-        doc.forEach(item => {
-          profileData.push({
-            ...item.data(),
-            key: item.id,
-          })
-        })
+  console.log('context User', contextUser)
 
-        setUserData(profileData)
-      })
+  useEffect(() => {
+    if (userId === authUser?.uid) {
+      setUserData([contextUser])
+    } else {
+      console.log('fetching firestore')
+      firestore()
+        .collection('Users')
+        .where('uid', '==', userId)
+        .get()
+        .then(doc => {
+          const profileData = []
+          doc.forEach(item => {
+            profileData.push({
+              ...item.data(),
+              key: item.id,
+            })
+          })
+
+          setUserData(profileData)
+        })
+    }
   }, [userId])
 
   const handleButtonToggle = () => {
