@@ -1,144 +1,196 @@
-import React from 'react'
-import Register from './Register'
+import React, {useEffect, useState} from 'react'
+import {ScrollView, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
 
-const SignUp = ({navigation}) => {
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [confirmPassword, setConfirmPassword] = useState('');
-  // const [username, setUsername] = useState('');
-  // const [charactersLeft, setCharactersLeft] = useState(30);
+import {Divider, HStack, Image, Text, View, VStack} from 'native-base'
 
-  // const {onRegisterAttempt, error, setError, loading} = useRegister();
+import StyledButton from '../../components/Button'
+import StyledError from '../../components/Error'
+import {COLORS} from '../../constants'
+import {FIREBASE_ERRORS} from '../../firebase/errors'
+import {useRegister} from '../../hooks/register'
+import {FacebookIcon, GoogleIcon} from '../../SVG'
 
-  // const isDisabled =
-  //   email.length === 0 ||
-  //   password.length === 0 ||
-  //   confirmPassword.length === 0 ||
-  //   username.length === 0 ||
-  //   password !== confirmPassword;
+const Register = ({navigation}) => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [username, setUsername] = useState('')
+  const [charactersLeft, setCharactersLeft] = useState(30)
 
-  // const confirmPasswordErrorMsg =
-  //   confirmPassword.length > 0 &&
-  //   confirmPassword !== password &&
-  //   'Password do not match';
+  const {onRegisterAttempt, error, setError, loading} = useRegister()
 
-  // const signUpAttempt = () => {
-  //   onRegisterAttempt({email, password, username});
-  // };
+  const isDisabled =
+    email.length === 0 ||
+    password.length === 0 ||
+    confirmPassword.length === 0 ||
+    username.length === 0 ||
+    password !== confirmPassword ||
+    loading
 
-  // useEffect(() => {
-  //   setError(prev => ({
-  //     ...prev,
-  //     password: '',
-  //   }));
-  // }, [password]);
+  const confirmPasswordErrorMsg =
+    confirmPassword.length > 0 &&
+    confirmPassword !== password &&
+    'Password do not match'
 
-  // useEffect(() => {
-  //   setError(prev => ({
-  //     ...prev,
-  //     email: '',
-  //   }));
-  // }, [email]);
+  const signUpAttempt = () => {
+    onRegisterAttempt({email, password, username})
+  }
 
-  // const handleUsername = text => {
-  //   if (text.length > 30) return;
-  //   setUsername(text);
-  //   setCharactersLeft(30 - text.length);
-  // };
+  useEffect(() => {
+    setError(prev => ({
+      ...prev,
+      password: '',
+    }))
+  }, [password])
+
+  useEffect(() => {
+    setError(prev => ({
+      ...prev,
+      email: '',
+    }))
+  }, [email])
+
+  const handleUsername = text => {
+    if (text.length > 30) return
+    setUsername(text)
+    setCharactersLeft(30 - text.length)
+  }
 
   return (
-    // <ScrollView
-    //   contentContainerStyle={styles.container}
-    //   showsVerticalScrollIndicator={false}>
-    //   <View>
-    //     <View>
-    //       <View style={styles.headingContainer}>
-    //         <Text style={styles.heading}>Create an Account</Text>
-    //         <Text style={styles.subtitle}>
-    //           We're happy to see. You can Login and continue to use our platform
-    //           or sign up today .
-    //         </Text>
-    //       </View>
-    //       <View style={styles.inputContainer}>
-    //         <Label label="Username" required />
-    //         <StyledTextInput
-    //           value={username}
-    //           maxLength={30}
-    //           onChangeText={handleUsername}
-    //           placeholder="Your Username"
-    //         />
-    //         <StyledError
-    //           errorStyle={{
-    //             color: charactersLeft > 0 ? 'white' : 'red',
-    //             fontSize: 10,
-    //             marginLeft: 15,
-    //           }}
-    //           message={`${charactersLeft} characters remaining`}
-    //         />
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.container}>
+      <View alignItems="center" justifyContent="center">
+        <Image
+          style={{
+            height: 200,
+            width: 200,
+          }}
+          source={require('../../../assets/register.png')}
+          alt="Illustration"
+        />
+      </View>
+      <Text fontSize="4xl" fontFamily="Lato-Medium">
+        Sign Up
+      </Text>
 
-    //         <Label label="Email" required />
-    //         <StyledTextInput
-    //           value={email}
-    //           onChangeText={text => setEmail(text)}
-    //           placeholder="@gmail.com"
-    //         />
-    //         <StyledError
-    //           showErrorIcon={Boolean(error.email)}
-    //           message={FIREBASE_ERRORS[error.email]}
-    //         />
-
-    //         <Label label="Password" required />
-    //         <StyledTextInput
-    //           secure={true}
-    //           value={password}
-    //           onChangeText={text => setPassword(text)}
-    //           placeholder="Your Password"
-    //         />
-    //         <StyledError
-    //           showErrorIcon={Boolean(error.password)}
-    //           message={FIREBASE_ERRORS[error.password]}
-    //         />
-
-    //         <Label label="Confirm Password" required />
-    //         <StyledTextInput
-    //           secure={true}
-    //           value={confirmPassword}
-    //           onChangeText={text => setConfirmPassword(text)}
-    //           placeholder="Confirm Your Password"
-    //           error={Boolean(confirmPasswordErrorMsg)}
-    //         />
-    //         <StyledError
-    //           showErrorIcon={Boolean(confirmPasswordErrorMsg)}
-    //           message={confirmPasswordErrorMsg}
-    //         />
-    //       </View>
-    //     </View>
-    //     <View style={styles.footerContainer}>
-    //       <Button
-    //         height="12"
-    //         backgroundColor={isDisabled ? 'primary.900' : 'primary.500'}
-    //         borderRadius="full"
-    //         _text={{
-    //           color: '#1F2937',
-    //           fontWeight: 700,
-    //         }}
-    //         disabled={isDisabled}
-    //         isLoading={loading}
-    //         onPress={signUpAttempt}
-    //         isLoadingText="Signing Up">
-    //         Sign Up
-    //       </Button>
-    //       <AuthFooter
-    //         navigation={navigation}
-    //         navigateTo="Login"
-    //         navigationText="Sign Up"
-    //         description="Already a member ?"
-    //       />
-    //     </View>
-    //   </View>
-    // </ScrollView>
-    <Register navigation={navigation} />
+      <VStack space="5" mt="6">
+        <View>
+          <TextInput
+            placeholder="Username"
+            placeholderTextColor={COLORS.white2}
+            value={username}
+            onChangeText={handleUsername}
+            style={[
+              styles.textInput,
+              charactersLeft === 0 && styles.textInputError,
+            ]}
+            maxLength={30}
+          />
+          <StyledError
+            errorStyle={{
+              color: charactersLeft > 0 ? 'white' : 'red',
+              fontSize: 10,
+              marginLeft: 15,
+            }}
+            message={`${charactersLeft} characters remaining`}
+          />
+        </View>
+        <View>
+          <TextInput
+            placeholder="Email ID"
+            placeholderTextColor={COLORS.white2}
+            value={email}
+            onChangeText={text => setEmail(text)}
+            style={[styles.textInput, error.email && styles.textInputError]}
+            maxLength={30}
+            keyboardType="email-address"
+            textContentType="emailAddress"
+          />
+          <StyledError message={FIREBASE_ERRORS[error.email]} />
+        </View>
+        <View>
+          <TextInput
+            secureTextEntry
+            placeholder="Password"
+            placeholderTextColor={COLORS.white2}
+            style={[styles.textInput, error.password && styles.textInputError]}
+            value={password}
+            onChangeText={text => setPassword(text)}
+          />
+          <StyledError message={FIREBASE_ERRORS[error.password]} />
+        </View>
+        <View>
+          <TextInput
+            secureTextEntry
+            placeholder="Confirm Password"
+            placeholderTextColor={COLORS.white2}
+            style={[
+              styles.textInput,
+              Boolean(confirmPasswordErrorMsg) && styles.textInputError,
+            ]}
+            value={confirmPassword}
+            onChangeText={text => setConfirmPassword(text)}
+          />
+          <StyledError message={confirmPasswordErrorMsg} />
+        </View>
+      </VStack>
+      <StyledButton
+        onPress={signUpAttempt}
+        text="Sign Up"
+        color={isDisabled ? COLORS.gray : COLORS.white2}
+        loader={loading}
+        disabled={isDisabled}
+      />
+      <Text my="6" textAlign="center" fontFamily="Lato-Regular">
+        Or, login with...
+      </Text>
+      <HStack justifyContent="center" space="10" alignItems="center">
+        <TouchableOpacity>
+          <GoogleIcon />
+        </TouchableOpacity>
+        <Divider thickness="1" mx="2" orientation="vertical" />
+        <TouchableOpacity>
+          <FacebookIcon />
+        </TouchableOpacity>
+      </HStack>
+      <Text
+        fontFamily="Lato-Regular"
+        mt="8"
+        textAlign="center"
+        alignItems="center">
+        Already a member?{' '}
+        <Text
+          onPress={() => navigation.navigate('Login')}
+          mt="10"
+          fontFamily="Lato-Bold"
+          color="primary.400">
+          Login
+        </Text>
+      </Text>
+    </ScrollView>
   )
 }
 
-export default SignUp
+export default Register
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 25,
+    paddingTop: 0,
+    // paddingBottom: 20,
+    backgroundColor: COLORS.mainBackground,
+  },
+  textInput: {
+    backgroundColor: COLORS.cardBackground,
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    color: 'white',
+    borderColor: COLORS.transparent,
+    borderWidth: 1,
+  },
+  textInputError: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+})
