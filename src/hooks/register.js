@@ -23,7 +23,6 @@ export function useRegister() {
           .set({
             email: user.user.email,
             username: username,
-            password: password,
             uid: user.user.uid,
             followers: [],
             followings: [],

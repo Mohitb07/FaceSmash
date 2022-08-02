@@ -1,105 +1,143 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+import {ScrollView, StyleSheet, TextInput} from 'react-native'
 
-import Login from './Login'
+import {Divider, HStack, Image, Text, View, VStack} from 'native-base'
 
-const LoginOld = ({navigation}) => {
-  // const [email, setEmail] = useState('');
-  // const [password, setPassword] = useState('');
-  // const [error, setError] = useState('');
-  // const [loading, setLoading] = useState(false);
+import StyledButton from '../../components/Button'
+import StyledError from '../../components/Error'
+import {COLORS} from '../../constants'
+import {FIREBASE_ERRORS} from '../../firebase/errors'
+import useLogin from '../../hooks/useLogin'
+import {FacebookIcon, GoogleIcon} from '../../SVG'
+import {checkIsEmailValid} from '../../utils'
 
-  // const onLoginAttempt = () => {
-  //   setLoading(true);
-  //   setError('');
-  //   auth()
-  //     .signInWithEmailAndPassword(email, password)
-  //     .then(user => {
-  //       console.log('User logged in!', user);
-  //     })
-  //     .catch(err => {
-  //       setLoading(false);
-  //       console.log('ERROR', err.message);
-  //       setError(err.message);
-  //     });
-  // };
+const Login = ({navigation}) => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const {onLoginAttempt, loading, error, setError} = useLogin()
+  const invalidEmail = checkIsEmailValid(email)
+  const isDisabled =
+    email.length === 0 || password.length === 0 || invalidEmail || loading
+  const invalidEmailError = email.length > 0 && invalidEmail
 
-  // useEffect(() => {
-  //   setError('');
-  // }, [email, password]);
-
-  // const invalidEmail = checkIsEmailValid(email);
-
-  // const isDisabled =
-  //   email.length === 0 || password.length === 0 || invalidEmail;
-
-  // const invalidEmailError = email.length > 0 && invalidEmail;
+  useEffect(() => {
+    error && setError('')
+  }, [email, password])
 
   return (
-    // <KeyboardAvoidingView style={styles.container} behavior="padding" enabled>
-    //   <View style={styles.container}>
-    //     <View>
-    //       <View style={styles.headingContainer}>
-    //         <Text style={styles.heading}>Welcome Back!</Text>
-    //         <Text style={styles.subtitle}>
-    //           We're happy to see. Login now and connect with your friends.
-    //         </Text>
-    //       </View>
-    //       <View style={styles.inputContainer}>
-    //         <Label label="Email" required />
-    //         <StyledTextInput
-    //           placeholder="@gmail.com"
-    //           value={email}
-    //           onChangeText={text => setEmail(text)}
-    //         />
-    //         <StyledError
-    //           showErrorIcon={invalidEmailError || Boolean(error)}
-    //           message={
-    //             (invalidEmailError && 'Invalid Email') || FIREBASE_ERRORS[error]
-    //           }
-    //         />
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.container}>
+      <View alignItems="center" justifyContent="center">
+        <Image
+          style={{
+            height: 200,
+            width: 200,
+          }}
+          source={require('../../../assets/login2.png')}
+          alt="Illustration"
+        />
+      </View>
+      <Text fontSize="4xl" fontFamily="Lato-Medium">
+        Login
+      </Text>
 
-    //         <Label label="Password" required />
-    //         <StyledTextInput
-    //           placeholder="Your Password"
-    //           value={password}
-    //           secure={true}
-    //           onChangeText={text => setPassword(text)}
-    //         />
-    //         <StyledError
-    //           showErrorIcon={Boolean(error)}
-    //           message={FIREBASE_ERRORS[error]}
-    //         />
+      <VStack space="5" mt="6">
+        <View>
+          <TextInput
+            placeholder="Email ID"
+            placeholderTextColor={COLORS.white2}
+            value={email}
+            onChangeText={text => setEmail(text)}
+            style={[styles.textInput, error && styles.textInputError]}
+            maxLength={30}
+            keyboardType="email-address"
+            textContentType="emailAddress"
+          />
+          <StyledError
+            message={
+              (invalidEmailError && 'Invalid Email') || FIREBASE_ERRORS[error]
+            }
+          />
+        </View>
+        <View>
+          <TextInput
+            secureTextEntry
+            placeholder="Password"
+            placeholderTextColor={COLORS.white2}
+            style={[styles.textInput, error && styles.textInputError]}
+            value={password}
+            onChangeText={text => setPassword(text)}
+          />
+          <StyledError message={FIREBASE_ERRORS[error]} />
+        </View>
+      </VStack>
+      <Text
+        fontFamily="Lato-Regular"
+        textAlign="right"
+        my="5"
+        color="primary.400">
+        Forgot Password ?
+      </Text>
 
-    //         <Text style={styles.forgotPasswordText}>Forgot password ?</Text>
-    //       </View>
-    //     </View>
-    //     <View style={styles.footerContainer}>
-    //       <Button
-    //         height="12"
-    //         backgroundColor={isDisabled ? 'primary.900' : 'primary.700'}
-    //         borderRadius="full"
-    //         _text={{
-    //           color: COLORS.white2,
-    //           fontFamily: 'Lato-Heavy',
-    //         }}
-    //         disabled={isDisabled}
-    //         isLoading={loading}
-    //         onPress={onLoginAttempt}
-    //         isLoadingText="Logging In">
-    //         Sign In
-    //       </Button>
-    //       <AuthFooter
-    //         navigation={navigation}
-    //         navigateTo="Sign Up"
-    //         navigationText="Sign Up"
-    //         description="I don't have an account"
-    //       />
-    //     </View>
-    //   </View>
-    // </KeyboardAvoidingView>
-    // );
-    <Login navigation={navigation} />
+      <StyledButton
+        onPress={() => onLoginAttempt(email, password)}
+        text="Login"
+        color={isDisabled ? COLORS.gray : COLORS.white2}
+        loader={loading}
+        disabled={isDisabled}
+      />
+      <Text my="6" textAlign="center" fontFamily="Lato-Regular">
+        Or, login with...
+      </Text>
+      <HStack justifyContent="center" space="10" alignItems="center">
+        <GoogleIcon />
+        <Divider thickness="1" mx="2" orientation="vertical" />
+        <FacebookIcon />
+      </HStack>
+      <Text
+        fontFamily="Lato-Regular"
+        mt="8"
+        textAlign="center"
+        alignItems="center">
+        New to FaceSmash?{' '}
+        <Text
+          onPress={() => navigation.navigate('Sign Up')}
+          mt="10"
+          fontFamily="Lato-Bold"
+          color="primary.400">
+          Register
+        </Text>
+      </Text>
+    </ScrollView>
   )
 }
 
-export default LoginOld
+export default Login
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 25,
+    paddingTop: 10,
+
+    backgroundColor: COLORS.mainBackground,
+  },
+  textInput: {
+    backgroundColor: COLORS.cardBackground,
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    color: 'white',
+    borderColor: COLORS.transparent,
+    borderWidth: 1,
+  },
+  textInputError: {
+    borderColor: 'red',
+    borderWidth: 1,
+  },
+  btnDefault: {
+    borderColor: COLORS.white2,
+    borderWidth: 2,
+    borderRadius: 50,
+    padding: 2,
+  },
+})
