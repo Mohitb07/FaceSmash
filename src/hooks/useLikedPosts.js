@@ -1,19 +1,18 @@
 import React, {useCallback, useContext, useEffect, useState} from 'react'
 
 import firestore from '@react-native-firebase/firestore'
-
-import {AuthUserContext} from '../Context/auth'
+import auth from '@react-native-firebase/auth'
 
 const useLikedPosts = () => {
-  const {authUser} = useContext(AuthUserContext)
   const [userLikedPosts, setUserLikedPosts] = useState([])
   const [error, setError] = useState('')
+  const authUserId = auth().currentUser.uid
 
   const getUserLikedPosts = useCallback(async () => {
     try {
       const userLikedPosts = await firestore()
         .collection('Users')
-        .doc(authUser?.uid)
+        .doc(authUserId)
         .collection('postlikes')
         .get()
 

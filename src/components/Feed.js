@@ -1,22 +1,14 @@
+import React, {useContext, useEffect, useState} from 'react'
 import {
-  View,
-  Text,
   StyleSheet,
+  Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-} from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+  View,
+} from 'react-native'
 
-import {
-  HeartOutlinIcon,
-  HeartFilledIcon,
-  CommentIcon,
-  CommentOutlinedIcon,
-  LinkIcon,
-} from '../SVG';
-import moment from 'moment';
-import firestore from '@react-native-firebase/firestore';
-import FastImage from 'react-native-fast-image';
+import firestore from '@react-native-firebase/firestore'
+import moment from 'moment'
 import {
   Actionsheet,
   HStack,
@@ -25,11 +17,13 @@ import {
   useDisclose,
   View as NView,
   VStack,
-} from 'native-base';
+} from 'native-base'
+import FastImage from 'react-native-fast-image'
+import {HeartFilledIcon, HeartOutlinIcon, LinkIcon} from '../SVG'
 
-import {COLORS} from '../constants';
-import FeedMore from './BottomSheet/FeedMore';
-import {AuthUserContext} from '../Context/auth';
+import {COLORS} from '../constants'
+import {AuthUserContext} from '../Context/auth'
+import FeedMore from './BottomSheet/FeedMore'
 
 const Feed = ({
   image,
@@ -46,15 +40,15 @@ const Feed = ({
   link = '',
   hasLiked: likedStatus,
 }) => {
-  console.log('feed', postTitle);
-  const {authUser} = useContext(AuthUserContext);
-  const {onOpen, onClose, isOpen} = useDisclose();
-  const [hasLiked, setHasLiked] = useState(likedStatus);
-  const [likesCounter, setLikesCounter] = useState(likes);
+  console.log('feed', postTitle)
+  const {authUser} = useContext(AuthUserContext)
+  const {onOpen, onClose, isOpen} = useDisclose()
+  const [hasLiked, setHasLiked] = useState(likedStatus)
+  const [likesCounter, setLikesCounter] = useState(likes)
 
   useEffect(() => {
-    setHasLiked(likedStatus);
-  }, [likedStatus]);
+    setHasLiked(likedStatus)
+  }, [likedStatus])
 
   const handleLikes = async () => {
     try {
@@ -62,62 +56,62 @@ const Feed = ({
         .collection('Users')
         .doc(authUser?.uid)
         .collection('postlikes')
-        .doc(postId);
-      const postRef = firestore().collection('Posts').doc(postId);
+        .doc(postId)
+      const postRef = firestore().collection('Posts').doc(postId)
 
-      let isExistingPost;
+      let isExistingPost
       await userDocRef.get().then(doc => {
         if (doc.exists) {
-          console.log('existing');
-          isExistingPost = true;
+          console.log('existing')
+          isExistingPost = true
         } else {
-          console.log('not existing');
-          isExistingPost = false;
+          console.log('not existing')
+          isExistingPost = false
         }
-      });
-      const batch = firestore().batch();
+      })
+      const batch = firestore().batch()
 
       if (!isExistingPost) {
-        console.log('inside if');
+        console.log('inside if')
         try {
-          setHasLiked(true);
-          setLikesCounter(prev => (prev += 1));
+          setHasLiked(true)
+          setLikesCounter(prev => (prev += 1))
           // remove the user id from the user doc
           batch.set(userDocRef, {
             postId: postId,
             liked: true,
-          });
+          })
           // increment the counter of likes in posts collection
           batch.update(postRef, {
             likes: firestore.FieldValue.increment(1),
-          });
+          })
         } catch (error) {
-          setHasLiked(false);
-          setLikesCounter(prev => (prev -= 1));
+          setHasLiked(false)
+          setLikesCounter(prev => (prev -= 1))
         }
       } else {
-        console.log('inside else');
+        console.log('inside else')
         try {
-          setHasLiked(false);
-          setLikesCounter(prev => (prev -= 1));
+          setHasLiked(false)
+          setLikesCounter(prev => (prev -= 1))
           // add the user id to the user doc
-          batch.delete(userDocRef);
+          batch.delete(userDocRef)
           // decrement the counter of likes in posts collection
           batch.update(postRef, {
             likes: firestore.FieldValue.increment(-1),
-          });
+          })
         } catch (error) {
-          setHasLiked(true);
-          setLikesCounter(prev => (prev += 1));
+          setHasLiked(true)
+          setLikesCounter(prev => (prev += 1))
         }
       }
-      batch.commit(() => console.log('operation completed'));
+      batch.commit(() => console.log('operation completed'))
     } catch (err) {
-      console.log('handlelikes error', err.message);
+      console.log('handlelikes error', err.message)
     }
-  };
+  }
 
-  const updateUIBasedOnImage = !!image ? 'column-reverse' : 'column';
+  const updateUIBasedOnImage = !!image ? 'column-reverse' : 'column'
 
   return (
     <NView style={styles.container}>
@@ -216,10 +210,10 @@ const Feed = ({
         </Actionsheet.Content>
       </Actionsheet>
     </NView>
-  );
-};
+  )
+}
 
-export default React.memo(Feed);
+export default React.memo(Feed)
 
 const styles = StyleSheet.create({
   container: {
@@ -304,4 +298,4 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-});
+})
