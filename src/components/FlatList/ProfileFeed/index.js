@@ -1,102 +1,43 @@
-import firestore from '@react-native-firebase/firestore'
-import {Text as NText, View, VStack} from 'native-base'
+import React, {useEffect, useRef, memo} from 'react'
 
-import React, {useEffect, useState} from 'react'
-
-import {FlatList} from 'react-native'
-import {COLORS} from '../../../constants'
 import useLikedPosts from '../../../hooks/useLikedPosts'
-import Feed from '../../Feed'
-import FeedSkeleton from '../../FeedSkeleton'
+import DataList from '../../DataList'
+import Footer from '../../DataList/DataListFooter'
+import EmptyList from '../../DataList/EmptyDataList'
 import ProfileHeader from '../../Header/Profile'
-import {SecondaryDocumentIcon} from '../../../SVG'
+import useUserPostsQuery from '../../../hooks/useUserPostsQuery'
 
 const ProfileFeed = ({userId, navigation}) => {
   const {userLikedPosts} = useLikedPosts()
-  const [myRecentPosts, setMyRecentPosts] = useState([])
-
-  const [loading, setLoading] = useState(true)
+  const {myRecentPosts, loading, getMoreData} = useUserPostsQuery(userId)
+  const counterRef = useRef(0)
 
   useEffect(() => {
-    firestore()
-      .collection('Posts')
-      .where('user', '==', userId)
-      .orderBy('createdAt', 'desc')
-      .get()
-      .then(querySnapshot => {
-        const allRecentPosts = []
-        querySnapshot.forEach(doc => {
-          allRecentPosts.push({
-            ...doc.data(),
-            key: doc.id,
-          })
-        })
+    counterRef.current = counterRef.current + 1
+  })
 
-        setMyRecentPosts(allRecentPosts)
-        setLoading(false)
-      })
-  }, [])
+  console.log('profile feed counter', counterRef.current)
 
   return (
-    <FlatList
-      contentContainerStyle={{paddingBottom: 20}}
-      data={myRecentPosts}
-      showsVerticalScrollIndicator={false}
-      ListEmptyComponent={() =>
-        loading ? (
-          <FeedSkeleton mt="5" />
-        ) : (
-          <VStack alignItems="center">
-            <SecondaryDocumentIcon width={90} height={90} />
-            <NText
-              textAlign="center"
-              color={COLORS.white}
-              fontSize={20}
-              fontFamily="Lato-Semibold"
-              // marginTop={20}
-            >
-              Not Enough Posts
-            </NText>
-          </VStack>
-        )
-      }
-      keyExtractor={item => item.key}
-      ListHeaderComponent={
+    <DataList
+      dataList={myRecentPosts.posts}
+      EmptyList={<EmptyList loading={loading} />}
+      Footer={<Footer dataList={myRecentPosts.posts} loading={loading} />}
+      Header={
         <ProfileHeader
+          totalPosts={myRecentPosts.posts?.length}
           userId={userId}
           navigation={navigation}
-          totalPosts={myRecentPosts?.length}
         />
       }
-      ListFooterComponent={
-        myRecentPosts?.length > 0 &&
-        !loading && (
-          <View paddingY="4">
-            <NText textAlign="center" color="gray.500">
-              No More post
-            </NText>
-          </View>
-        )
-      }
-      renderItem={({item}) => (
-        <Feed
-          postId={item.key}
-          userProfilePic={item?.userProfile}
-          createdAt={item.createdAt}
-          username={item.username}
-          postTitle={item.title}
-          image={item.image}
-          description={item.description}
-          navigation={navigation}
-          likes={myRecentPosts.find(post => post.key === item.key)?.likes}
-          userId={item.user}
-          hasLiked={
-            userLikedPosts.find(post => post.postId === item.key)?.liked
-          }
-        />
-      )}
+      // onRefresh={onRefresh}
+      // refreshing={refreshing}
+      retrieveMore={getMoreData}
+      loading={loading}
+      userLikedPosts={userLikedPosts}
+      navigation={navigation}
     />
   )
 }
 
-export default ProfileFeed
+export default memo(ProfileFeed)
