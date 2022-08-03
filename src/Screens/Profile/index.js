@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import {StyleSheet, View} from 'react-native'
 
 import {useSetRecoilState} from 'recoil'
@@ -13,6 +13,13 @@ import {GearIcon} from '../../SVG'
 const MyProfile = ({route, navigation}) => {
   const {providedUserId} = route?.params || null
   const setBottomSheetStateValue = useSetRecoilState(bottomSheetState)
+  const counter = useRef(0)
+
+  useEffect(() => {
+    counter.current = counter.current + 1
+  })
+
+  console.log('profile index counter', counter.current)
 
   const handleModalState = () => {
     setBottomSheetStateValue(prev => ({
