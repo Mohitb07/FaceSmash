@@ -8,11 +8,13 @@ import {
   Text,
   View,
 } from 'native-base'
-import React, {useContext, useEffect, useState} from 'react'
+import React, {memo, useContext, useEffect, useRef, useState} from 'react'
 import {ActivityIndicator, TouchableOpacity} from 'react-native'
 
 import firestore from '@react-native-firebase/firestore'
+import auth from '@react-native-firebase/auth'
 import FastImage from 'react-native-fast-image'
+
 import {COLORS} from '../../../constants'
 import {AuthUserContext} from '../../../Context/auth'
 import {
@@ -26,16 +28,22 @@ import StyledButton from '../../Button'
 import {UserDataContext} from '../../../Context/userData'
 
 const ProfileHeader = ({userId, navigation, totalPosts = 0}) => {
-  const {authUser} = useContext(AuthUserContext)
-  const {contextUser, updateUserData} = useContext(UserDataContext)
+  // const {authUser} = useContext(AuthUserContext)
+  const {contextUser} = useContext(UserDataContext)
   const [userData, setUserData] = useState([])
   const [isConnected, setIsConnected] = useState(false)
   const [loading, setLoading] = useState(false)
-
-  console.log('context User', contextUser)
+  const counter = useRef(0)
+  const authUser = auth().currentUser.uid
 
   useEffect(() => {
-    if (userId === authUser?.uid) {
+    counter.current = counter.current + 1
+  })
+
+  console.log('profile header counter', counter.current)
+
+  useEffect(() => {
+    if (userId === authUser) {
       setUserData([contextUser])
     } else {
       console.log('fetching firestore')
@@ -90,7 +98,7 @@ const ProfileHeader = ({userId, navigation, totalPosts = 0}) => {
       }
 
   return (
-    <Box my="2">
+    <Box my="2" mb="10">
       <HStack alignItems="center" justifyContent="space-between">
         <PresenceTransition
           visible={true}
@@ -186,7 +194,7 @@ const ProfileHeader = ({userId, navigation, totalPosts = 0}) => {
           showRing={false}
           {...buttonStyle}
         />
-        {authUser?.uid === userId && (
+        {authUser === userId && (
           <TouchableOpacity
             onPress={() => navigation.navigate('Update Profile')}>
             <ThreeDotsIcon />
@@ -225,4 +233,4 @@ const ProfileHeader = ({userId, navigation, totalPosts = 0}) => {
   )
 }
 
-export default ProfileHeader
+export default memo(ProfileHeader)
