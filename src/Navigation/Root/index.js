@@ -1,36 +1,55 @@
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import React, {createRef, useContext, useEffect} from 'react';
+import {createNativeStackNavigator} from '@react-navigation/native-stack'
+import React, {createRef, useContext, useEffect} from 'react'
 
-import GetStarted from '../../Screens/GetStarted';
-import Home from '../../Screens/Home';
-import Login from '../../Screens/Login';
-import MyProfile from '../../Screens/Profile';
-import Loader from '../../components/Loader';
-import {AuthUserContext} from '../../Context/auth';
-import AddPost from '../../Screens/AddPost';
-import Browser from '../../Screens/Browser';
-import UpdateProfile from '../../Screens/Profile/Update';
-import Register from '../../Screens/Register';
+import GetStarted from '../../Screens/GetStarted'
+import Home from '../../Screens/Home'
+import Login from '../../Screens/Login'
+import MyProfile from '../../Screens/Profile'
+import Loader from '../../components/Loader'
+import {AuthUserContext} from '../../Context/auth'
+import AddPost from '../../Screens/AddPost'
+import Browser from '../../Screens/Browser'
+import UpdateProfile from '../../Screens/Profile/Update'
+import Register from '../../Screens/Register'
 
-const RootStack = createNativeStackNavigator();
-export const navigationRef = createRef();
+const RootStack = createNativeStackNavigator()
+export const navigationRef = createRef()
 
 const Root = () => {
-  const {authUser, initializing} = useContext(AuthUserContext);
+  const {authUser, initializing} = useContext(AuthUserContext)
 
   if (initializing) {
-    return <Loader />;
+    return <Loader />
   }
 
   return (
-    <RootStack.Navigator screenOptions={{headerShown: false}}>
+    <RootStack.Navigator
+      screenOptions={{headerShown: false, animation: 'slide_from_right'}}>
       {!!authUser ? (
         <>
           <RootStack.Screen name="Home" component={Home} />
           <RootStack.Screen name="Profile" component={MyProfile} />
-          <RootStack.Screen name="Update Profile" component={UpdateProfile} />
-          <RootStack.Screen name="Add Post" component={AddPost} />
-          <RootStack.Screen name="Browser" component={Browser} />
+          <RootStack.Screen
+            name="Update Profile"
+            component={UpdateProfile}
+            options={{
+              animation: 'slide_from_bottom',
+            }}
+          />
+          <RootStack.Screen
+            name="Add Post"
+            component={AddPost}
+            options={{
+              animation: 'slide_from_bottom',
+            }}
+          />
+          <RootStack.Screen
+            name="Browser"
+            component={Browser}
+            options={{
+              animation: 'slide_from_bottom',
+            }}
+          />
         </>
       ) : (
         <>
@@ -40,7 +59,7 @@ const Root = () => {
         </>
       )}
     </RootStack.Navigator>
-  );
-};
+  )
+}
 
-export default Root;
+export default Root
