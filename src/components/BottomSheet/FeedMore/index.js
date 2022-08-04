@@ -1,13 +1,26 @@
-import {StyleSheet, TouchableOpacity} from 'react-native';
-import React, {useContext} from 'react';
-import {useRecoilValue} from 'recoil';
-import {authState} from '../../../atoms/authAtom';
-import {Actionsheet, Box, Text as NText, Icon} from 'native-base';
-import {DocumentIcon, LogoutIcon, PrivacyIcon} from '../../../SVG';
-import {AuthUserContext} from '../../../Context/auth';
+import {Actionsheet, Box, Icon, Text as NText} from 'native-base'
+import React, {useContext} from 'react'
+import {StyleSheet, TouchableOpacity} from 'react-native'
+import {AuthUserContext} from '../../../Context/auth'
+import {DocumentIcon, LogoutIcon, PrivacyIcon} from '../../../SVG'
+import firestore from '@react-native-firebase/firestore'
+import {useRecoilState} from 'recoil'
+import {postState} from '../../../atoms/postAtom'
 
-const FeedMore = () => {
-  const {authUser} = useContext(AuthUserContext);
+const FeedMore = ({postId, handleDelete}) => {
+  const {authUser} = useContext(AuthUserContext)
+
+  const handleDeletePost = () => {
+    firestore()
+      .collection('Posts')
+      .doc(postId)
+      .delete()
+      .then(() => {
+        handleDelete(true)
+        console.log('User deleted!')
+      })
+  }
+
   return (
     <>
       <Box w="100%" h={60} px={4} justifyContent="center">
@@ -42,7 +55,7 @@ const FeedMore = () => {
         <Actionsheet.Item
           startIcon={<Icon as={LogoutIcon} mr="1" size="6" />}
           style={styles.defaultStyle}>
-          <TouchableOpacity style={styles.btnLogout} onPress={() => {}}>
+          <TouchableOpacity style={styles.btnLogout} onPress={handleDeletePost}>
             <NText color="red.700" fontWeight="semibold">
               Delete Post
             </NText>
@@ -50,13 +63,13 @@ const FeedMore = () => {
         </Actionsheet.Item>
       )}
     </>
-  );
-};
+  )
+}
 
-export default React.memo(FeedMore);
+export default React.memo(FeedMore)
 
 const styles = StyleSheet.create({
   defaultStyle: {
     backgroundColor: 'none',
   },
-});
+})

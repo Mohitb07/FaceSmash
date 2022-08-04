@@ -17,6 +17,7 @@ import {
   useDisclose,
   View as NView,
   VStack,
+  Text as NText,
 } from 'native-base'
 import FastImage from 'react-native-fast-image'
 import {HeartFilledIcon, HeartOutlinIcon, LinkIcon} from '../SVG'
@@ -45,10 +46,16 @@ const Feed = ({
   const {onOpen, onClose, isOpen} = useDisclose()
   const [hasLiked, setHasLiked] = useState(likedStatus)
   const [likesCounter, setLikesCounter] = useState(likes)
+  const [isDeleted, setIsDeleted] = useState(false)
 
   useEffect(() => {
     setHasLiked(likedStatus)
   }, [likedStatus])
+
+  const handleOnDelete = value => {
+    onClose()
+    setIsDeleted(value)
+  }
 
   const handleLikes = async () => {
     try {
@@ -112,6 +119,14 @@ const Feed = ({
   }
 
   const updateUIBasedOnImage = !!image ? 'column-reverse' : 'column'
+
+  if (isDeleted) {
+    return (
+      <View>
+        <NText color={COLORS.white2}>{postTitle}Post Deleted</NText>
+      </View>
+    )
+  }
 
   return (
     <NView style={styles.container}>
@@ -206,7 +221,7 @@ const Feed = ({
       </NView>
       <Actionsheet disableOverlay isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content>
-          <FeedMore />
+          <FeedMore postId={postId} handleDelete={handleOnDelete} />
         </Actionsheet.Content>
       </Actionsheet>
     </NView>
