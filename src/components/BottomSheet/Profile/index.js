@@ -1,28 +1,28 @@
-import auth from '@react-native-firebase/auth';
-import {Actionsheet, Box, Text as NText} from 'native-base';
-import React, {useContext} from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {useResetRecoilState} from 'recoil';
-import {bottomSheetState} from '../../../atoms/bottomSheetAtom';
-import {postState} from '../../../atoms/postAtom';
-import {AuthUserContext} from '../../../Context/auth';
-import {DocumentIcon, LogoutIcon, PrivacyIcon} from '../../../SVG';
+import auth from '@react-native-firebase/auth'
+import {Actionsheet, Box, Text as NText} from 'native-base'
+import React, {useContext} from 'react'
+import {StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {useResetRecoilState} from 'recoil'
+import {bottomSheetState} from '../../../atoms/bottomSheetAtom'
+import {postState} from '../../../atoms/postAtom'
+import {AuthUserContext} from '../../../Context/auth'
+import {DocumentIcon, LogoutIcon, PrivacyIcon} from '../../../SVG'
 
 const ProfileBottomSheet = () => {
-  const {authUser} = useContext(AuthUserContext);
-  const setPostState = useResetRecoilState(postState);
-  const setBottom = useResetRecoilState(bottomSheetState);
+  const {authUser} = useContext(AuthUserContext)
+  const setPostState = useResetRecoilState(postState)
+  const setBottom = useResetRecoilState(bottomSheetState)
 
   const onLogoutAttempt = () => {
     auth()
       .signOut()
       .then(() => {
-        console.log('user logged out');
-        setPostState();
-        setBottom();
+        console.log('user logged out')
+        setPostState()
+        setBottom()
       })
-      .catch(err => console.log('SIGN OUT ERROR', err));
-  };
+      .catch(err => console.log('SIGN OUT ERROR', err))
+  }
 
   return (
     <>
@@ -61,10 +61,10 @@ const ProfileBottomSheet = () => {
         </Actionsheet.Item>
       )}
     </>
-  );
-};
+  )
+}
 
-export default ProfileBottomSheet;
+export default ProfileBottomSheet
 
 const styles = StyleSheet.create({
   btnLogout: {
@@ -74,4 +74,4 @@ const styles = StyleSheet.create({
   defaultStyle: {
     backgroundColor: 'none',
   },
-});
+})

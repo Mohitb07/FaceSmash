@@ -1,5 +1,5 @@
-import React, {useContext} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import React, {useContext} from 'react'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {
   Avatar,
@@ -8,22 +8,22 @@ import {
   ScrollView,
   Text as NText,
   View as NView,
-} from 'native-base';
+} from 'native-base'
 
-import {COLORS} from '../../../constants';
-import {UserDataContext} from '../../../Context/userData';
-import useSelectImage from '../../../hooks/useSelectImage';
-import {PhotoIcon, SearchIcon} from '../../../SVG';
-import Story from '../../Story';
+import {COLORS} from '../../../constants'
+import {UserDataContext} from '../../../Context/userData'
+import useSelectImage from '../../../hooks/useSelectImage'
+import {PhotoIcon, SearchIcon} from '../../../SVG'
+import Story from '../../Story'
 
 function PostHeader({navigation}) {
-  const {contextUser} = useContext(UserDataContext);
-  const {handleChooseGallary} = useSelectImage();
+  const {contextUser} = useContext(UserDataContext)
+  const {handleChooseGallary} = useSelectImage()
 
   const handleGetImageThenNavigate = () => {
     // true for navigation
-    handleChooseGallary(true, navigation);
-  };
+    handleChooseGallary(true, navigation)
+  }
 
   const dummyStoryData = [
     {
@@ -56,7 +56,7 @@ function PostHeader({navigation}) {
       username: 'Justin',
       id: 6,
     },
-  ];
+  ]
 
   return (
     <NView mb="10">
@@ -136,10 +136,10 @@ function PostHeader({navigation}) {
         </TouchableOpacity>
       </NView>
     </NView>
-  );
+  )
 }
 
-export default PostHeader;
+export default PostHeader
 
 const styles = StyleSheet.create({
   container: {
@@ -194,4 +194,4 @@ const styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: 'bold',
   },
-});
+})
