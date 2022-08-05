@@ -39,7 +39,6 @@ const DataList = ({
       hasLiked={userLikedPosts.find(post => post.postId === item.key)?.liked}
       post={item}
       link={item?.link}
-      dataList={dataList}
     />
   )
 
