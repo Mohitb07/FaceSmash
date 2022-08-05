@@ -9,8 +9,6 @@ const EmptyList = ({loading}) => {
   return loading ? (
     <>
       <FeedSkeleton />
-      <FeedSkeleton />
-      <FeedSkeleton />
     </>
   ) : (
     <Text textAlign="center" color={COLORS.white} fontSize={20} marginTop={20}>
