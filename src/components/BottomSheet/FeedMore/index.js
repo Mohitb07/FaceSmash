@@ -6,9 +6,12 @@ import {DocumentIcon, LogoutIcon, PrivacyIcon} from '../../../SVG'
 import firestore from '@react-native-firebase/firestore'
 import {useRecoilState} from 'recoil'
 import {postState} from '../../../atoms/postAtom'
+import {userDataState} from '../../../atoms/userAtom'
 
 const FeedMore = ({postId, handleDelete}) => {
   const {authUser} = useContext(AuthUserContext)
+  const [postStateValue, setPostStateValue] = useRecoilState(postState)
+  const [userStateValue, setUserStateValue] = useRecoilState(userDataState)
 
   const handleDeletePost = () => {
     firestore()
@@ -16,8 +19,19 @@ const FeedMore = ({postId, handleDelete}) => {
       .doc(postId)
       .delete()
       .then(() => {
-        handleDelete(true)
-        console.log('User deleted!')
+        handleDelete()
+        setPostStateValue(prev => ({
+          ...prev,
+          posts: postStateValue.posts.filter(post => post.key !== postId),
+        }))
+        if (userStateValue.posts.length > 0) {
+          console.log('deleting profile data')
+          setUserStateValue(prev => ({
+            ...prev,
+            posts: userStateValue.posts.filter(post => post.key !== postId),
+          }))
+        }
+        console.log('Post deleted!')
       })
   }
 
