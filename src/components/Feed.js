@@ -52,9 +52,9 @@ const Feed = ({
     setHasLiked(likedStatus)
   }, [likedStatus])
 
-  const handleOnDelete = value => {
+  const handleOnDelete = () => {
     onClose()
-    setIsDeleted(value)
+    // setIsDeleted(value)
   }
 
   const handleLikes = async () => {
@@ -120,13 +120,13 @@ const Feed = ({
 
   const updateUIBasedOnImage = !!image ? 'column-reverse' : 'column'
 
-  if (isDeleted) {
-    return (
-      <View>
-        <NText color={COLORS.white2}>{postTitle}Post Deleted</NText>
-      </View>
-    )
-  }
+  // if (isDeleted) {
+  //   return (
+  //     <View>
+  //       <NText color={COLORS.white2}>{postTitle}Post Deleted</NText>
+  //     </View>
+  //   )
+  // }
 
   return (
     <NView style={styles.container}>

@@ -1,6 +1,7 @@
-import React, {useEffect, useRef, memo} from 'react'
+import React, {memo, useEffect, useRef} from 'react'
 import {FlatList, RefreshControl} from 'react-native'
 import {COLORS} from '../../constants'
+import useLikedPosts from '../../hooks/useLikedPosts'
 import Feed from '../Feed'
 
 const DataList = ({
@@ -9,18 +10,18 @@ const DataList = ({
   Footer,
   EmptyList,
   navigation,
-  userLikedPosts,
   retrieveMore = () => {},
   onRefresh = () => {},
   refreshing = false,
   loading = false,
 }) => {
+  const {userLikedPosts} = useLikedPosts()
+  // console.log('latest userLikedPosts', userLikedPosts)
   const counter = useRef(0)
   useEffect(() => {
     counter.current = counter.current + 1
   })
-
-  console.log('data list counter', counter.current)
+  // console.log('data list counter', counter.current)
 
   const renderItems = ({item}) => (
     <Feed
