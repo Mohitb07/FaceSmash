@@ -8,21 +8,25 @@ import EmptyList from '../../DataList/EmptyDataList'
 import HomeHeader from '../../Header/Home'
 
 function HomeFeed({navigation}) {
-  const {userLikedPosts} = useLikedPosts()
-  const {postStateValue, loading, onRefresh, refreshing, getMoreData} =
-    usePostsQuery()
+  const {postStateValue, onRefresh, refreshing, getMoreData} = usePostsQuery()
 
   return (
     <DataList
       dataList={postStateValue.posts}
-      EmptyList={<EmptyList loading={loading} />}
-      Footer={<Footer dataList={postStateValue.posts} loading={loading} />}
-      Header={<HomeHeader navigation={navigation} loading={loading} />}
+      EmptyList={<EmptyList loading={postStateValue.loading} />}
+      Footer={
+        <Footer
+          dataList={postStateValue.posts}
+          loading={postStateValue.loading}
+        />
+      }
+      Header={
+        <HomeHeader navigation={navigation} loading={postStateValue.loading} />
+      }
       onRefresh={onRefresh}
       refreshing={refreshing}
       retrieveMore={getMoreData}
-      loading={loading}
-      userLikedPosts={userLikedPosts}
+      loading={postStateValue.loading}
       navigation={navigation}
     />
   )
