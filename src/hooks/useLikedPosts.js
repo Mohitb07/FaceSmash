@@ -1,12 +1,18 @@
-import React, {useCallback, useContext, useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useRef, useState} from 'react'
 
-import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 const useLikedPosts = () => {
   const [userLikedPosts, setUserLikedPosts] = useState([])
   const [error, setError] = useState('')
   const authUserId = auth().currentUser.uid
+
+  const counter = useRef(0)
+  useEffect(() => {
+    counter.current = counter.current + 1
+  })
+  console.log('useLikedPosts Count ❤️', counter.current)
 
   const getUserLikedPosts = useCallback(async () => {
     try {
@@ -17,8 +23,9 @@ const useLikedPosts = () => {
         .get()
 
       const postsLiked = []
-      userLikedPosts.docs.map(doc => postsLiked.push(doc.data()))
 
+      userLikedPosts.docs.map(doc => postsLiked.push(doc.data()))
+      console.log('within postsLiked', postsLiked)
       setUserLikedPosts(postsLiked)
     } catch (err) {
       console.log('getLikedposterror', err.message)
@@ -28,7 +35,9 @@ const useLikedPosts = () => {
 
   const refetch = useCallback(async () => {
     getUserLikedPosts()
-  }, [])
+  }, [getUserLikedPosts])
+
+  console.log('latest here', userLikedPosts)
 
   useEffect(() => {
     getUserLikedPosts()
