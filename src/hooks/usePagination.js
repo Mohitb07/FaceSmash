@@ -1,15 +1,13 @@
 import firestore from '@react-native-firebase/firestore'
 import {useCallback} from 'react'
 
-const LIMIT = 10
+const LIMIT = 5
 
 const usePagination = () => {
   const retrieveMore = useCallback(
     async (
       lastVisible,
-      setLoading,
       collection,
-      setLastVisible,
       getterData,
       setter,
       where = false,
@@ -22,7 +20,10 @@ const usePagination = () => {
         // setLoading(false)
         return
       }
-      setLoading(true)
+      setter(prev => ({
+        ...prev,
+        loading: true,
+      }))
       let dataList
       try {
         if (where) {
@@ -51,13 +52,16 @@ const usePagination = () => {
         let lastVisibleDoc = dataList.docs[dataList.docs.length - 1]
         setter(prev => ({
           ...prev,
-          posts: [...getterData.posts, ...latestPost],
+          posts: [...getterData, ...latestPost],
+          loading: false,
+          lastVisible: lastVisibleDoc,
         }))
-        setLastVisible(lastVisibleDoc)
-        setLoading(false)
       } catch (error) {
         console.log('getPosts error', error)
-        setLoading(false)
+        setter(prev => ({
+          ...prev,
+          loading: false,
+        }))
       }
     },
     [],
