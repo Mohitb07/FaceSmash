@@ -5,12 +5,10 @@ import {useRecoilState} from 'recoil'
 import useLikedPosts from './useLikedPosts'
 import usePagination from './usePagination'
 
-const LIMIT = 10
+const LIMIT = 5
 
 const usePostsQuery = () => {
   const [postStateValue, setPostStateValue] = useRecoilState(postState)
-  const [loading, setLoading] = useState(true)
-  const [lastVisible, setLastVisible] = useState(null)
   const {refetch} = useLikedPosts()
   const [refreshing, setRefreshing] = useState(false)
   const {retrieveMore} = usePagination()
@@ -40,13 +38,17 @@ const usePostsQuery = () => {
       setPostStateValue(prev => ({
         ...prev,
         posts: latestPost,
+        lastVisible: lastVisibleDoc,
+        loading: false,
       }))
-
-      setLastVisible(lastVisibleDoc)
-      setLoading(false)
+      // setLastVisible(lastVisibleDoc)
+      // setLoading(false)
     } catch (error) {
       console.log('getPosts error', error)
-      setLoading(false)
+      setPostStateValue(prev => ({
+        ...prev,
+        loading: false,
+      }))
     }
   }, [])
 
@@ -54,28 +56,27 @@ const usePostsQuery = () => {
     getPosts()
   }, [getPosts])
 
-  const onRefresh = useCallback(async () => {
-    setLoading(true)
+  const onRefresh = async () => {
+    setPostStateValue(prev => ({
+      loading: true,
+    }))
     setRefreshing(true)
     await getPosts()
-    refetch() //on refresh refetch all liked posts of the current user
+    await refetch() //on refresh refetch all liked posts of the current user
     setRefreshing(false)
-  }, [])
+  }
 
   const getMoreData = useCallback(() => {
     return retrieveMore(
-      lastVisible,
-      setLoading,
+      postStateValue.lastVisible,
       'Posts',
-      setLastVisible,
-      postStateValue,
+      postStateValue.posts,
       setPostStateValue,
     )
-  }, [lastVisible])
+  }, [postStateValue.lastVisible])
 
   return {
     postStateValue,
-    loading,
     onRefresh,
     refreshing,
     getMoreData,
