@@ -1,19 +1,21 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react'
+import React, {useCallback, useEffect, useRef} from 'react'
 
 import firestore from '@react-native-firebase/firestore'
+import {useRecoilState} from 'recoil'
+import {userDataState} from '../../../atoms/userAtom'
+import useLikedPosts from '../../../hooks/useLikedPosts'
 import usePagination from '../../../hooks/usePagination'
 import DataList from '../../DataList'
 import Footer from '../../DataList/DataListFooter'
 import EmptyList from '../../DataList/EmptyDataList'
 import ProfileHeader from '../../Header/Profile'
-import {useRecoilState} from 'recoil'
-import {userDataState} from '../../../atoms/userAtom'
 
 const LIMIT = 5
 
 const ProfileFeed = ({userId, navigation}) => {
   const [myRecentPosts, setMyRecentPosts] = useRecoilState(userDataState)
   const {retrieveMore} = usePagination()
+  const {userLikedPosts} = useLikedPosts()
 
   const counterRef = useRef(0)
   useEffect(() => {
@@ -96,6 +98,7 @@ const ProfileFeed = ({userId, navigation}) => {
       retrieveMore={getMoreData}
       loading={myRecentPosts.loading}
       navigation={navigation}
+      userLikedPosts={userLikedPosts}
     />
   )
 }

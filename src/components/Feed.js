@@ -46,15 +46,13 @@ const Feed = ({
   const {onOpen, onClose, isOpen} = useDisclose()
   const [hasLiked, setHasLiked] = useState(likedStatus)
   const [likesCounter, setLikesCounter] = useState(likes)
-  const [isDeleted, setIsDeleted] = useState(false)
 
   useEffect(() => {
     setHasLiked(likedStatus)
-  }, [likedStatus])
+  }, [likedStatus, likes])
 
   const handleOnDelete = () => {
     onClose()
-    // setIsDeleted(value)
   }
 
   const handleLikes = async () => {
