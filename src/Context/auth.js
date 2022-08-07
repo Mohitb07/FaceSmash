@@ -1,25 +1,25 @@
-import React, {useEffect, useState, useCallback} from 'react';
+import React, {useEffect, useState, useCallback} from 'react'
 
-import auth from '@react-native-firebase/auth';
+import auth from '@react-native-firebase/auth'
 
-export const AuthUserContext = React.createContext();
+export const AuthUserContext = React.createContext()
 
 const AuthUserProvider = props => {
-  const [authUser, setAuth] = useState(null);
-  const [initializing, setInitializing] = useState(true);
+  const [authUser, setAuth] = useState(null)
+  const [initializing, setInitializing] = useState(true)
 
-  const onAuthStateChanged = useCallback(function onAuthStateChanged(user) {
-    setAuth(user);
-    if (initializing) setInitializing(false);
-  }, []);
+  const onAuthStateChanged = function onAuthStateChanged(user) {
+    setAuth(user)
+    if (initializing) setInitializing(false)
+  }
 
-  let subscriber;
+  let subscriber
   useEffect(() => {
-    subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  }, []);
+    subscriber = auth().onAuthStateChanged(onAuthStateChanged)
+    return subscriber
+  }, [])
 
-  console.log('authUser is', authUser);
+  console.log('authUser is', authUser)
 
   const value = React.useMemo(
     () => ({
@@ -27,8 +27,9 @@ const AuthUserProvider = props => {
       initializing,
     }),
     [authUser, initializing],
-  );
-  return <AuthUserContext.Provider value={value} {...props} />;
-};
+  )
+  const memoValues = {...value, setAuth}
+  return <AuthUserContext.Provider value={memoValues} {...props} />
+}
 
-export default AuthUserProvider;
+export default AuthUserProvider
