@@ -10,6 +10,8 @@ import {
   View as NView,
 } from 'native-base'
 
+import auth from '@react-native-firebase/auth'
+
 import {COLORS} from '../../../constants'
 import {UserDataContext} from '../../../Context/userData'
 import useSelectImage from '../../../hooks/useSelectImage'
@@ -109,7 +111,7 @@ function PostHeader({navigation}) {
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('Profile', {
-              providedUserId: contextUser.uid,
+              providedUserId: auth()?.currentUser?.uid,
             })
           }>
           <Avatar
