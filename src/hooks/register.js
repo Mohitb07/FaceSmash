@@ -15,8 +15,11 @@ export function useRegister() {
     setLoading(true)
     auth()
       .createUserWithEmailAndPassword(email, password)
-      .then(user => {
+      .then(async user => {
         console.log('inside user', user.user.metadata)
+
+        await auth().currentUser.sendEmailVerification()
+
         firestore()
           .collection('Users')
           .doc(user.user.uid)
@@ -40,7 +43,8 @@ export function useRegister() {
             })
           })
       })
-      .catch(error => {
+      .catch(async error => {
+        await auth().currentUser.delete()
         setLoading(false)
         console.log('error', error.message)
         if (error.code === 'auth/weak-password') {
