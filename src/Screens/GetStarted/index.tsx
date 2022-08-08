@@ -1,13 +1,24 @@
 import React from 'react'
 import {ImageBackground, StatusBar, Text, View} from 'react-native'
 
-import {Button, Text as NText, View as NView} from 'native-base'
+import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 import LinearGradient from 'react-native-linear-gradient'
 
-// import Button from '../../components/Button';
-import {COLORS, FONTS, SIZES} from '../../constants'
+import {Button, Text as NText, View as NView} from 'native-base'
 
-const GetStarted = ({navigation}) => {
+import {COLORS, FONTS, SIZES} from '../../constants'
+import {RootStackParamList} from '../../Navigation/Root'
+
+type GetStartedScreenNavigationProp = NativeStackScreenProps<
+  RootStackParamList,
+  'Get Started'
+>
+
+const ASSET_PATH = '../../../assets/giving-rupiah-coin.png'
+
+const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
+  navigation,
+}: GetStartedScreenNavigationProp) => {
   function renderHeader() {
     return (
       <View
@@ -17,7 +28,7 @@ const GetStarted = ({navigation}) => {
         <ImageBackground
           style={{flex: 1, justifyContent: 'flex-end'}}
           resizeMode="contain"
-          source={require('../../../assets/giving-rupiah-coin.png')}>
+          source={require(ASSET_PATH)}>
           <LinearGradient
             start={{x: 0, y: 0}}
             end={{x: 0, y: 1}}

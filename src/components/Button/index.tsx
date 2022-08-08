@@ -1,4 +1,5 @@
-import React from 'react'
+import React, {ReactElement, SVGProps} from 'react'
+
 import {
   Text,
   StyleSheet,
@@ -8,19 +9,33 @@ import {
 
 import {COLORS} from '../../constants'
 import {PresenceTransition, View} from 'native-base'
+import {TextStyle} from 'react-native'
 
-const Button = ({
+interface Props {
+  onPress: () => void
+  text: string
+  disabled: boolean
+  color?: string
+  icon?: ReactElement
+  style?: object
+  textStyle?: TextStyle
+  loader: boolean
+  showRing?: boolean
+  loadingText?: string
+}
+
+const Button: React.FC<Props> = ({
   onPress = () => {},
   text = '',
   disabled = false,
   color = '',
   icon,
   style: customStyle = {},
-  textStyle: customTextStyle = [],
+  textStyle,
   loader = false,
   showRing = true,
   loadingText = 'Loading...',
-}) => {
+}: Props) => {
   return (
     <View
       borderColor={disabled || !showRing ? COLORS.transparent : COLORS.white2}
@@ -43,8 +58,8 @@ const Button = ({
           disabled={disabled}
           style={[
             styles.btn,
-            color && {backgroundColor: color},
-            disabled && styles.disabled,
+            color.length > 0 && {backgroundColor: color},
+            // disabled && styles.disabled,
             customStyle,
           ]}
           onPress={onPress}>
@@ -54,8 +69,8 @@ const Button = ({
             <Text
               style={[
                 styles.btnText,
-                disabled && styles.disabled,
-                customTextStyle,
+                // disabled && styles.disabled,
+                textStyle,
               ]}>
               {loadingText}
             </Text>
@@ -63,8 +78,8 @@ const Button = ({
             <Text
               style={[
                 styles.btnText,
-                disabled && styles.disabled,
-                customTextStyle,
+                // disabled && styles.disabled,
+                textStyle,
               ]}>
               {text}
             </Text>

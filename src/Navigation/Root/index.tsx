@@ -1,4 +1,5 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
+import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 import React, {createRef, useContext} from 'react'
 
 import auth from '@react-native-firebase/auth'
@@ -15,7 +16,19 @@ import UpdateProfile from '../../Screens/Profile/Update'
 import Register from '../../Screens/Register'
 import Verification from '../../Screens/Verification'
 
-const RootStack = createNativeStackNavigator()
+export type RootStackParamList = {
+  Verification: undefined
+  'Get Started': undefined
+  Login: undefined
+  'Sign Up': undefined
+  Home: undefined
+  Profile: undefined
+  'Update Profile': undefined
+  'Add Post': undefined
+  Browser: undefined
+}
+
+const RootStack = createNativeStackNavigator<RootStackParamList>()
 export const navigationRef = createRef()
 
 const Root = () => {

@@ -1,7 +1,14 @@
 import React, {useEffect, useState} from 'react'
-import {ScrollView, StyleSheet, TextInput} from 'react-native'
+import {
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TextStyle,
+  ViewStyle,
+} from 'react-native'
 
 import {Divider, HStack, Image, Text, View, VStack} from 'native-base'
+import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import StyledButton from '../../components/Button'
 import StyledError from '../../components/Error'
@@ -10,10 +17,18 @@ import {FIREBASE_ERRORS} from '../../firebase/errors'
 import useLogin from '../../hooks/useLogin'
 import {FacebookIcon, GoogleIcon} from '../../SVG'
 import {checkIsEmailValid} from '../../utils'
+import {RootStackParamList} from '../../Navigation/Root'
 
-const Login = ({navigation}) => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+type LoginScreenNavigationProp = NativeStackScreenProps<
+  RootStackParamList,
+  'Get Started'
+>
+
+const Login: React.FC<LoginScreenNavigationProp> = ({
+  navigation,
+}: LoginScreenNavigationProp) => {
+  const [email, setEmail] = useState<string>('')
+  const [password, setPassword] = useState<string>('')
   const {onLoginAttempt, loading, error, setError} = useLogin()
   const invalidEmail = checkIsEmailValid(email)
   const isDisabled =
@@ -49,14 +64,18 @@ const Login = ({navigation}) => {
             placeholderTextColor={COLORS.white2}
             value={email}
             onChangeText={text => setEmail(text)}
-            style={[styles.textInput, error && styles.textInputError]}
+            style={[
+              styles.textInput,
+              error.length > 0 && styles.textInputError,
+            ]}
             maxLength={30}
             keyboardType="email-address"
             textContentType="emailAddress"
           />
           <StyledError
             message={
-              (invalidEmailError && 'Invalid Email') || FIREBASE_ERRORS[error]
+              (invalidEmailError && 'Invalid Email') ||
+              FIREBASE_ERRORS[error as keyof typeof FIREBASE_ERRORS]
             }
           />
         </View>
@@ -65,11 +84,16 @@ const Login = ({navigation}) => {
             secureTextEntry
             placeholder="Password"
             placeholderTextColor={COLORS.white2}
-            style={[styles.textInput, error && styles.textInputError]}
+            style={[
+              styles.textInput,
+              error.length > 0 && styles.textInputError,
+            ]}
             value={password}
             onChangeText={text => setPassword(text)}
           />
-          <StyledError message={FIREBASE_ERRORS[error]} />
+          <StyledError
+            message={FIREBASE_ERRORS[error as keyof typeof FIREBASE_ERRORS]}
+          />
         </View>
       </VStack>
       <Text
@@ -113,9 +137,15 @@ const Login = ({navigation}) => {
   )
 }
 
+type Style = {
+  container: ViewStyle
+  textInput: TextStyle
+  textInputError: TextStyle
+}
+
 export default Login
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create<Style>({
   container: {
     padding: 25,
     paddingTop: 10,
@@ -134,10 +164,10 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderWidth: 1,
   },
-  btnDefault: {
-    borderColor: COLORS.white2,
-    borderWidth: 2,
-    borderRadius: 50,
-    padding: 2,
-  },
+  // btnDefault: {
+  //   borderColor: COLORS.white2,
+  //   borderWidth: 2,
+  //   borderRadius: 50,
+  //   padding: 2,
+  // },
 })

@@ -1,19 +1,24 @@
-import {InfoOutlineIcon} from 'native-base';
-import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
+import {InfoOutlineIcon} from 'native-base'
+import React from 'react'
+import {Text, View, StyleSheet, TextStyle} from 'react-native'
+
+interface Props {
+  errorStyle?: TextStyle
+  showErrorIcon?: boolean
+  message: string
+}
 
 export default function StyledError({
   errorStyle,
   showErrorIcon = false,
   message,
-  type = 'info',
-}) {
+}: Props) {
   return (
     <View style={styles.errorContainer}>
       {showErrorIcon && <InfoOutlineIcon style={styles.errorIcon} />}
       <Text style={[styles.error, errorStyle]}>{message}</Text>
     </View>
-  );
+  )
 }
 
 const styles = StyleSheet.create({
@@ -36,4 +41,4 @@ const styles = StyleSheet.create({
     marginRight: 8,
     color: 'red',
   },
-});
+})
