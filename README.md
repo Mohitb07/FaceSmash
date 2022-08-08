@@ -52,7 +52,7 @@ Start the server
 
 ## Tech Stack
 
-**Client:** React Native, React-Navigation, Recoil, Native-Base
+**Client:** TypeScript, React Native, React-Navigation, Recoil, Native-Base
 
 **Server:** Firebase
 
