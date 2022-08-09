@@ -1,13 +1,5 @@
-import React, {useContext, useEffect, useState} from 'react'
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
-
 import firestore from '@react-native-firebase/firestore'
+import { useNavigation } from '@react-navigation/native'
 import moment from 'moment'
 import {
   Actionsheet,
@@ -16,14 +8,21 @@ import {
   ThreeDotsIcon,
   useDisclose,
   View as NView,
-  VStack,
-  Text as NText,
+  VStack
 } from 'native-base'
+import React, { useContext, useEffect, useState } from 'react'
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View
+} from 'react-native'
 import FastImage from 'react-native-fast-image'
-import {HeartFilledIcon, HeartOutlinIcon, LinkIcon} from '../SVG'
+import { HeartFilledIcon, HeartOutlinIcon, LinkIcon } from '../SVG'
 
-import {COLORS} from '../constants'
-import {AuthUserContext} from '../Context/auth'
+import { COLORS } from '../constants'
+import { AuthUserContext } from '../Context/auth'
 import FeedMore from './BottomSheet/FeedMore'
 
 const Feed = ({
@@ -31,7 +30,6 @@ const Feed = ({
   postTitle = '',
   username = '',
   userProfilePic,
-  navigation,
   description = '',
   likes = 0,
   createdAt,
@@ -41,6 +39,7 @@ const Feed = ({
   link = '',
   hasLiked: likedStatus,
 }) => {
+  const navigation = useNavigation()
   console.log('feed', postTitle)
   const {authUser} = useContext(AuthUserContext)
   const {onOpen, onClose, isOpen} = useDisclose()
@@ -117,14 +116,6 @@ const Feed = ({
   }
 
   const updateUIBasedOnImage = !!image ? 'column-reverse' : 'column'
-
-  // if (isDeleted) {
-  //   return (
-  //     <View>
-  //       <NText color={COLORS.white2}>{postTitle}Post Deleted</NText>
-  //     </View>
-  //   )
-  // }
 
   return (
     <NView style={styles.container}>

@@ -4,19 +4,19 @@ import {
   Flex,
   HStack,
   PresenceTransition,
-  Spinner,
   Text,
   View,
 } from 'native-base'
 import React, {memo, useContext, useEffect, useRef, useState} from 'react'
 import {ActivityIndicator, TouchableOpacity} from 'react-native'
 
-import firestore from '@react-native-firebase/firestore'
 import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 import FastImage from 'react-native-fast-image'
 
+import {useNavigation} from '@react-navigation/native'
 import {COLORS} from '../../../constants'
-import {AuthUserContext} from '../../../Context/auth'
+import {UserDataContext} from '../../../Context/userData'
 import {
   FilterIcon,
   GridIcon,
@@ -25,10 +25,9 @@ import {
   UserIcon,
 } from '../../../SVG'
 import StyledButton from '../../Button'
-import {UserDataContext} from '../../../Context/userData'
 
-const ProfileHeader = ({userId, navigation, totalPosts = 0}) => {
-  // const {authUser} = useContext(AuthUserContext)
+const ProfileHeader = ({userId, totalPosts = 0}) => {
+  const navigation = useNavigation()
   const {contextUser} = useContext(UserDataContext)
   const [userData, setUserData] = useState([])
   const [isConnected, setIsConnected] = useState(false)
@@ -196,7 +195,7 @@ const ProfileHeader = ({userId, navigation, totalPosts = 0}) => {
         />
         {authUser === userId && (
           <TouchableOpacity
-            onPress={() => navigation.navigate('Update Profile')}>
+            onPress={() => navigation.navigate('UpdateProfile')}>
             <ThreeDotsIcon />
           </TouchableOpacity>
         )}
