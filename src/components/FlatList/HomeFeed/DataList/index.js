@@ -1,24 +1,20 @@
-import React from 'react'
+import React, {useEffect, useRef} from 'react'
 import {FlatList, RefreshControl} from 'react-native'
-import {COLORS} from '../../constants'
-import EmptyList from '../DataList/EmptyDataList'
-import Feed from '../Feed'
-import Footer from '../FlatList/HomeFeed/DataListFooter'
-import ProfileHeader from '../Header/Profile'
+import {COLORS} from '../../../../constants'
+import Feed from '../../../Feed'
 
 const DataList = ({
   dataList = [],
-  // Header,
-  // Footer,
-  // EmptyList,
+  Header,
+  Footer,
+  EmptyList,
   retrieveMore = () => {},
   onRefresh = () => {},
   refreshing = false,
   loading = false,
   userLikedPosts = [],
-  userId = '',
 }) => {
-  console.log('profile data list render')
+  console.log('home feed data list render')
   const renderItems = ({item}) => (
     <Feed
       key={item.key}
@@ -36,16 +32,15 @@ const DataList = ({
       link={item?.link}
     />
   )
+
   return (
     <FlatList
       contentContainerStyle={{paddingBottom: 20}}
       showsVerticalScrollIndicator={false}
       data={dataList}
-      ListEmptyComponent={<EmptyList loading={loading} />}
-      ListHeaderComponent={
-        <ProfileHeader totalPosts={dataList?.length} userId={userId} />
-      }
-      ListFooterComponent={<Footer dataList={dataList} loading={loading} />}
+      ListEmptyComponent={EmptyList}
+      ListHeaderComponent={Header}
+      ListFooterComponent={Footer}
       onEndReached={retrieveMore}
       onEndReachedThreshold={0.1}
       refreshControl={
@@ -62,4 +57,4 @@ const DataList = ({
   )
 }
 
-export default React.memo(DataList)
+export default DataList

@@ -8,12 +8,6 @@ const useLikedPosts = () => {
   const [error, setError] = useState('')
   const authUserId = auth()?.currentUser?.uid
 
-  const counter = useRef(0)
-  useEffect(() => {
-    counter.current = counter.current + 1
-  })
-  // console.log('useLikedPosts Count ❤️', counter.current)
-
   const getUserLikedPosts = useCallback(async () => {
     try {
       const userLikedPosts = await firestore()
@@ -25,7 +19,6 @@ const useLikedPosts = () => {
       const postsLiked = []
 
       userLikedPosts.docs.map(doc => postsLiked.push(doc.data()))
-      // console.log('within postsLiked 🚀', postsLiked, postsLiked.length)
       setUserLikedPosts(postsLiked)
     } catch (err) {
       console.log('getLikedposterror', err.message)
@@ -36,8 +29,6 @@ const useLikedPosts = () => {
   const refetch = useCallback(async () => {
     getUserLikedPosts()
   }, [getUserLikedPosts])
-
-  // console.log('🚀', userLikedPosts, userLikedPosts.length)
 
   useEffect(() => {
     getUserLikedPosts()

@@ -16,7 +16,7 @@ const Home = ({navigation}: HomeScreenNavigationProp) => {
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
-        <HomeFeed navigation={navigation} />
+        <HomeFeed />
       </View>
     </View>
   )
