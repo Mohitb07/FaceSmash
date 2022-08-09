@@ -17,4 +17,4 @@ const EmptyList = ({loading}) => {
   )
 }
 
-export default EmptyList
+export default React.memo(EmptyList)
