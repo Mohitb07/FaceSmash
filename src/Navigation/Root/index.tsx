@@ -1,10 +1,8 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
-import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 import React, {createRef, useContext} from 'react'
 
-import auth from '@react-native-firebase/auth'
-
 import Loader from '../../components/Loader'
+import {COLORS} from '../../constants'
 import {AuthUserContext} from '../../Context/auth'
 import AddPost from '../../Screens/AddPost'
 import Browser from '../../Screens/Browser'
@@ -18,13 +16,13 @@ import Verification from '../../Screens/Verification'
 
 export type RootStackParamList = {
   Verification: undefined
-  'Get Started': undefined
+  GetStarted: undefined
   Login: undefined
-  'Sign Up': undefined
+  SignUp: undefined
   Home: undefined
   Profile: undefined
-  'Update Profile': undefined
-  'Add Post': undefined
+  UpdateProfile: undefined
+  AddPost: undefined
   Browser: undefined
 }
 
@@ -48,16 +46,28 @@ const Root = () => {
           ) : (
             <>
               <RootStack.Screen name="Home" component={Home} />
-              <RootStack.Screen name="Profile" component={MyProfile} />
               <RootStack.Screen
-                name="Update Profile"
+                name="Profile"
+                component={MyProfile}
+                options={{
+                  headerShown: true,
+                  title: 'Profile',
+                  headerTitleAlign: 'center',
+                  headerTintColor: '#fff',
+                  headerStyle: {
+                    backgroundColor: COLORS.mainBackground,
+                  },
+                }}
+              />
+              <RootStack.Screen
+                name="UpdateProfile"
                 component={UpdateProfile}
                 options={{
                   animation: 'slide_from_bottom',
                 }}
               />
               <RootStack.Screen
-                name="Add Post"
+                name="AddPost"
                 component={AddPost}
                 options={{
                   animation: 'slide_from_bottom',
@@ -75,9 +85,9 @@ const Root = () => {
         </>
       ) : (
         <>
-          <RootStack.Screen name="Get Started" component={GetStarted} />
+          <RootStack.Screen name="GetStarted" component={GetStarted} />
           <RootStack.Screen name="Login" component={Login} />
-          <RootStack.Screen name="Sign Up" component={Register} />
+          <RootStack.Screen name="SignUp" component={Register} />
         </>
       )}
     </RootStack.Navigator>

@@ -11,7 +11,7 @@ import {RootStackParamList} from '../../Navigation/Root'
 
 type GetStartedScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
-  'Get Started'
+  'GetStarted'
 >
 
 const ASSET_PATH = '../../../assets/giving-rupiah-coin.png'

@@ -21,7 +21,7 @@ import {RootStackParamList} from '../../Navigation/Root'
 
 type LoginScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
-  'Get Started'
+  'Login'
 >
 
 const Login: React.FC<LoginScreenNavigationProp> = ({
@@ -126,7 +126,7 @@ const Login: React.FC<LoginScreenNavigationProp> = ({
         alignItems="center">
         New to FaceSmash?{' '}
         <Text
-          onPress={() => navigation.navigate('Sign Up')}
+          onPress={() => navigation.navigate('SignUp')}
           mt="10"
           fontFamily="Lato-Bold"
           color="primary.400">
@@ -164,10 +164,4 @@ const styles = StyleSheet.create<Style>({
     borderColor: 'red',
     borderWidth: 1,
   },
-  // btnDefault: {
-  //   borderColor: COLORS.white2,
-  //   borderWidth: 2,
-  //   borderRadius: 50,
-  //   padding: 2,
-  // },
 })

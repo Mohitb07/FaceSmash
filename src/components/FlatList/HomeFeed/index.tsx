@@ -1,26 +1,25 @@
 import React, {useEffect, useState} from 'react'
 import {useRecoilState} from 'recoil'
-import {postState} from '../../../atoms/postAtom'
-import useLikedPosts from '../../../hooks/useLikedPosts'
-import usePagination from '../../../hooks/usePagination'
 
 import firestore from '@react-native-firebase/firestore'
 
-import DataList from '../../DataList'
-import Footer from '../../DataList/DataListFooter'
-import EmptyList from '../../DataList/EmptyDataList'
+import usePagination from '../../../hooks/usePagination'
+import {IDefaultPostState, IPost, postState} from '../../../atoms/postAtom'
+import useLikedPosts from '../../../hooks/useLikedPosts'
+import DataList from './DataList'
+import Footer from './DataListFooter'
+import EmptyList from './EmptyDataList'
 import HomeHeader from '../../Header/Home'
 
 const LIMIT = 5
 
-function HomeFeed({navigation}) {
-  const [postStateValue, setPostStateValue] = useRecoilState(postState)
-  // const {refetch} = useLikedPosts()
-  const [refreshing, setRefreshing] = useState(false)
+function HomeFeed() {
+  const [postStateValue, setPostStateValue] =
+    useRecoilState<IDefaultPostState>(postState)
+  const [refreshing, setRefreshing] = useState<boolean>(false)
   const {retrieveMore} = usePagination()
   const {userLikedPosts, refetch} = useLikedPosts()
-
-  // console.log('data list getting 🎯', userLikedPosts, userLikedPosts.length)
+  console.log('user liked posts', userLikedPosts)
   const getPosts = async () => {
     setPostStateValue(prev => ({
       ...prev,
@@ -32,17 +31,21 @@ function HomeFeed({navigation}) {
         .orderBy('createdAt', 'desc')
         .limit(LIMIT)
         .get()
-
-      const latestPost = []
+      const latestPost: Array<IPost> = []
       allPosts.docs.map(item => {
         latestPost.push({
-          ...item.data(),
           key: item.id,
+          createdAt: {},
+          description: '',
+          likes: 0,
+          title: '',
+          user: '',
+          userProfile: '',
+          username: '',
+          ...item.data(),
         })
       })
-
       let lastVisibleDoc = allPosts.docs[allPosts.docs.length - 1]
-
       setPostStateValue(prev => ({
         ...prev,
         posts: latestPost,
@@ -81,7 +84,6 @@ function HomeFeed({navigation}) {
       setPostStateValue,
     )
   }
-
   return (
     <DataList
       dataList={postStateValue.posts}
@@ -92,14 +94,11 @@ function HomeFeed({navigation}) {
           loading={postStateValue.loading}
         />
       }
-      Header={
-        <HomeHeader navigation={navigation} loading={postStateValue.loading} />
-      }
+      Header={<HomeHeader />}
       onRefresh={onRefresh}
       refreshing={refreshing}
       retrieveMore={getMoreData}
       loading={postStateValue.loading}
-      navigation={navigation}
       userLikedPosts={userLikedPosts}
     />
   )

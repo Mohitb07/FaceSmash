@@ -2,8 +2,8 @@ import React from 'react'
 
 import {Text} from 'native-base'
 
-import {COLORS} from '../../../constants'
-import FeedSkeleton from '../../FeedSkeleton'
+import {COLORS} from '../../../../constants'
+import FeedSkeleton from '../../../FeedSkeleton'
 
 const EmptyList = ({loading}) => {
   return loading ? (

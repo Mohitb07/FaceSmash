@@ -11,6 +11,7 @@ import {
 } from 'native-base'
 
 import auth from '@react-native-firebase/auth'
+import {useNavigation} from '@react-navigation/native'
 
 import {COLORS} from '../../../constants'
 import {UserDataContext} from '../../../Context/userData'
@@ -18,9 +19,10 @@ import useSelectImage from '../../../hooks/useSelectImage'
 import {PhotoIcon, SearchIcon} from '../../../SVG'
 import Story from '../../Story'
 
-function PostHeader({navigation}) {
+function PostHeader() {
   const {contextUser} = useContext(UserDataContext)
   const {handleChooseGallary} = useSelectImage()
+  const navigation = useNavigation()
 
   const handleGetImageThenNavigate = () => {
     // true for navigation
@@ -122,7 +124,7 @@ function PostHeader({navigation}) {
           />
         </TouchableOpacity>
         <Input
-          onPressIn={() => navigation.navigate('Add Post')}
+          onPressIn={() => navigation.navigate('AddPost')}
           borderRadius="full"
           maxWidth="2/3"
           // ml="-4"
