@@ -1,12 +1,18 @@
-import React from 'react';
-import {TouchableOpacity, StyleSheet} from 'react-native';
+import React from 'react'
+import {StyleSheet, TouchableOpacity} from 'react-native'
 
-import {Text, Avatar, Badge, View} from 'native-base';
+import {Avatar, Text, View} from 'native-base'
 
-import {COLORS} from '../../constants';
-import {AddIcon} from '../../SVG';
+import {COLORS} from '../../constants'
+import {AddIcon} from '../../SVG'
 
-const Story = ({uri, username, noRing = false}) => {
+type Props = {
+  uri: string
+  username?: string
+  noRing?: boolean
+}
+
+const Story = ({uri, username, noRing = false}: Props) => {
   return (
     <TouchableOpacity style={styles.story}>
       {noRing ? (
@@ -30,14 +36,14 @@ const Story = ({uri, username, noRing = false}) => {
       )}
       <Text fontFamily="Lato-Regular">{username ?? 'Your Story'}</Text>
     </TouchableOpacity>
-  );
-};
+  )
+}
 
-export default Story;
+export default Story
 
 const styles = StyleSheet.create({
   story: {
     justifyContent: 'center',
     alignItems: 'center',
   },
-});
+})

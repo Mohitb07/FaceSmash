@@ -19,10 +19,14 @@ import useSelectImage from '../../../hooks/useSelectImage'
 import {PhotoIcon, SearchIcon} from '../../../SVG'
 import Story from '../../Story'
 
-function PostHeader() {
+interface navigation {
+  navigate: (screen: string, params?: object) => void
+}
+
+function HomeHeader() {
   const {contextUser} = useContext(UserDataContext)
   const {handleChooseGallary} = useSelectImage()
-  const navigation = useNavigation()
+  const navigation = useNavigation<navigation>()
 
   const handleGetImageThenNavigate = () => {
     // true for navigation
@@ -83,8 +87,7 @@ function PostHeader() {
 
         <View style={styles.rightHeader}>
           <TouchableOpacity
-            hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}
-            style={styles.searchIcon}>
+            hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
             <SearchIcon />
           </TouchableOpacity>
         </View>
@@ -127,7 +130,6 @@ function PostHeader() {
           onPressIn={() => navigation.navigate('AddPost')}
           borderRadius="full"
           maxWidth="2/3"
-          // ml="-4"
           placeholder={
             '  Write something here...' + '\n' + '  यहाँ कुछ लिखो...'
           }
@@ -143,7 +145,7 @@ function PostHeader() {
   )
 }
 
-export default PostHeader
+export default HomeHeader
 
 const styles = StyleSheet.create({
   container: {

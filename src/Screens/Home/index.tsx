@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native'
 
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import HomeFeed from '../../components/FlatList/HomeFeed'
+import HomeFeedContainer from '../../components/FlatList/HomeFeed'
 import {COLORS} from '../../constants'
 import {RootStackParamList} from '../../Navigation/Root'
 
@@ -16,7 +16,7 @@ const Home = ({navigation}: HomeScreenNavigationProp) => {
   return (
     <View style={styles.container}>
       <View style={styles.innerContainer}>
-        <HomeFeed />
+        <HomeFeedContainer />
       </View>
     </View>
   )
