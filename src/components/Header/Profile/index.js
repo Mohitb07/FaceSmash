@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'native-base'
-import React, {memo, useContext, useEffect, useRef, useState} from 'react'
+import React, {memo, useContext, useEffect, useState} from 'react'
 import {ActivityIndicator, TouchableOpacity} from 'react-native'
 
 import auth from '@react-native-firebase/auth'
@@ -27,41 +27,33 @@ import {
 import StyledButton from '../../Button'
 
 const ProfileHeader = ({userId, totalPosts = 0}) => {
+  let canSetState = true
   const navigation = useNavigation()
   const {contextUser} = useContext(UserDataContext)
-  const [userData, setUserData] = useState([])
+  const [userData, setUserData] = useState({})
   const [isConnected, setIsConnected] = useState(false)
   const [loading, setLoading] = useState(false)
-  const counter = useRef(0)
   const authUser = auth().currentUser.uid
 
   useEffect(() => {
-    counter.current = counter.current + 1
-  })
-
-  console.log('profile header counter', counter.current)
-
-  useEffect(() => {
-    if (userId === authUser) {
-      setUserData([contextUser])
-    } else {
-      console.log('fetching firestore')
-      firestore()
-        .collection('Users')
-        .where('uid', '==', userId)
-        .get()
-        .then(doc => {
-          const profileData = []
-          doc.forEach(item => {
-            profileData.push({
-              ...item.data(),
-              key: item.id,
-            })
-          })
-
-          setUserData(profileData)
-        })
+    const fetchUserDetails = async () => {
+      if (userId === authUser) {
+        canSetState && setUserData(contextUser)
+      } else {
+        const userInfo = await firestore()
+          .collection('Users')
+          .where('uid', '==', userId)
+          .get()
+        const latestUserData = {
+          ...userInfo.docs[0].data(),
+          key: userInfo.docs[0].id,
+        }
+        canSetState && setUserData(latestUserData)
+      }
     }
+    fetchUserDetails()
+
+    return () => (canSetState = false)
   }, [userId])
 
   const handleButtonToggle = () => {
@@ -117,7 +109,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
               borderRadius: 100,
             }}
             source={{
-              uri: userData[0]?.profilePic,
+              uri: userData?.profilePic,
               priority: FastImage.priority.normal,
             }}
             resizeMode={FastImage.resizeMode.cover}
@@ -134,7 +126,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
           </View>
           <View>
             <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
-              {userData[0]?.followers?.length}
+              {userData?.followers?.length}
             </Text>
             <Text color={COLORS.gray} fontFamily="Lato-Regular">
               Followers
@@ -142,7 +134,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
           </View>
           <View>
             <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
-              {userData[0]?.followings?.length}
+              {userData?.followings?.length}
             </Text>
             <Text color={COLORS.gray} fontFamily="Lato-Regular">
               Following
@@ -153,7 +145,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
 
       <View my="5">
         <Text fontSize="lg" letterSpacing="lg" fontFamily="Lato-Regular">
-          {userData[0]?.username}
+          {userData?.username}
         </Text>
         <HStack alignItems="center">
           <Text fontSize="sm" color={COLORS.gray} fontFamily="Lato-Regular">
@@ -169,7 +161,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
           fontSize="sm"
           color={COLORS.gray}
           fontFamily="Lato-Regular">
-          {userData[0]?.email}
+          {userData?.email}
         </Text>
       </View>
 
