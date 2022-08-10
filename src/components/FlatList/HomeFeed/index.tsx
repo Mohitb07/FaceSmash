@@ -3,13 +3,13 @@ import {useRecoilState} from 'recoil'
 
 import firestore from '@react-native-firebase/firestore'
 
-import usePagination from '../../../hooks/usePagination'
 import {IDefaultPostState, IPost, postState} from '../../../atoms/postAtom'
 import useLikedPosts from '../../../hooks/useLikedPosts'
+import usePagination from '../../../hooks/usePagination'
+import HomeHeader from '../../Header/Home'
 import DataList from './DataList'
 import Footer from './DataListFooter'
 import EmptyList from './EmptyDataList'
-import HomeHeader from '../../Header/Home'
 
 const LIMIT = 5
 
