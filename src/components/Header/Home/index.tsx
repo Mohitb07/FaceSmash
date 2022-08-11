@@ -67,7 +67,7 @@ function HomeHeader() {
   ]
 
   return (
-    <NView mb="10">
+    <NView mb="5" paddingX="2">
       <View style={styles.headerContainer}>
         <NView alignItems="center" flexDirection="row">
           <NText fontFamily="Lato-Bold" color={COLORS.primary} fontSize="2xl">
@@ -163,6 +163,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    // paddingHorizontal:
   },
   image: {
     width: 38,
