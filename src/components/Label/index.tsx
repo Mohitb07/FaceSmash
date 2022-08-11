@@ -1,23 +1,25 @@
-import React, {memo} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React, {memo} from 'react'
+import {View, Text, StyleSheet, TextStyle} from 'react-native'
+
+interface IStyledLabelProps {
+  label: string
+  labelStyle?: TextStyle
+  required?: boolean
+}
 
 function StyledLabel({
   label,
   labelStyle = {},
   required = false,
-  labelFontWeight = '500',
-}) {
+}: IStyledLabelProps) {
   return (
     <View style={styles.container}>
-      <Text
-        style={[styles.labelText, {fontWeight: labelFontWeight}, labelStyle]}>
-        {label}
-      </Text>
+      <Text style={[styles.labelText, labelStyle]}>{label}</Text>
       {required && <Text style={styles.sup}>*</Text>}
     </View>
-  );
+  )
 }
-export default memo(StyledLabel);
+export default memo(StyledLabel)
 
 const styles = StyleSheet.create({
   container: {
@@ -38,4 +40,4 @@ const styles = StyleSheet.create({
     marginLeft: 4,
     fontSize: 12,
   },
-});
+})

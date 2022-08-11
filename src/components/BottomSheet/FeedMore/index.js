@@ -2,7 +2,7 @@ import {Actionsheet, Box, Icon, Text as NText} from 'native-base'
 import React, {useContext} from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
 import {AuthUserContext} from '../../../Context/auth'
-import {DocumentIcon, LogoutIcon, PrivacyIcon} from '../../../SVG'
+import {FeedEditIcon, DeleteIcon, FeedShareIcon} from '../../../SVG'
 import firestore from '@react-native-firebase/firestore'
 import {useRecoilState} from 'recoil'
 import {postState} from '../../../atoms/postAtom'
@@ -39,6 +39,7 @@ const FeedMore = ({postId, handleDelete}) => {
     <>
       <Box w="100%" h={60} px={4} justifyContent="center">
         <NText
+          fontFamily="Lato-Semibold"
           fontSize="20"
           color="gray.500"
           _dark={{
@@ -49,28 +50,28 @@ const FeedMore = ({postId, handleDelete}) => {
       </Box>
       <Actionsheet.Item
         style={styles.defaultStyle}
-        startIcon={<Icon as={DocumentIcon} mr="1" size="6" />}>
+        startIcon={<Icon as={FeedEditIcon} mr="1" size="5" />}>
         <TouchableOpacity style={styles.btnLogout}>
-          <NText color="white" fontWeight="semibold">
+          <NText color="white" fontFamily="Lato-Semibold">
             Edit Post
           </NText>
         </TouchableOpacity>
       </Actionsheet.Item>
       <Actionsheet.Item
         style={styles.defaultStyle}
-        startIcon={<Icon as={PrivacyIcon} name="share" mr="1" size="6" />}>
+        startIcon={<Icon as={FeedShareIcon} name="share" mr="1" size="5" />}>
         <TouchableOpacity style={styles.btnLogout}>
-          <NText color="white" fontWeight="semibold">
+          <NText color="white" fontFamily="Lato-Semibold">
             Share Post
           </NText>
         </TouchableOpacity>
       </Actionsheet.Item>
       {!!authUser && (
         <Actionsheet.Item
-          startIcon={<Icon as={LogoutIcon} mr="1" size="6" />}
+          startIcon={<Icon as={DeleteIcon} mr="1" size="5" />}
           style={styles.defaultStyle}>
           <TouchableOpacity style={styles.btnLogout} onPress={handleDeletePost}>
-            <NText color="red.700" fontWeight="semibold">
+            <NText color="red.700" fontFamily="Lato-Semibold">
               Delete Post
             </NText>
           </TouchableOpacity>

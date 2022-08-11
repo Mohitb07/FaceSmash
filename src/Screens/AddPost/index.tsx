@@ -26,23 +26,32 @@ import {AuthUserContext} from '../../Context/auth'
 import {UserDataContext} from '../../Context/userData'
 import useSelectImage from '../../hooks/useSelectImage'
 import {CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '../../SVG'
+import {RouteProp, useNavigation} from '@react-navigation/native'
+import {RootStackParamList} from '../../Navigation/Root'
+import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 
-const AddPost = ({route, navigation}) => {
-  const routeData = route?.params || {}
+const AddPost = ({
+  route,
+}: {
+  route: RouteProp<{params: {selectedImage: string}}, 'params'>
+}) => {
+  const routeData = route.params || {}
 
   let getterImage = {...routeData}
 
-  const image = getterImage?.selectedImage
+  const image = getterImage.selectedImage
 
-  const [textAreaValue, setTextAreaValue] = useState()
-  const [title, setTitle] = useState('')
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>()
+  const [textAreaValue, setTextAreaValue] = useState<string>('')
+  const [title, setTitle] = useState<string>('')
   const {authUser} = useContext(AuthUserContext)
   const {contextUser} = useContext(UserDataContext)
   const {selectedImage, handleChooseGallary, clearImage} = useSelectImage()
-  const [imageFromNav, setImageFromNav] = useState(image)
-  const [loading, setLoading] = useState(false)
-  const [showLink, setShowLink] = useState(false)
-  const [link, setLink] = useState('')
+  const [imageFromNav, setImageFromNav] = useState<string>(image)
+  const [loading, setLoading] = useState<boolean>(false)
+  const [showLink, setShowLink] = useState<boolean>(false)
+  const [link, setLink] = useState<string>('')
 
   console.log('selectedFromnav', imageFromNav)
 
@@ -73,20 +82,20 @@ const AddPost = ({route, navigation}) => {
             createdAt: new Date(),
           })
           navigation.navigate('Home')
-        } catch (error) {
+        } catch (error: any) {
           setLoading(false)
           Toast.show({
             type: 'error',
             text1: 'Post Creation Error',
-            text2: err.message,
+            text2: error.message,
           })
         }
-      } catch (err) {
+      } catch (error: any) {
         setLoading(false)
         Toast.show({
           type: 'error',
           text1: '',
-          text2: err.message,
+          text2: error.message,
         })
       }
     } else {
@@ -103,12 +112,12 @@ const AddPost = ({route, navigation}) => {
           createdAt: new Date(),
         })
         navigation.navigate('Home')
-      } catch (error) {
+      } catch (error: any) {
         setLoading(false)
         Toast.show({
           type: 'error',
           text1: 'Post Creation Error',
-          text2: err.message,
+          text2: error.message,
         })
       }
     }
@@ -210,7 +219,7 @@ const AddPost = ({route, navigation}) => {
                 <Image
                   style={styles.postImage}
                   source={{
-                    uri: imageFromNav || selectedImage,
+                    uri: imageFromNav || selectedImage || '',
                   }}
                 />
 

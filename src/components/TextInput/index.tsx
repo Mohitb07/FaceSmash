@@ -1,5 +1,18 @@
-import {View, TextInput, StyleSheet} from 'react-native';
-import React from 'react';
+import {View, TextInput, StyleSheet, TextStyle} from 'react-native'
+import React from 'react'
+
+type TextInputProps = {
+  onChangeText: (text: string) => void
+  value: string
+  placeholder: string
+  icon?: any
+  secure?: boolean
+  error?: boolean
+  multiline?: boolean
+  numberOfLines?: number
+  customStyles?: TextStyle
+  maxLength?: number
+}
 
 const StyledTextInput = ({
   onChangeText = () => {},
@@ -10,9 +23,9 @@ const StyledTextInput = ({
   error = false,
   multiline = false,
   numberOfLines = 1,
-  customStyles,
+  customStyles = {},
   maxLength,
-}) => {
+}: TextInputProps) => {
   return (
     <View style={[styles.inputFieldContainer, error && styles.error]}>
       {icon}
@@ -28,10 +41,10 @@ const StyledTextInput = ({
         maxLength={maxLength}
       />
     </View>
-  );
-};
+  )
+}
 
-export default StyledTextInput;
+export default StyledTextInput
 
 const styles = StyleSheet.create({
   inputField: {
@@ -56,4 +69,4 @@ const styles = StyleSheet.create({
   error: {
     borderColor: 'red',
   },
-});
+})

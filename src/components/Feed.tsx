@@ -1,5 +1,7 @@
-import firestore from '@react-native-firebase/firestore'
-import { useNavigation } from '@react-navigation/native'
+import firestore, {
+  FirebaseFirestoreTypes,
+} from '@react-native-firebase/firestore'
+import {useNavigation} from '@react-navigation/native'
 import moment from 'moment'
 import {
   Actionsheet,
@@ -8,22 +10,38 @@ import {
   ThreeDotsIcon,
   useDisclose,
   View as NView,
-  VStack
+  VStack,
 } from 'native-base'
-import React, { useContext, useEffect, useState } from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import {
   StyleSheet,
   Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View
+  View,
 } from 'react-native'
 import FastImage from 'react-native-fast-image'
-import { HeartFilledIcon, HeartOutlinIcon, LinkIcon } from '../SVG'
+import {HeartFilledIcon, HeartOutlinIcon, LinkIcon} from '../SVG'
 
-import { COLORS } from '../constants'
-import { AuthUserContext } from '../Context/auth'
+import {COLORS} from '../constants'
+import {AuthUserContext} from '../Context/auth'
 import FeedMore from './BottomSheet/FeedMore'
+import {RootStackParamList} from '../Navigation/Root'
+import {NativeStackNavigationProp} from '@react-navigation/native-stack'
+
+interface FeedProps {
+  image?: string
+  postTitle: string
+  username: string
+  userProfilePic: string
+  description: string
+  likes: number
+  createdAt: FirebaseFirestoreTypes.Timestamp
+  postId: string
+  userId: string
+  link?: string
+  hasLiked: boolean
+}
 
 const Feed = ({
   image,
@@ -35,12 +53,13 @@ const Feed = ({
   createdAt,
   postId = '',
   userId = '',
-  post,
   link = '',
   hasLiked: likedStatus,
-}) => {
-  const navigation = useNavigation()
+}: FeedProps) => {
   console.log('feed', postTitle)
+
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const {authUser} = useContext(AuthUserContext)
   const {onOpen, onClose, isOpen} = useDisclose()
   const [hasLiked, setHasLiked] = useState(likedStatus)
@@ -109,8 +128,8 @@ const Feed = ({
           setLikesCounter(prev => (prev += 1))
         }
       }
-      batch.commit(() => console.log('operation completed'))
-    } catch (err) {
+      batch.commit()
+    } catch (err: any) {
       console.log('handlelikes error', err.message)
     }
   }
@@ -134,9 +153,9 @@ const Feed = ({
           />
           <View>
             <Text style={styles.usernameText}>{username}</Text>
-            <Text style={styles.timePosted}>
+            {/* <Text style={styles.timePosted}>
               {moment(createdAt?.toDate()).fromNow()}
-            </Text>
+            </Text> */}
           </View>
         </TouchableOpacity>
         {authUser?.uid === userId && (
@@ -161,13 +180,14 @@ const Feed = ({
               uri: image,
               priority: FastImage.priority.normal,
             }}
+            resizeMode={FastImage.resizeMode.contain}
           />
         </NView>
       )}
 
       {/* TITLE & DESCRIPTION */}
       <NView flexDirection={updateUIBasedOnImage}>
-        <NView>
+        <NView ml="2">
           {link.length > 0 ? (
             <TouchableOpacity
               style={styles.linkTitle}
@@ -192,7 +212,7 @@ const Feed = ({
         </NView>
 
         {/* USER INTERACTIONS */}
-        <VStack space="2" mb="1">
+        <VStack space="2" mb="1" ml="1">
           <HStack alignItems="center">
             <TouchableOpacity onPress={handleLikes}>
               {hasLiked ? (
@@ -208,8 +228,13 @@ const Feed = ({
           <Text style={styles.likes}>{likesCounter} likes</Text>
         </VStack>
       </NView>
+      <NView ml="2%">
+        <Text style={styles.timePosted}>
+          {moment(createdAt?.toDate()).fromNow()}
+        </Text>
+      </NView>
       <Actionsheet disableOverlay isOpen={isOpen} onClose={onClose}>
-        <Actionsheet.Content>
+        <Actionsheet.Content style={{backgroundColor: COLORS.mainBackground}}>
           <FeedMore postId={postId} handleDelete={handleOnDelete} />
         </Actionsheet.Content>
       </Actionsheet>
@@ -223,14 +248,14 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.transparentBlack9,
     // maxHeight: 530,
-    borderRadius: 25,
+    // borderRadius: 25,
     // marginTop: 10,
     // padding: 20,
     paddingTop: 1,
     paddingBottom: 10,
     marginVertical: 5,
     overflow: 'hidden',
-    paddingHorizontal: 15,
+    // paddingHorizontal: 15, -> this needs to be rolledback just in case
   },
   outerContainer: {
     paddingTop: 0,
@@ -251,38 +276,42 @@ const styles = StyleSheet.create({
   usernameText: {
     color: COLORS.white2,
     fontSize: 15,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
+    fontFamily: 'Lato-Semibold',
   },
   imageContainer: {
-    height: 200,
-    borderRadius: 15,
+    // height: 250,
+    // borderRadius: 15,
     overflow: 'hidden',
     marginBottom: 5,
   },
   image: {
+    // width: '50%',
+    // height: '',
+    // height: '50%',
+    aspectRatio: 3 / 2,
     width: '100%',
-    height: '100%',
   },
   text: {
     color: 'white',
   },
   timePosted: {
     color: '#747474',
-    fontSize: 12,
+    fontSize: 10,
+    fontFamily: 'Lato-Regular',
   },
   userProfile: {
     width: 38,
     height: 38,
     borderRadius: 25,
     marginRight: 10,
-    borderColor: COLORS.primary,
-    borderWidth: 1,
   },
   userInfo: {
     flexDirection: 'row',
     paddingVertical: 11,
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingLeft: 10,
   },
   description: {
     color: '#747474',
@@ -295,8 +324,9 @@ const styles = StyleSheet.create({
   },
   likes: {
     color: COLORS.white,
-    fontWeight: '700',
+    // fontWeight: '700',
     marginLeft: 5,
+    fontFamily: 'Lato-Bold',
   },
   linkTitle: {
     flexDirection: 'row',

@@ -20,10 +20,14 @@ export type RootStackParamList = {
   Login: undefined
   SignUp: undefined
   Home: undefined
-  Profile: undefined
+  Profile: {
+    providedUserId: string
+  }
   UpdateProfile: undefined
   AddPost: undefined
-  Browser: undefined
+  Browser: {
+    uri: string
+  }
 }
 
 const RootStack = createNativeStackNavigator<RootStackParamList>()

@@ -89,7 +89,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
       }
 
   return (
-    <Box my="2" mb="10">
+    <Box my="2" mb="5" paddingX="2">
       <HStack alignItems="center" justifyContent="space-between">
         <PresenceTransition
           visible={true}
