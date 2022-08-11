@@ -3,6 +3,7 @@ import {useRecoilState} from 'recoil'
 import {bottomSheetState} from '../../atoms/bottomSheetAtom'
 import {Actionsheet} from 'native-base'
 import ProfileBottomSheet from './Profile'
+import {COLORS} from '../../constants'
 
 const BottomSheet = () => {
   const [bottomSheetStateValue, setBottomSheetStateValue] =
@@ -18,7 +19,7 @@ const BottomSheet = () => {
           type: null,
         }))
       }}>
-      <Actionsheet.Content>
+      <Actionsheet.Content style={{backgroundColor: COLORS.mainBackground}}>
         {bottomSheetStateValue.type === 'profile' && <ProfileBottomSheet />}
       </Actionsheet.Content>
     </Actionsheet>
