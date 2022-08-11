@@ -28,6 +28,7 @@ const ProfileBottomSheet = () => {
     <>
       <Box w="100%" h={60} px={4} justifyContent="center">
         <NText
+          fontFamily="Lato-Semibold"
           fontSize="20"
           color="gray.500"
           _dark={{
@@ -39,7 +40,7 @@ const ProfileBottomSheet = () => {
       <Actionsheet.Item style={styles.defaultStyle}>
         <TouchableOpacity style={styles.btnLogout}>
           <DocumentIcon style={{marginRight: 5}} />
-          <Text style={{color: 'white', fontWeight: '600'}}>
+          <Text style={{color: 'white', fontFamily: 'Lato-Semibold'}}>
             Settings and Privacy
           </Text>
         </TouchableOpacity>
@@ -47,7 +48,7 @@ const ProfileBottomSheet = () => {
       <Actionsheet.Item style={styles.defaultStyle}>
         <TouchableOpacity style={styles.btnLogout}>
           <PrivacyIcon style={{marginRight: 5}} />
-          <Text style={{color: 'white', fontWeight: '600'}}>
+          <Text style={{color: 'white', fontFamily: 'Lato-Semibold'}}>
             Settings and Privacy
           </Text>
         </TouchableOpacity>
@@ -56,7 +57,9 @@ const ProfileBottomSheet = () => {
         <Actionsheet.Item style={styles.defaultStyle}>
           <TouchableOpacity style={styles.btnLogout} onPress={onLogoutAttempt}>
             <LogoutIcon style={{marginRight: 5}} />
-            <Text style={{color: 'red', fontWeight: '600'}}>Log Out</Text>
+            <Text style={{color: 'red', fontFamily: 'Lato-Semibold'}}>
+              Log Out
+            </Text>
           </TouchableOpacity>
         </Actionsheet.Item>
       )}
