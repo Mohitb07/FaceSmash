@@ -24,7 +24,7 @@ const useSelectImage = () => {
       } else {
         setSelectedImage(response.assets[0].uri)
         navigate &&
-          navigation.navigate('Add Post', {
+          navigation.navigate('AddPost', {
             selectedImage: response.assets[0].uri,
           })
       }
