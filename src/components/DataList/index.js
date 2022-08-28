@@ -19,6 +19,7 @@ const DataList = ({
   userId = '',
 }) => {
   console.log('profile data list render')
+  console.log('user liked posts render', userLikedPosts)
   const renderItems = ({item}) => (
     <Feed
       key={item.key}
@@ -31,7 +32,8 @@ const DataList = ({
       description={item.description}
       likes={dataList.find(post => post.key === item.key).likes}
       userId={item.user}
-      hasLiked={userLikedPosts.find(post => post.postId === item.key)?.liked}
+      // hasLiked={userLikedPosts.find(post => post.postId === item.key)?.liked}
+      userLikedPosts={!!userLikedPosts.find(post => post.postId === item.key)}
       post={item}
       link={item?.link}
     />
