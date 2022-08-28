@@ -8,31 +8,34 @@ const useLikedPosts = () => {
   const [error, setError] = useState('')
   const authUserId = auth()?.currentUser?.uid
 
-  const getUserLikedPosts = useCallback(async () => {
+  const refetch = useCallback(async () => {
+    console.log('refetching')
+  }, [])
+
+  useEffect(() => {
     try {
-      const userLikedPosts = await firestore()
+      firestore()
         .collection('Users')
         .doc(authUserId)
         .collection('postlikes')
-        .get()
-
-      const postsLiked = []
-
-      userLikedPosts.docs.map(doc => postsLiked.push(doc.data()))
-      setUserLikedPosts(postsLiked)
+        .onSnapshot(
+          querySnapshot => {
+            const dataList = querySnapshot.docs.map(d => d.data())
+            console.log(
+              'query snapshot',
+              querySnapshot.docs.map(d => d.data()),
+            )
+            setUserLikedPosts(dataList)
+          },
+          error => {
+            console.log('user liked data fetching error', error)
+          },
+        )
     } catch (err) {
       console.log('getLikedposterror', err.message)
       setError(err.message)
     }
   }, [])
-
-  const refetch = useCallback(async () => {
-    getUserLikedPosts()
-  }, [getUserLikedPosts])
-
-  useEffect(() => {
-    getUserLikedPosts()
-  }, [getUserLikedPosts])
 
   return {userLikedPosts, refetch, error}
 }
