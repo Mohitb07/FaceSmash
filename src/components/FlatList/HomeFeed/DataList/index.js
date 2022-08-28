@@ -14,7 +14,7 @@ const DataList = ({
   loading = false,
   userLikedPosts = [],
 }) => {
-  console.log('home feed data list render')
+  console.log('user liked post 🏆🏆', userLikedPosts)
   const renderItems = ({item}) => (
     <Feed
       key={item.key}
@@ -27,9 +27,10 @@ const DataList = ({
       description={item.description}
       likes={dataList.find(post => post.key === item.key).likes}
       userId={item.user}
-      hasLiked={userLikedPosts.find(post => post.postId === item.key)?.liked}
+      // hasLiked={userLikedPosts.find(post => post.postId === item.key)?.liked}
       post={item}
       link={item?.link}
+      userLikedPosts={!!userLikedPosts.find(post => post.postId === item.key)}
     />
   )
 

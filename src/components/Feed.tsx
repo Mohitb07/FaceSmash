@@ -41,6 +41,7 @@ interface FeedProps {
   userId: string
   link?: string
   hasLiked: boolean
+  userLikedPosts: Boolean
 }
 
 const Feed = ({
@@ -54,83 +55,51 @@ const Feed = ({
   postId = '',
   userId = '',
   link = '',
-  hasLiked: likedStatus,
+  hasLiked,
+  userLikedPosts = false,
 }: FeedProps) => {
   console.log('feed', postTitle)
+  console.log('liked post ', postTitle, userLikedPosts)
 
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const {authUser} = useContext(AuthUserContext)
   const {onOpen, onClose, isOpen} = useDisclose()
-  const [hasLiked, setHasLiked] = useState(likedStatus)
-  const [likesCounter, setLikesCounter] = useState(likes)
-
-  useEffect(() => {
-    setHasLiked(likedStatus)
-  }, [likedStatus, likes])
 
   const handleOnDelete = () => {
     onClose()
   }
 
-  const handleLikes = async () => {
+  const handleLikes = () => {
+    const postlikesRef = firestore()
+      .collection('Users')
+      .doc(authUser?.uid)
+      .collection('postlikes')
+      .doc(postId)
+
+    const postRef = firestore().collection('Posts').doc(postId)
+    const batch = firestore().batch()
+
     try {
-      const userDocRef = firestore()
-        .collection('Users')
-        .doc(authUser?.uid)
-        .collection('postlikes')
-        .doc(postId)
-      const postRef = firestore().collection('Posts').doc(postId)
-
-      let isExistingPost
-      await userDocRef.get().then(doc => {
-        if (doc.exists) {
-          console.log('existing')
-          isExistingPost = true
-        } else {
-          console.log('not existing')
-          isExistingPost = false
-        }
-      })
-      const batch = firestore().batch()
-
-      if (!isExistingPost) {
-        console.log('inside if')
-        try {
-          setHasLiked(true)
-          setLikesCounter(prev => (prev += 1))
-          // remove the user id from the user doc
-          batch.set(userDocRef, {
-            postId: postId,
-            liked: true,
-          })
-          // increment the counter of likes in posts collection
-          batch.update(postRef, {
-            likes: firestore.FieldValue.increment(1),
-          })
-        } catch (error) {
-          setHasLiked(false)
-          setLikesCounter(prev => (prev -= 1))
-        }
+      if (userLikedPosts) {
+        batch.delete(postlikesRef)
+        batch.update(postRef, {
+          likes: firestore.FieldValue.increment(-1),
+        })
+        console.log('dis liked')
       } else {
-        console.log('inside else')
-        try {
-          setHasLiked(false)
-          setLikesCounter(prev => (prev -= 1))
-          // add the user id to the user doc
-          batch.delete(userDocRef)
-          // decrement the counter of likes in posts collection
-          batch.update(postRef, {
-            likes: firestore.FieldValue.increment(-1),
-          })
-        } catch (error) {
-          setHasLiked(true)
-          setLikesCounter(prev => (prev += 1))
-        }
+        batch.set(postlikesRef, {
+          likes: true,
+          postId: postId,
+        })
+        batch.update(postRef, {
+          likes: firestore.FieldValue.increment(1),
+        })
+        console.log('liked')
       }
       batch.commit()
-    } catch (err: any) {
-      console.log('handlelikes error', err.message)
+    } catch (err) {
+      console.log('handlelikes error', err)
     }
   }
 
@@ -215,7 +184,7 @@ const Feed = ({
         <VStack space="2" mb="1" ml="1">
           <HStack alignItems="center">
             <TouchableOpacity onPress={handleLikes}>
-              {hasLiked ? (
+              {userLikedPosts ? (
                 <HeartFilledIcon height="22" />
               ) : (
                 <HeartOutlinIcon height="22" />
@@ -225,7 +194,7 @@ const Feed = ({
               <CommentOutlinedIcon style={{marginLeft: 4}} />
             </TouchableOpacity> */}
           </HStack>
-          <Text style={styles.likes}>{likesCounter} likes</Text>
+          <Text style={styles.likes}>{likes} likes</Text>
         </VStack>
       </NView>
       <NView ml="2%">

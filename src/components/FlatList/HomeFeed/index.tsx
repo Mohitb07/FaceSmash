@@ -16,42 +16,44 @@ const LIMIT = 5
 function HomeFeed() {
   const [postStateValue, setPostStateValue] =
     useRecoilState<IDefaultPostState>(postState)
-  const [refreshing, setRefreshing] = useState<boolean>(false)
+  const [refreshing, setRefreshing] = useState(false)
   const {retrieveMore} = usePagination()
   const {userLikedPosts, refetch} = useLikedPosts()
-  console.log('user liked posts', userLikedPosts)
-  const getPosts = async () => {
+  const getPosts = () => {
     setPostStateValue(prev => ({
       ...prev,
       posts: [],
     }))
     try {
-      const allPosts = await firestore()
+      firestore()
         .collection('Posts')
         .orderBy('createdAt', 'desc')
         .limit(LIMIT)
-        .get()
-      const latestPost: Array<IPost> = []
-      allPosts.docs.map(item => {
-        latestPost.push({
-          key: item.id,
-          createdAt: {},
-          description: '',
-          likes: 0,
-          title: '',
-          user: '',
-          userProfile: '',
-          username: '',
-          ...item.data(),
-        })
-      })
-      let lastVisibleDoc = allPosts.docs[allPosts.docs.length - 1]
-      setPostStateValue(prev => ({
-        ...prev,
-        posts: latestPost,
-        lastVisible: lastVisibleDoc,
-        loading: false,
-      }))
+        .onSnapshot(
+          snapshot => {
+            const postList: Array<IPost> = snapshot.docs.map(d => ({
+              key: d.id,
+              createdAt: {},
+              description: '',
+              likes: 0,
+              title: '',
+              user: '',
+              userProfile: '',
+              username: '',
+              ...d.data(),
+            }))
+            const lastVisiblePostDoc = snapshot.docs[snapshot.docs.length - 1]
+            setPostStateValue(prev => ({
+              ...prev,
+              posts: postList,
+              lastVisible: lastVisiblePostDoc,
+              loading: false,
+            }))
+          },
+          error => {
+            console.log('home post fetching error', error)
+          },
+        )
     } catch (error) {
       console.log('getPosts error', error)
       setPostStateValue(prev => ({
@@ -71,7 +73,7 @@ function HomeFeed() {
       loading: true,
     }))
     setRefreshing(true)
-    await getPosts()
+    getPosts()
     await refetch() //on refresh refetch all liked posts of the current user
     setRefreshing(false)
   }
