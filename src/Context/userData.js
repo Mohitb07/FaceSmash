@@ -12,13 +12,19 @@ const UserDataProvider = props => {
   console.log('auth User inside user data context 🎯', contextUser)
 
   useEffect(() => {
-    async function getData() {
+    function getData() {
       if (authUser) {
-        const user = await firestore()
+        firestore()
           .collection('Users')
           .doc(authUser?.uid)
-          .get()
-        setContextUser(user.data())
+          .onSnapshot(
+            snapshot => {
+              setContextUser(snapshot.data())
+            },
+            error => {
+              console.log('fetching user context error', error)
+            },
+          )
       }
     }
     getData()
