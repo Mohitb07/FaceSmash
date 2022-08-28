@@ -1,9 +1,7 @@
-import React, {useCallback, useEffect, useState} from 'react'
-import {InteractionManager} from 'react-native'
+import React, {useCallback, useEffect} from 'react'
 
 import firestore from '@react-native-firebase/firestore'
 import {useRecoilState} from 'recoil'
-import {IPost} from '../../../atoms/postAtom'
 import {IDefaultUserDataState, userDataState} from '../../../atoms/userAtom'
 import useLikedPosts from '../../../hooks/useLikedPosts'
 import usePagination from '../../../hooks/usePagination'
@@ -26,41 +24,42 @@ const ProfileFeed = ({userId}: {userId: string}) => {
         loading: true,
       }))
     }
-    InteractionManager.runAfterInteractions(() => {
-      async function fetchUserPosts() {
-        const allUserPosts = await firestore()
-          .collection('Posts')
-          .where('user', '==', userId)
-          .orderBy('createdAt', 'desc')
-          .limit(LIMIT)
-          .get()
-
-        const latestPosts: Array<IPost> = []
-        allUserPosts.docs.map(post => {
-          latestPosts.push({
-            key: post.id,
-            createdAt: {},
-            description: '',
-            likes: 0,
-            title: '',
-            user: '',
-            userProfile: '',
-            username: '',
-            ...post.data(),
-          })
-        })
-
-        let lastVisibleDoc = allUserPosts.docs[allUserPosts.docs.length - 1]
-        setMyRecentPosts(prev => ({
-          ...prev,
-          posts: latestPosts,
-          loading: false,
-          lastVisible: lastVisibleDoc,
-        }))
-      }
-      fetchUserPosts()
-    })
-  }, [userId])
+    function fetchUserPosts() {
+      firestore()
+        .collection('Posts')
+        .where('user', '==', userId)
+        .orderBy('createdAt', 'desc')
+        .limit(LIMIT)
+        .onSnapshot(
+          querySnapshot => {
+            const dataList = querySnapshot.docs.map(d => ({
+              key: d.id,
+              createdAt: {},
+              description: '',
+              likes: 0,
+              title: '',
+              user: '',
+              userProfile: '',
+              username: '',
+              ...d.data(),
+            }))
+            let lastVisibleDoc =
+              querySnapshot.docs[querySnapshot.docs.length - 1]
+            console.log('lastVisibleDoc', lastVisibleDoc)
+            setMyRecentPosts(prev => ({
+              ...prev,
+              posts: dataList,
+              loading: false,
+              lastVisible: lastVisibleDoc,
+            }))
+          },
+          error => {
+            console.log('fetchUserPosts error: ', error)
+          },
+        )
+    }
+    fetchUserPosts()
+  }, [])
 
   const getMoreData = useCallback(() => {
     return retrieveMore(
