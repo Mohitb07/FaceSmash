@@ -36,23 +36,21 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
   const authUser = auth().currentUser.uid
 
   useEffect(() => {
-    const fetchUserDetails = async () => {
-      if (userId === authUser) {
-        canSetState && setUserData(contextUser)
-      } else {
-        const userInfo = await firestore()
-          .collection('Users')
-          .where('uid', '==', userId)
-          .get()
-        const latestUserData = {
-          ...userInfo.docs[0].data(),
-          key: userInfo.docs[0].id,
-        }
-        canSetState && setUserData(latestUserData)
-      }
-    }
-    fetchUserDetails()
-
+    firestore()
+      .collection('Users')
+      .doc(userId)
+      .onSnapshot(
+        snapshot => {
+          canSetState &&
+            setUserData({
+              ...snapshot.data(),
+              key: snapshot.id,
+            })
+        },
+        error => {
+          console.log('user info fetching error', error)
+        },
+      )
     return () => (canSetState = false)
   }, [userId])
 
