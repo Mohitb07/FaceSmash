@@ -7,23 +7,29 @@ import {IDefaultPostState, IPost, postState} from '../../../atoms/postAtom'
 import useLikedPosts from '../../../hooks/useLikedPosts'
 import usePagination from '../../../hooks/usePagination'
 import HomeHeader from '../../Header/Home'
-import DataList from './DataList'
-import Footer from './DataListFooter'
-import EmptyList from './EmptyDataList'
+import DataList from '../../DataList'
+import Footer from '../../DataList/DataListFooter'
+import EmptyList from '../../DataList/EmptyDataList'
 
 const LIMIT = 5
 
 function HomeFeed() {
-  const [postStateValue, setPostStateValue] =
-    useRecoilState<IDefaultPostState>(postState)
+  // const [postStateValue, setPostStateValue] =
+  //   useRecoilState<IDefaultPostState>(postState)
+  const [postStateValue, setPostStateValue] = useState<IDefaultPostState>({
+    loading: true,
+    lastVisible: null,
+    posts: [],
+    selectedPost: null,
+  })
   const [refreshing, setRefreshing] = useState(false)
   const {retrieveMore} = usePagination()
   const {userLikedPosts, refetch} = useLikedPosts()
   const getPosts = () => {
-    setPostStateValue(prev => ({
-      ...prev,
-      posts: [],
-    }))
+    // setPostStateValue(prev => ({
+    //   ...prev,
+    //   posts: [],
+    // }))
     try {
       firestore()
         .collection('Posts')
@@ -68,14 +74,18 @@ function HomeFeed() {
   }, [])
 
   const onRefresh = async () => {
-    setPostStateValue(prev => ({
-      ...prev,
-      loading: true,
-    }))
-    setRefreshing(true)
-    getPosts()
-    await refetch() //on refresh refetch all liked posts of the current user
-    setRefreshing(false)
+    try {
+      setRefreshing(true)
+      setPostStateValue(prev => ({
+        ...prev,
+        loading: true,
+      }))
+      getPosts()
+      // await refetch() //on refresh refetch all liked posts of the current user
+      setRefreshing(false)
+    } catch (error) {
+      setRefreshing(false)
+    }
   }
 
   const getMoreData = () => {
