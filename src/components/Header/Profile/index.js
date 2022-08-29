@@ -7,7 +7,7 @@ import {
   Text,
   View,
 } from 'native-base'
-import React, {memo, useContext, useEffect, useState} from 'react'
+import React, {memo, useEffect, useState} from 'react'
 import {ActivityIndicator, TouchableOpacity} from 'react-native'
 
 import auth from '@react-native-firebase/auth'
@@ -16,7 +16,6 @@ import FastImage from 'react-native-fast-image'
 
 import {useNavigation} from '@react-navigation/native'
 import {COLORS} from '../../../constants'
-import {UserDataContext} from '../../../Context/userData'
 import {
   FilterIcon,
   GridIcon,
@@ -29,7 +28,6 @@ import StyledButton from '../../Button'
 const ProfileHeader = ({userId, totalPosts = 0}) => {
   let canSetState = true
   const navigation = useNavigation()
-  const {contextUser} = useContext(UserDataContext)
   const [userData, setUserData] = useState({})
   const [isConnected, setIsConnected] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -89,36 +87,24 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
   return (
     <Box my="2" mb="5" paddingX="2">
       <HStack alignItems="center" justifyContent="space-between">
-        <PresenceTransition
-          visible={true}
-          initial={{
-            opacity: 0,
+        <FastImage
+          style={{
+            width: 80,
+            height: 80,
+            borderRadius: 100,
           }}
-          animate={{
-            opacity: 1,
-            transition: {
-              duration: 250,
-            },
-          }}>
-          <FastImage
-            style={{
-              width: 80,
-              height: 80,
-              borderRadius: 100,
-            }}
-            source={{
-              uri: userData?.profilePic,
-              priority: FastImage.priority.normal,
-            }}
-            resizeMode={FastImage.resizeMode.cover}
-          />
-        </PresenceTransition>
+          source={{
+            uri: userData?.profilePic,
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.cover}
+        />
         <HStack alignItems="center" space="8">
           <View>
             <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
               {totalPosts}
             </Text>
-            <Text color={COLORS.gray} fontFamily="Lato-Regular">
+            <Text color={COLORS.white2} fontFamily="Lato-Regular">
               Posts
             </Text>
           </View>
@@ -126,7 +112,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
             <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
               {userData?.followers?.length}
             </Text>
-            <Text color={COLORS.gray} fontFamily="Lato-Regular">
+            <Text color={COLORS.white2} fontFamily="Lato-Regular">
               Followers
             </Text>
           </View>
@@ -134,24 +120,20 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
             <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
               {userData?.followings?.length}
             </Text>
-            <Text color={COLORS.gray} fontFamily="Lato-Regular">
+            <Text color={COLORS.white2} fontFamily="Lato-Regular">
               Following
             </Text>
           </View>
         </HStack>
       </HStack>
 
-      <View my="5">
-        <Text fontSize="lg" letterSpacing="lg" fontFamily="Lato-Regular">
+      <View my="2" mb="2">
+        <Text fontSize="md" letterSpacing="lg" fontFamily="Lato-Regular">
           {userData?.username}
         </Text>
         <HStack alignItems="center">
           <Text fontSize="sm" color={COLORS.gray} fontFamily="Lato-Regular">
-            Delhi, India
-          </Text>
-          <Divider thickness="2" h="3" mx="5" orientation="vertical" />
-          <Text fontSize="sm" color={COLORS.gray} fontFamily="Lato-Regular">
-            UX Designer - Apple
+            It's my bio
           </Text>
         </HStack>
         <Text
