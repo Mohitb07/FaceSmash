@@ -40,7 +40,6 @@ interface FeedProps {
   postId: string
   userId: string
   link?: string
-  hasLiked: boolean
   userLikedPosts: Boolean
 }
 
@@ -55,20 +54,15 @@ const Feed = ({
   postId = '',
   userId = '',
   link = '',
-  hasLiked,
   userLikedPosts = false,
 }: FeedProps) => {
   console.log('feed', postTitle)
-  console.log('liked post ', postTitle, userLikedPosts)
-
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const {authUser} = useContext(AuthUserContext)
   const {onOpen, onClose, isOpen} = useDisclose()
 
-  const handleOnDelete = () => {
-    onClose()
-  }
+  const handleOnDelete = () => onClose()
 
   const handleLikes = () => {
     const postlikesRef = firestore()
