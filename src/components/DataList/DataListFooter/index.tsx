@@ -1,8 +1,8 @@
 import {Text, View} from 'native-base'
 import React from 'react'
-import FeedSkeleton from '../../../FeedSkeleton'
+import FeedSkeleton from '../../FeedSkeleton'
 
-import {IPost} from '../../../../atoms/postAtom'
+import {IPost} from '../../../atoms/postAtom'
 
 const DataListFooter = ({
   dataList = [],
