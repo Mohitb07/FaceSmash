@@ -1,7 +1,7 @@
+import {Box, Center, Flex, HStack, Skeleton, VStack} from 'native-base'
 import React from 'react'
-import {Box, Center, Flex, HStack, Skeleton, View, VStack} from 'native-base'
 
-const FeedSkeleton = props => {
+const FeedSkeleton = (props: any) => {
   return (
     <Center w="100%" mb="10" {...props}>
       <VStack

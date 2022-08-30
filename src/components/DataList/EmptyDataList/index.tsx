@@ -3,10 +3,11 @@ import React from 'react'
 import {Text, View} from 'native-base'
 
 import {COLORS} from '../../../constants'
-import FeedSkeleton from '../../FeedSkeleton'
+const FeedSkeleton = React.lazy(() => import('../../FeedSkeleton'))
+// import FeedSkeleton from '../../FeedSkeleton'
 import {DocumentNotFound} from '../../../SVG'
 
-const EmptyList = ({loading}) => {
+const EmptyList = ({loading}: {loading: boolean}) => {
   return loading ? (
     <>
       <FeedSkeleton />

@@ -1,20 +1,12 @@
-import {
-  Box,
-  Divider,
-  Flex,
-  HStack,
-  PresenceTransition,
-  Text,
-  View,
-} from 'native-base'
+import {Box, Flex, HStack, Text, View} from 'native-base'
 import React, {memo, useEffect, useState} from 'react'
 import {ActivityIndicator, TouchableOpacity} from 'react-native'
 
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import FastImage from 'react-native-fast-image'
-
 import {useNavigation} from '@react-navigation/native'
+
 import {COLORS} from '../../../constants'
 import {
   FilterIcon,
