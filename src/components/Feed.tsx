@@ -1,3 +1,4 @@
+import React, {useContext} from 'react'
 import firestore, {
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore'
@@ -7,12 +8,12 @@ import {
   Actionsheet,
   HStack,
   Image,
+  Spinner,
   ThreeDotsIcon,
   useDisclose,
   View as NView,
   VStack,
 } from 'native-base'
-import React, {useContext, useEffect, useState} from 'react'
 import {
   StyleSheet,
   Text,
@@ -23,11 +24,12 @@ import {
 import FastImage from 'react-native-fast-image'
 import {HeartFilledIcon, HeartOutlinIcon, LinkIcon} from '../SVG'
 
+import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import {COLORS} from '../constants'
 import {AuthUserContext} from '../Context/auth'
-import FeedMore from './BottomSheet/FeedMore'
 import {RootStackParamList} from '../Navigation/Root'
-import {NativeStackNavigationProp} from '@react-navigation/native-stack'
+// import FeedMore from './BottomSheet/FeedMore'
+const FeedMore = React.lazy(() => import('./BottomSheet/FeedMore'))
 
 interface FeedProps {
   image?: string
@@ -198,7 +200,14 @@ const Feed = ({
       </NView>
       <Actionsheet disableOverlay isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content style={{backgroundColor: COLORS.mainBackground}}>
-          <FeedMore postId={postId} handleDelete={handleOnDelete} />
+          <React.Suspense
+            fallback={
+              <View>
+                <Spinner color="indigo.500" />
+              </View>
+            }>
+            <FeedMore postId={postId} handleDelete={handleOnDelete} />
+          </React.Suspense>
         </Actionsheet.Content>
       </Actionsheet>
     </NView>
