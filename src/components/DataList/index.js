@@ -1,4 +1,3 @@
-import {Divider} from 'native-base'
 import React from 'react'
 import {FlatList, RefreshControl} from 'react-native'
 import {COLORS} from '../../constants'
@@ -48,14 +47,6 @@ const DataList = ({
           colors={[COLORS.white2]}
         />
       }
-      ItemSeparatorComponent={() => (
-        <Divider
-          my="2"
-          _dark={{
-            bg: 'muted.800',
-          }}
-        />
-      )}
       refreshing={loading}
       renderItem={renderItems}
       keyExtractor={item => item.key}
