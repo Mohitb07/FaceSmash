@@ -166,7 +166,7 @@ function HomeHeader() {
   }
 
   return (
-    <NView mb="5" paddingX="2" backgroundColor={COLORS.transparentBlack9}>
+    <NView mb="5" paddingX="2">
       <View style={styles.headerContainer}>
         <NView alignItems="center" flexDirection="row">
           <NText fontFamily="Lato-Bold" color={COLORS.primary} fontSize="2xl">
