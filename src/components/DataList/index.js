@@ -1,5 +1,5 @@
 import React from 'react'
-import {FlatList, RefreshControl} from 'react-native'
+import {FlatList, RefreshControl, StyleSheet} from 'react-native'
 import {COLORS} from '../../constants'
 import Feed from '../Feed'
 
@@ -31,7 +31,7 @@ const DataList = ({
   )
   return (
     <FlatList
-      contentContainerStyle={{paddingBottom: 20}}
+      contentContainerStyle={styles.container}
       showsVerticalScrollIndicator={false}
       data={dataList}
       ListEmptyComponent={EmptyList}
@@ -53,5 +53,11 @@ const DataList = ({
     />
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    paddingBottom: 20,
+  },
+})
 
 export default React.memo(DataList)
