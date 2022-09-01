@@ -1,15 +1,16 @@
-import {View, ActivityIndicator, StyleSheet} from 'react-native';
-import React from 'react';
+import {View, ActivityIndicator, StyleSheet} from 'react-native'
+import React from 'react'
+import {COLORS} from '../../constants'
 
 const Loader = () => {
   return (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="#202124" />
+      <ActivityIndicator size="large" color={COLORS.primary} />
     </View>
-  );
-};
+  )
+}
 
-export default Loader;
+export default Loader
 
 const styles = StyleSheet.create({
   container: {
@@ -19,4 +20,4 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-});
+})
