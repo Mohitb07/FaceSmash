@@ -1,7 +1,8 @@
 import {Box, Flex, HStack, Text, View} from 'native-base'
-import React, {memo, useEffect, useState} from 'react'
+import React, {memo, useEffect, useRef, useState} from 'react'
 import {ActivityIndicator, TouchableOpacity} from 'react-native'
 
+import {Redis} from '@upstash/redis'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import FastImage from 'react-native-fast-image'
@@ -17,31 +18,54 @@ import {
 } from '../../../SVG'
 import StyledButton from '../../Button'
 
+const redis = new Redis({
+  url: 'https://usw2-welcomed-duckling-30227.upstash.io',
+  token:
+    'AXYTASQgOWMyNTcwZTQtMzQ3Yy00NWEyLTkzZjktNzM5ZmJkNTdiOWUzNjg4N2RhOGEzMTQwNDc0Nzk0ZGRmNTAwODc4ZWYyMjE=',
+})
+
 const ProfileHeader = ({userId, totalPosts = 0}) => {
-  let canSetState = true
   const navigation = useNavigation()
   const [userData, setUserData] = useState({})
   const [isConnected, setIsConnected] = useState(false)
   const [loading, setLoading] = useState(false)
   const authUser = auth().currentUser.uid
-
+  const isMounted = useRef(false)
   useEffect(() => {
-    firestore()
-      .collection('Users')
-      .doc(userId)
-      .onSnapshot(
-        snapshot => {
-          canSetState &&
-            setUserData({
-              ...snapshot.data(),
-              key: snapshot.id,
-            })
-        },
-        error => {
-          console.log('user info fetching error', error)
-        },
-      )
-    return () => (canSetState = false)
+    isMounted.current = true
+    async function fetchUserData() {
+      const userCache = await redis.get(userId)
+      console.log('user cache', userCache)
+      if (userCache) {
+        isMounted.current && setUserData(userCache)
+        return
+      }
+      console.log('fetching firebase')
+      firestore()
+        .collection('Users')
+        .doc(userId)
+        .onSnapshot(
+          async snapshot => {
+            if (isMounted.current) {
+              await redis.set(
+                userId,
+                JSON.stringify({...snapshot.data(), key: snapshot.id}),
+              )
+              setUserData({
+                ...snapshot.data(),
+                key: snapshot.id,
+              })
+            }
+          },
+          error => {
+            console.log('user info fetching error', error)
+          },
+        )
+    }
+    fetchUserData()
+    return () => {
+      isMounted.current = false
+    }
   }, [userId])
 
   const handleButtonToggle = () => {
@@ -102,7 +126,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
           </View>
           <View>
             <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
-              {userData?.followers?.length}
+              {userData?.followers?.length ?? 0}
             </Text>
             <Text color={COLORS.white2} fontFamily="Lato-Regular">
               Followers
@@ -110,7 +134,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
           </View>
           <View>
             <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
-              {userData?.followings?.length}
+              {userData?.followings?.length ?? 0}
             </Text>
             <Text color={COLORS.white2} fontFamily="Lato-Regular">
               Following
@@ -121,19 +145,21 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
 
       <View my="2" mb="2">
         <Text fontSize="md" letterSpacing="lg" fontFamily="Lato-Regular">
-          {userData?.username}
+          {userData?.username ?? ''}
         </Text>
-        <HStack alignItems="center">
-          <Text fontSize="sm" color={COLORS.gray} fontFamily="Lato-Regular">
-            It's my bio
-          </Text>
-        </HStack>
+        {userData?.bio && (
+          <HStack alignItems="center">
+            <Text fontSize="sm" color={COLORS.gray} fontFamily="Lato-Regular">
+              {userData?.bio}
+            </Text>
+          </HStack>
+        )}
         <Text
           mt="1"
           fontSize="sm"
           color={COLORS.gray}
           fontFamily="Lato-Regular">
-          {userData?.email}
+          {userData?.email ?? ''}
         </Text>
       </View>
 

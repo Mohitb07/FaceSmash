@@ -1,21 +1,18 @@
 import React, {useEffect, useState} from 'react'
-import {useRecoilState} from 'recoil'
 
 import firestore from '@react-native-firebase/firestore'
 
-import {IDefaultPostState, IPost, postState} from '../../../atoms/postAtom'
+import {IDefaultPostState, IPost} from '../../../atoms/postAtom'
 import useLikedPosts from '../../../hooks/useLikedPosts'
 import usePagination from '../../../hooks/usePagination'
-import HomeHeader from '../../Header/Home'
 import DataList from '../../DataList'
 import Footer from '../../DataList/DataListFooter'
 import EmptyList from '../../DataList/EmptyDataList'
+import HomeHeader from '../../Header/Home'
 
 const LIMIT = 5
 
 function HomeFeed() {
-  // const [postStateValue, setPostStateValue] =
-  //   useRecoilState<IDefaultPostState>(postState)
   const [postStateValue, setPostStateValue] = useState<IDefaultPostState>({
     loading: true,
     lastVisible: null,
@@ -24,12 +21,8 @@ function HomeFeed() {
   })
   const [refreshing, setRefreshing] = useState(false)
   const {retrieveMore} = usePagination()
-  const {userLikedPosts, refetch} = useLikedPosts()
+  const {userLikedPosts} = useLikedPosts()
   const getPosts = () => {
-    // setPostStateValue(prev => ({
-    //   ...prev,
-    //   posts: [],
-    // }))
     try {
       firestore()
         .collection('Posts')
@@ -70,32 +63,28 @@ function HomeFeed() {
   }
 
   useEffect(() => {
+    console.log('fetching firebase posts')
     getPosts()
   }, [])
 
-  const onRefresh = async () => {
+  const onRefresh = () => {
     try {
       setRefreshing(true)
-      setPostStateValue(prev => ({
-        ...prev,
-        loading: true,
-      }))
       getPosts()
-      // await refetch() //on refresh refetch all liked posts of the current user
-      setRefreshing(false)
     } catch (error) {
+      console.log('On Refresh Error:', error)
+    } finally {
       setRefreshing(false)
     }
   }
 
-  const getMoreData = () => {
-    return retrieveMore(
+  const getMoreData = () =>
+    retrieveMore(
       postStateValue.lastVisible,
       'Posts',
       postStateValue.posts,
       setPostStateValue,
     )
-  }
   return (
     <DataList
       dataList={postStateValue.posts}
