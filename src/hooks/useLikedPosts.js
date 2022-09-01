@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
@@ -8,13 +8,10 @@ const useLikedPosts = () => {
   const [error, setError] = useState('')
   const authUserId = auth()?.currentUser?.uid
 
-  const refetch = useCallback(async () => {
-    console.log('refetching')
-  }, [])
-
   useEffect(() => {
+    let unsub
     try {
-      firestore()
+      unsub = firestore()
         .collection('Users')
         .doc(authUserId)
         .collection('postlikes')
@@ -32,9 +29,13 @@ const useLikedPosts = () => {
       console.log('getLikedposterror', err.message)
       setError(err.message)
     }
+
+    return () => {
+      unsub()
+    }
   }, [])
 
-  return {userLikedPosts, refetch, error}
+  return {userLikedPosts, error}
 }
 
 export default useLikedPosts
