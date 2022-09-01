@@ -3,7 +3,7 @@ import React from 'react'
 import {Text, View} from 'native-base'
 
 import {COLORS} from '../../../constants'
-const FeedSkeleton = React.lazy(() => import('../../FeedSkeleton'))
+import FeedSkeleton from '../../FeedSkeleton'
 // import FeedSkeleton from '../../FeedSkeleton'
 import {DocumentNotFound} from '../../../SVG'
 
