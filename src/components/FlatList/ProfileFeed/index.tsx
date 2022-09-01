@@ -1,22 +1,21 @@
-import React, {useCallback, useEffect, useRef, useState} from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 
 import firestore from '@react-native-firebase/firestore'
-import {useRecoilState} from 'recoil'
-import {IDefaultUserDataState, userDataState} from '../../../atoms/userAtom'
+import {IDefaultUserDataState} from '../../../atoms/userAtom'
 import useLikedPosts from '../../../hooks/useLikedPosts'
 import usePagination from '../../../hooks/usePagination'
 import DataList from '../../DataList'
 import DataListFooter from '../../DataList/DataListFooter'
 import EmptyDataList from '../../DataList/EmptyDataList'
 import ProfileHeader from '../../Header/Profile'
+import {IPost} from '../../../atoms/postAtom'
 
 const LIMIT = 5
 
 const ProfileFeed = ({userId}: {userId: string}) => {
-  // const [myRecentPosts, setMyRecentPosts] =
-  //   useRecoilState<IDefaultUserDataState>(userDataState)
   const {retrieveMore} = usePagination()
   const {userLikedPosts} = useLikedPosts()
+  const [totalUserPosts, setTotalUserPosts] = useState(0)
   const [myRecentPosts, setMyRecentPosts] = useState<IDefaultUserDataState>({
     posts: [],
     loading: true,
@@ -24,56 +23,104 @@ const ProfileFeed = ({userId}: {userId: string}) => {
     postsLikes: [],
   })
   const isMounted = useRef(false)
-  useEffect(() => {
-    isMounted.current = true
-    // if (myRecentPosts.posts[0]?.user !== userId) {
-    //   setMyRecentPosts(prev => ({
-    //     ...prev,
-    //     posts: [],
-    //     loading: true,
+  // const getPosts = () => {
+  //   const unsubscribe = firestore()
+  //   .collection('Posts')
+  //   .where('user', '==', userId)
+  //   .orderBy('createdAt', 'desc')
+  //   .limit(LIMIT)
+  //   .onSnapshot(
+  //     snapshot => {
+  //       const postList: Array<IPost> = snapshot.docs.map(d => ({
+  //         key: d.id,
+  //         createdAt: {},
+  //         description: '',
+  //         likes: 0,
+  //         title: '',
+  //         user: '',
+  //         userProfile: '',
+  //         username: '',
+  //         ...d.data(),
+  //       }))
+  //       let lastVisiblePostDoc = snapshot.docs[snapshot.docs.length - 1]
+  //       console.log('inside profile useEffect')
+  //       isMounted.current &&
+  //         setMyRecentPosts(prev => ({
+  //           ...prev,
+  //           posts: postList,
+  //           loading: false,
+  //           lastVisible: lastVisiblePostDoc,
+  //         }))
+  //     },
+  //     error => {
+  //       console.log('fetchUserPosts error: ', error)
+  //     },
+  //   )
 
-    //   }))
-    // }
-    firestore()
+  //   return unsubscribe;
+  // }
+
+  const getPosts = () => {
+    console.log('inside post effect')
+    const query = firestore()
       .collection('Posts')
       .where('user', '==', userId)
       .orderBy('createdAt', 'desc')
       .limit(LIMIT)
-      .onSnapshot(
-        querySnapshot => {
-          const dataList = querySnapshot.docs.map(d => ({
-            key: d.id,
-            createdAt: {},
-            description: '',
-            likes: 0,
-            title: '',
-            user: '',
-            userProfile: '',
-            username: '',
-            ...d.data(),
-          }))
-          let lastVisibleDoc = querySnapshot.docs[querySnapshot.docs.length - 1]
-          console.log('inside profile useEffect')
-          isMounted.current &&
-            setMyRecentPosts(prev => ({
-              ...prev,
-              posts: dataList,
-              loading: false,
-              lastVisible: lastVisibleDoc,
-            }))
-        },
-        error => {
-          console.log('fetchUserPosts error: ', error)
-        },
-      )
 
+    const onsub = query.onSnapshot(
+      snapshot => {
+        const postList: Array<IPost> = snapshot.docs.map(d => ({
+          key: d.id,
+          createdAt: {},
+          description: '',
+          likes: 0,
+          title: '',
+          user: '',
+          userProfile: '',
+          username: '',
+          ...d.data(),
+        }))
+        let lastVisiblePostDoc = snapshot.docs[snapshot.docs.length - 1]
+        console.log('inside profile useEffect')
+        setMyRecentPosts(prev => ({
+          ...prev,
+          posts: postList,
+          loading: false,
+          lastVisible: lastVisiblePostDoc,
+        }))
+      },
+      error => {
+        console.log('fetchUserPosts error: ', error)
+      },
+    )
+
+    return onsub
+  }
+
+  useEffect(() => {
+    const onsub = getPosts()
     return () => {
-      isMounted.current = false
+      console.log('unmouning prfo')
+      onsub()
     }
   }, [])
 
-  const getMoreData = useCallback(() => {
-    return retrieveMore(
+  useEffect(() => {
+    console.log('inside length effect')
+    const unsub = firestore()
+      .collection('Posts')
+      .where('user', '==', userId)
+      .onSnapshot(snapshot => {
+        setTotalUserPosts(snapshot.docs.length)
+      })
+    return () => {
+      unsub()
+    }
+  }, [])
+
+  const getMoreData = () =>
+    retrieveMore(
       myRecentPosts.lastVisible,
       'Posts',
       myRecentPosts.posts,
@@ -83,7 +130,6 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       '==',
       userId,
     )
-  }, [myRecentPosts.lastVisible])
 
   return (
     <DataList
@@ -91,12 +137,7 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       dataList={myRecentPosts.posts}
       // onRefresh={onRefresh}
       // refreshing={refreshing}
-      Header={
-        <ProfileHeader
-          totalPosts={myRecentPosts.posts?.length}
-          userId={userId}
-        />
-      }
+      Header={<ProfileHeader totalPosts={totalUserPosts} userId={userId} />}
       EmptyList={<EmptyDataList loading={myRecentPosts.loading} />}
       Footer={
         <DataListFooter
