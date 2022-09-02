@@ -43,6 +43,7 @@ interface FeedProps {
   userId: string
   link?: string
   userLikedPosts: Boolean
+  imageRef?: string
 }
 
 const Feed = ({
@@ -57,6 +58,7 @@ const Feed = ({
   userId = '',
   link = '',
   userLikedPosts = false,
+  imageRef,
 }: FeedProps) => {
   console.log('feed', postTitle)
   const navigation =
@@ -206,7 +208,13 @@ const Feed = ({
                 <Spinner color="indigo.500" />
               </View>
             }>
-            <FeedMore postId={postId} handleDelete={handleOnDelete} />
+            <FeedMore
+              imageRef={imageRef}
+              postId={postId}
+              hasImage={Boolean(image)}
+              onClose={handleOnDelete}
+              hasLiked={userLikedPosts}
+            />
           </React.Suspense>
         </Actionsheet.Content>
       </Actionsheet>
