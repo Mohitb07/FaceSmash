@@ -5,6 +5,8 @@ import Toast from 'react-native-toast-message'
 
 const useSelectImage = () => {
   const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedImageRef, setSelectedImageRef] = useState('')
+  console.log('selected image uri', selectedImage)
   const handleChooseGallary = (navigate = false, navigation) => {
     ImagePicker.launchImageLibrary({}, response => {
       if (response.didCancel) {
@@ -22,10 +24,16 @@ const useSelectImage = () => {
           text2: response.errorMessage,
         })
       } else {
+        const imageRef = `${response.assets[0].fileName}${
+          response.assets[0].height + response.assets[0].width
+        }${response.assets[0].fileSize}`
+
         setSelectedImage(response.assets[0].uri)
+        setSelectedImageRef(imageRef)
         navigate &&
           navigation.navigate('AddPost', {
-            selectedImage: response.assets[0].uri,
+            selectedImageURI: response.assets[0].uri,
+            selectedImageRef: imageRef,
           })
       }
     })
@@ -55,9 +63,16 @@ const useSelectImage = () => {
 
   const clearImage = () => {
     setSelectedImage(null)
+    setSelectedImageRef('')
   }
 
-  return {selectedImage, handleChooseGallary, handleTakePhoto, clearImage}
+  return {
+    selectedImage,
+    selectedImageRef,
+    handleChooseGallary,
+    handleTakePhoto,
+    clearImage,
+  }
 }
 
 export default useSelectImage
