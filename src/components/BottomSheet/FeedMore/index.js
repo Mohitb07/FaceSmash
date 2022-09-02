@@ -4,34 +4,36 @@ import {StyleSheet, TouchableOpacity} from 'react-native'
 import {AuthUserContext} from '../../../Context/auth'
 import {FeedEditIcon, DeleteIcon, FeedShareIcon} from '../../../SVG'
 import firestore from '@react-native-firebase/firestore'
-import {useRecoilState} from 'recoil'
-import {postState} from '../../../atoms/postAtom'
-import {userDataState} from '../../../atoms/userAtom'
+import storage from '@react-native-firebase/storage'
 
-const FeedMore = ({postId, handleDelete}) => {
+const FeedMore = ({postId, onClose, hasImage, imageRef, hasLiked}) => {
   const {authUser} = useContext(AuthUserContext)
-  const [postStateValue, setPostStateValue] = useRecoilState(postState)
-  const [userStateValue, setUserStateValue] = useRecoilState(userDataState)
-
-  const handleDeletePost = () => {
+  console.log('has imageRef', imageRef)
+  const handleDeletePost = async () => {
+    // remove image from storage if an image exists (DONE)
+    // remove doc from postlikes subcollection if present
     firestore()
       .collection('Posts')
       .doc(postId)
       .delete()
-      .then(() => {
-        handleDelete()
-        setPostStateValue(prev => ({
-          ...prev,
-          posts: postStateValue.posts.filter(post => post.key !== postId),
-        }))
-        if (userStateValue.posts.length > 0) {
-          console.log('deleting profile data')
-          setUserStateValue(prev => ({
-            ...prev,
-            posts: userStateValue.posts.filter(post => post.key !== postId),
-          }))
+      .then(async () => {
+        onClose()
+        if (hasImage) {
+          await storage()
+            .ref(imageRef)
+            .delete()
+            .then(() => {
+              console.log('storage cleanup complete')
+            })
         }
-        console.log('Post deleted!')
+        if (hasLiked) {
+          const postlikesRef = firestore()
+            .collection('Users')
+            .doc(authUser?.uid)
+            .collection('postlikes')
+            .doc(postId)
+          postlikesRef.delete()
+        }
       })
   }
 

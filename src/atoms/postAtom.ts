@@ -12,6 +12,7 @@ export interface IPost {
   user: string
   userProfile: string
   username: string
+  imageRef?: string
 }
 
 export interface IDefaultPostState {

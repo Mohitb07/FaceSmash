@@ -39,6 +39,7 @@ function HomeFeed() {
               user: '',
               userProfile: '',
               username: '',
+              imageRef: '',
               ...d.data(),
             }))
             const lastVisiblePostDoc = snapshot.docs[snapshot.docs.length - 1]
