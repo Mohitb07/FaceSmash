@@ -33,13 +33,17 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 const AddPost = ({
   route,
 }: {
-  route: RouteProp<{params: {selectedImage: string}}, 'params'>
+  route: RouteProp<
+    {params: {selectedImageURI: string; selectedImageRef: string}},
+    'params'
+  >
 }) => {
   const routeData = route.params || {}
 
   let getterImage = {...routeData}
 
-  const image = getterImage.selectedImage
+  const image = getterImage.selectedImageURI
+  const imageRef = getterImage.selectedImageRef
 
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
@@ -47,40 +51,47 @@ const AddPost = ({
   const [title, setTitle] = useState<string>('')
   const {authUser} = useContext(AuthUserContext)
   const {contextUser} = useContext(UserDataContext)
-  const {selectedImage, handleChooseGallary, clearImage} = useSelectImage()
+  const {selectedImage, selectedImageRef, handleChooseGallary, clearImage} =
+    useSelectImage()
   const [imageFromNav, setImageFromNav] = useState<string>(image)
   const [loading, setLoading] = useState<boolean>(false)
   const [showLink, setShowLink] = useState<boolean>(false)
   const [link, setLink] = useState<string>('')
 
   console.log('selectedFromnav', imageFromNav)
+  console.log('ref image', selectedImageRef)
 
   const handlePostCreation = async () => {
     setLoading(true)
     if (selectedImage || imageFromNav) {
       try {
         await storage()
-          .ref(selectedImage || imageFromNav)
+          .ref(`${authUser?.uid}/posts/${imageRef || selectedImageRef}`)
           .putFile(selectedImage || imageFromNav)
         const imageURL = await storage()
-          .ref(selectedImage || imageFromNav)
+          .ref(`${authUser?.uid}/posts/${imageRef || selectedImageRef}`)
           .getDownloadURL()
 
         if (!imageURL) {
           throw new Error('Image Upload failed')
         }
         try {
-          await firestore().collection('Posts').add({
-            title: title,
-            description: textAreaValue,
-            image: imageURL,
-            user: authUser?.uid,
-            userProfile: contextUser.profilePic,
-            username: contextUser.username,
-            likes: 0,
-            link: link,
-            createdAt: new Date(),
-          })
+          await firestore()
+            .collection('Posts')
+            .add({
+              title: title,
+              description: textAreaValue,
+              image: imageURL,
+              user: authUser?.uid,
+              userProfile: contextUser.profilePic,
+              username: contextUser.username,
+              likes: 0,
+              link: link,
+              createdAt: new Date(),
+              imageRef: `${authUser?.uid}/posts/${
+                imageRef || selectedImageRef
+              }`,
+            })
           navigation.navigate('Home')
         } catch (error: any) {
           setLoading(false)
