@@ -27,6 +27,7 @@ const DataList = ({
       userId={item.user}
       userLikedPosts={!!userLikedPosts.find(post => post.postId === item.key)}
       link={item?.link}
+      imageRef={item?.imageRef}
     />
   )
   return (
