@@ -1,5 +1,5 @@
 import React, {useLayoutEffect} from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {StyleSheet, TouchableOpacity, View} from 'react-native'
 
 import {RouteProp, useNavigation} from '@react-navigation/native'
 import {useSetRecoilState} from 'recoil'
@@ -8,7 +8,7 @@ import {bottomSheetState, IBottomSheetState} from '../../atoms/bottomSheetAtom'
 import ProfileFeed from '../../components/FlatList/ProfileFeed'
 import {COLORS} from '../../constants'
 import BottomSheetProvider from '../../Context/BottomSheet'
-import {GearIcon} from '../../SVG'
+import {ThreeDotsIcon} from '../../SVG'
 
 const MyProfile = ({
   route,
@@ -30,8 +30,10 @@ const MyProfile = ({
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity onPress={handleModalState}>
-          <GearIcon />
+        <TouchableOpacity
+          onPress={handleModalState}
+          style={styles.threeDotsIconContainer}>
+          <ThreeDotsIcon fillColor="#fff" />
         </TouchableOpacity>
       ),
     })
@@ -53,5 +55,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.mainBackground,
     // paddingHorizontal: 15,
+  },
+  threeDotsIconContainer: {
+    transform: [{rotate: '90deg'}],
   },
 })
