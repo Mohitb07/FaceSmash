@@ -10,10 +10,10 @@ import {useNavigation} from '@react-navigation/native'
 
 import {COLORS} from '../../../constants'
 import {
+  EditIcon,
   FilterIcon,
   GridIcon,
   LightningIcon,
-  ThreeDotsIcon,
   UserIcon,
 } from '../../../SVG'
 import StyledButton from '../../Button'
@@ -67,6 +67,12 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
       isMounted.current = false
     }
   }, [userId])
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: userData?.username,
+    })
+  }, [userData?.username])
 
   const handleButtonToggle = () => {
     setLoading(true)
@@ -186,7 +192,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
         {authUser === userId && (
           <TouchableOpacity
             onPress={() => navigation.navigate('UpdateProfile')}>
-            <ThreeDotsIcon />
+            <EditIcon />
           </TouchableOpacity>
         )}
       </HStack>
