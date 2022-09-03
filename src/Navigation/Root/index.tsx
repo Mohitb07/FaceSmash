@@ -55,7 +55,7 @@ const Root = () => {
                 component={MyProfile}
                 options={{
                   headerShown: true,
-                  title: 'Profile',
+                  title: '',
                   headerTitleAlign: 'center',
                   headerTintColor: '#fff',
                   headerStyle: {
