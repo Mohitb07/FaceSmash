@@ -1,7 +1,5 @@
 import React, {useContext} from 'react'
-import firestore, {
-  FirebaseFirestoreTypes,
-} from '@react-native-firebase/firestore'
+import firestore from '@react-native-firebase/firestore'
 import {useNavigation} from '@react-navigation/native'
 import moment from 'moment'
 import {
@@ -28,23 +26,8 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import {COLORS} from '../constants'
 import {AuthUserContext} from '../Context/auth'
 import {RootStackParamList} from '../Navigation/Root'
-// import FeedMore from './BottomSheet/FeedMore'
+import {FeedProps} from '../types'
 const FeedMore = React.lazy(() => import('./BottomSheet/FeedMore'))
-
-interface FeedProps {
-  image?: string
-  postTitle: string
-  username: string
-  userProfilePic: string
-  description: string
-  likes: number
-  createdAt: FirebaseFirestoreTypes.Timestamp
-  postId: string
-  userId: string
-  link?: string
-  userLikedPosts: Boolean
-  imageRef?: string
-}
 
 const Feed = ({
   image,
@@ -57,16 +40,15 @@ const Feed = ({
   postId = '',
   userId = '',
   link = '',
-  userLikedPosts = false,
+  hasUserLikedPost = false,
   imageRef,
 }: FeedProps) => {
   console.log('feed', postTitle)
+  const updateUIBasedOnImage = Boolean(image) ? 'column-reverse' : 'column'
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const {authUser} = useContext(AuthUserContext)
   const {onOpen, onClose, isOpen} = useDisclose()
-
-  const handleOnDelete = () => onClose()
 
   const handleLikes = () => {
     const postlikesRef = firestore()
@@ -79,7 +61,7 @@ const Feed = ({
     const batch = firestore().batch()
 
     try {
-      if (userLikedPosts) {
+      if (hasUserLikedPost) {
         batch.delete(postlikesRef)
         batch.update(postRef, {
           likes: firestore.FieldValue.increment(-1),
@@ -100,8 +82,6 @@ const Feed = ({
       console.log('handlelikes error', err)
     }
   }
-
-  const updateUIBasedOnImage = !!image ? 'column-reverse' : 'column'
 
   return (
     <NView style={styles.container}>
@@ -182,7 +162,7 @@ const Feed = ({
         <VStack space="2" mb="1" ml="1">
           <HStack alignItems="center">
             <TouchableOpacity onPress={handleLikes}>
-              {userLikedPosts ? (
+              {hasUserLikedPost ? (
                 <HeartFilledIcon height="22" />
               ) : (
                 <HeartOutlinIcon height="22" />
@@ -212,8 +192,8 @@ const Feed = ({
               imageRef={imageRef}
               postId={postId}
               hasImage={Boolean(image)}
-              onClose={handleOnDelete}
-              hasLiked={userLikedPosts}
+              onClose={() => onClose()}
+              hasLiked={hasUserLikedPost}
             />
           </React.Suspense>
         </Actionsheet.Content>
