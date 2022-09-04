@@ -106,4 +106,4 @@ function HomeFeed() {
   )
 }
 
-export default React.memo(HomeFeed)
+export default HomeFeed

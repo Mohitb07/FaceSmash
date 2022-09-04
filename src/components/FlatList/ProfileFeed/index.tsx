@@ -1,6 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useState} from 'react'
+import {View, Text} from 'react-native'
+import {Spinner} from 'native-base'
 
 import firestore from '@react-native-firebase/firestore'
+
 import {IDefaultUserDataState} from '../../../atoms/userAtom'
 import useLikedPosts from '../../../hooks/useLikedPosts'
 import usePagination from '../../../hooks/usePagination'
@@ -9,6 +12,7 @@ import DataListFooter from '../../DataList/DataListFooter'
 import EmptyDataList from '../../DataList/EmptyDataList'
 import ProfileHeader from '../../Header/Profile'
 import {IPost} from '../../../atoms/postAtom'
+import Loader from '../../Loader'
 
 const LIMIT = 5
 
@@ -20,46 +24,7 @@ const ProfileFeed = ({userId}: {userId: string}) => {
     posts: [],
     loading: true,
     lastVisible: null,
-    postsLikes: [],
   })
-  const isMounted = useRef(false)
-  // const getPosts = () => {
-  //   const unsubscribe = firestore()
-  //   .collection('Posts')
-  //   .where('user', '==', userId)
-  //   .orderBy('createdAt', 'desc')
-  //   .limit(LIMIT)
-  //   .onSnapshot(
-  //     snapshot => {
-  //       const postList: Array<IPost> = snapshot.docs.map(d => ({
-  //         key: d.id,
-  //         createdAt: {},
-  //         description: '',
-  //         likes: 0,
-  //         title: '',
-  //         user: '',
-  //         userProfile: '',
-  //         username: '',
-  //         ...d.data(),
-  //       }))
-  //       let lastVisiblePostDoc = snapshot.docs[snapshot.docs.length - 1]
-  //       console.log('inside profile useEffect')
-  //       isMounted.current &&
-  //         setMyRecentPosts(prev => ({
-  //           ...prev,
-  //           posts: postList,
-  //           loading: false,
-  //           lastVisible: lastVisiblePostDoc,
-  //         }))
-  //     },
-  //     error => {
-  //       console.log('fetchUserPosts error: ', error)
-  //     },
-  //   )
-
-  //   return unsubscribe;
-  // }
-
   const getPosts = () => {
     console.log('inside post effect')
     const query = firestore()
@@ -92,6 +57,12 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       },
       error => {
         console.log('fetchUserPosts error: ', error)
+        setMyRecentPosts(prev => ({
+          ...prev,
+          posts: [],
+          loading: false,
+          lastVisible: null,
+        }))
       },
     )
 
@@ -131,12 +102,17 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       userId,
     )
 
+  if (myRecentPosts.loading) {
+    return (
+      <View style={{flex: 1}}>
+        <Spinner />
+      </View>
+    )
+  }
   return (
     <DataList
       key={userId}
       dataList={myRecentPosts.posts}
-      // onRefresh={onRefresh}
-      // refreshing={refreshing}
       Header={<ProfileHeader totalPosts={totalUserPosts} userId={userId} />}
       EmptyList={<EmptyDataList loading={myRecentPosts.loading} />}
       Footer={

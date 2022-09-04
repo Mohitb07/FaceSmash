@@ -17,15 +17,17 @@ const DataList = ({
   const renderItems = ({item}) => (
     <Feed
       postId={item.key}
-      userProfilePic={item?.userProfile}
+      userProfilePic={item.userProfile}
       createdAt={item.createdAt}
       username={item.username}
       postTitle={item.title}
-      image={item.image}
+      image={item?.image}
       description={item.description}
       likes={dataList.find(post => post.key === item.key).likes}
       userId={item.user}
-      userLikedPosts={!!userLikedPosts.find(post => post.postId === item.key)}
+      hasUserLikedPost={Boolean(
+        userLikedPosts.find(post => post.postId === item.key),
+      )}
       link={item?.link}
       imageRef={item?.imageRef}
     />
