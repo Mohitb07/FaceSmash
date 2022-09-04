@@ -34,12 +34,12 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
   useEffect(() => {
     isMounted.current = true
     async function fetchUserData() {
-      const userCache = await redis.get(userId)
-      console.log('user cache', userCache)
-      if (userCache) {
-        isMounted.current && setUserData(userCache)
-        return
-      }
+      // const userCache = await redis.get(userId)
+      // console.log('user cache', userCache)
+      // if (userCache) {
+      //   isMounted.current && setUserData(userCache)
+      //   return
+      // }
       console.log('fetching firebase')
       firestore()
         .collection('Users')
@@ -47,10 +47,10 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
         .onSnapshot(
           async snapshot => {
             if (isMounted.current) {
-              await redis.set(
-                userId,
-                JSON.stringify({...snapshot.data(), key: snapshot.id}),
-              )
+              // await redis.set(
+              //   userId,
+              //   JSON.stringify({...snapshot.data(), key: snapshot.id}),
+              // )
               setUserData({
                 ...snapshot.data(),
                 key: snapshot.id,
