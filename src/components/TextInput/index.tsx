@@ -1,4 +1,10 @@
-import {View, TextInput, StyleSheet, TextStyle} from 'react-native'
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  TextStyle,
+  TouchableOpacity,
+} from 'react-native'
 import React from 'react'
 
 type TextInputProps = {
@@ -12,6 +18,7 @@ type TextInputProps = {
   numberOfLines?: number
   customStyles?: TextStyle
   maxLength?: number
+  rounded?: TextStyle
 }
 
 const StyledTextInput = ({
@@ -25,10 +32,15 @@ const StyledTextInput = ({
   numberOfLines = 1,
   customStyles = {},
   maxLength,
+  rounded,
 }: TextInputProps) => {
   return (
-    <View style={[styles.inputFieldContainer, error && styles.error]}>
-      {icon}
+    <View
+      style={[
+        styles.inputFieldContainer,
+        rounded && rounded,
+        error && styles.error,
+      ]}>
       <TextInput
         placeholderTextColor="#BEBEBE"
         style={[styles.inputField, customStyles]}
@@ -40,6 +52,7 @@ const StyledTextInput = ({
         numberOfLines={numberOfLines}
         maxLength={maxLength}
       />
+      <TouchableOpacity style={{marginRight: 15}}>{icon}</TouchableOpacity>
     </View>
   )
 }
