@@ -1199,3 +1199,21 @@ export const DocumentNotFound = props => (
     />
   </Svg>
 )
+
+export const TrendingIcon = props => (
+  <Svg
+    width="24px"
+    height="24px"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth={2}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="feather feather-trending-up"
+    {...props}>
+    <Polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+    <Polyline points="17 6 23 6 23 12" />
+  </Svg>
+)
