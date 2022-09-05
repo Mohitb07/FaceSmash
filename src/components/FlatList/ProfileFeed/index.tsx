@@ -104,7 +104,7 @@ const ProfileFeed = ({userId}: {userId: string}) => {
 
   if (myRecentPosts.loading) {
     return (
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
         <Spinner />
       </View>
     )

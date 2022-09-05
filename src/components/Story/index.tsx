@@ -23,18 +23,26 @@ const Story = ({uri, username, noRing = false}: Props) => {
           <AddIcon />
         </View>
       ) : (
-        <Avatar
-          size="lg"
-          borderColor={COLORS.primary}
-          borderWidth={`${noRing ? '0' : '2'}`}
-          padding="0.5"
-          bgColor={COLORS.mainBackground}
-          source={{
-            uri,
-          }}
-        />
+        <View>
+          <Avatar
+            size="lg"
+            borderColor={COLORS.primary}
+            borderWidth={`${noRing ? '0' : '2'}`}
+            padding="0.5"
+            bgColor={COLORS.mainBackground}
+            source={{
+              uri,
+            }}
+          />
+        </View>
       )}
-      <Text fontFamily="Lato-Regular">{username ?? 'Your Story'}</Text>
+      <Text
+        style={styles.storyText}
+        numberOfLines={1}
+        ellipsizeMode="tail"
+        fontFamily="Lato-Regular">
+        {username ?? 'Your Story'}
+      </Text>
     </TouchableOpacity>
   )
 }
@@ -45,5 +53,11 @@ const styles = StyleSheet.create({
   story: {
     justifyContent: 'center',
     alignItems: 'center',
+    alignSelf: 'center',
+    marginLeft: 15,
+    textAlign: 'center',
+  },
+  storyText: {
+    width: 45,
   },
 })

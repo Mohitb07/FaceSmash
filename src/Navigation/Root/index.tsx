@@ -12,6 +12,7 @@ import Login from '../../Screens/Login'
 import MyProfile from '../../Screens/Profile'
 import UpdateProfile from '../../Screens/Profile/Update'
 import Register from '../../Screens/Register'
+import SearchUser from '../../Screens/Search'
 import Verification from '../../Screens/Verification'
 
 export type RootStackParamList = {
@@ -28,6 +29,7 @@ export type RootStackParamList = {
   Browser: {
     uri: string
   }
+  SearchUser: undefined
 }
 
 const RootStack = createNativeStackNavigator<RootStackParamList>()
@@ -75,6 +77,18 @@ const Root = () => {
                 component={AddPost}
                 options={{
                   animation: 'slide_from_bottom',
+                }}
+              />
+              <RootStack.Screen
+                name="SearchUser"
+                component={SearchUser}
+                options={{
+                  headerShown: false,
+                  headerTintColor: '#fff',
+                  headerStyle: {
+                    backgroundColor: COLORS.mainBackground,
+                  },
+                  animation: 'fade_from_bottom',
                 }}
               />
               <RootStack.Screen

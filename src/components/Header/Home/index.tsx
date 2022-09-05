@@ -13,18 +13,20 @@ import {
 import auth from '@react-native-firebase/auth'
 import {useNavigation} from '@react-navigation/native'
 
+import {NativeStackNavigationProp} from '@react-navigation/native-stack'
+import InstaStory from 'react-native-insta-story'
 import {COLORS} from '../../../constants'
 import {UserDataContext} from '../../../Context/userData'
 import useSelectImage from '../../../hooks/useSelectImage'
-import {AddIcon, PhotoIcon, SearchIcon} from '../../../SVG'
+import {RootStackParamList} from '../../../Navigation/Root'
+import {PhotoIcon, SearchIcon} from '../../../SVG'
 import Story from '../../Story'
-import InstaStory from 'react-native-insta-story'
 
 interface navigation {
   navigate: (screen: string, params?: object) => void
 }
 
-const dummyStoryData = [
+export const dummyStoryData = [
   {
     uri: 'https://media.istockphoto.com/photos/portrait-of-a-young-african-man-at-studio-high-fashion-male-model-in-picture-id1325359218?b=1&k=20&m=1325359218&s=170667a&w=0&h=MflA10Erq46yR-LFSREN6svtgXP7OeKuiBGXkYnBWls=',
     username: 'Drax',
@@ -156,14 +158,22 @@ const data = [
   },
 ]
 
+// type SearchUserScreenNavigationProp = NativeStackScreenProps<
+//   RootStackParamList,
+//   'SearchUser'
+// >
+
 function HomeHeader() {
   const {contextUser} = useContext(UserDataContext)
   const {handleChooseGallary} = useSelectImage()
-  const navigation = useNavigation<navigation>()
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
   const handleGetImageThenNavigate = () => {
     handleChooseGallary(true, navigation) // true for navigation
   }
+
+  const user = auth().currentUser?.uid
 
   return (
     <NView mb="5" paddingX="2">
@@ -184,12 +194,12 @@ function HomeHeader() {
             rounded="full"></NView>
         </NView>
 
-        <View style={styles.rightHeader}>
-          <TouchableOpacity
-            hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
-            <SearchIcon />
-          </TouchableOpacity>
-        </View>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SearchUser')}
+          style={styles.rightHeader}
+          hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
+          <SearchIcon />
+        </TouchableOpacity>
       </View>
 
       <ScrollView
@@ -229,7 +239,7 @@ function HomeHeader() {
         <TouchableOpacity
           onPress={() =>
             navigation.navigate('Profile', {
-              providedUserId: auth()?.currentUser?.uid,
+              providedUserId: user ?? '',
             })
           }>
           <Avatar
