@@ -1,5 +1,5 @@
 import React from 'react'
-import {StyleSheet, TouchableOpacity} from 'react-native'
+import {StyleSheet, TextStyle, TouchableOpacity} from 'react-native'
 
 import {Avatar, Text, View} from 'native-base'
 
@@ -10,9 +10,10 @@ type Props = {
   uri: string
   username?: string
   noRing?: boolean
+  textStyle?: TextStyle
 }
 
-const Story = ({uri, username, noRing = false}: Props) => {
+const Story = ({uri, username, noRing = false, textStyle}: Props) => {
   return (
     <TouchableOpacity style={styles.story}>
       {noRing ? (
@@ -37,7 +38,7 @@ const Story = ({uri, username, noRing = false}: Props) => {
         </View>
       )}
       <Text
-        style={styles.storyText}
+        style={textStyle}
         numberOfLines={1}
         ellipsizeMode="tail"
         fontFamily="Lato-Regular">
@@ -56,8 +57,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     marginLeft: 15,
     textAlign: 'center',
-  },
-  storyText: {
-    width: 45,
   },
 })
