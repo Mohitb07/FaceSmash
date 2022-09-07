@@ -5,17 +5,27 @@ import {Avatar, Text, View} from 'native-base'
 
 import {COLORS} from '../../constants'
 import {AddIcon} from '../../SVG'
+import {ThemeComponentSizeType} from 'native-base/lib/typescript/components/types'
 
 type Props = {
   uri: string
   username?: string
   noRing?: boolean
   textStyle?: TextStyle
+  containerStyle?: TextStyle
+  size?: ThemeComponentSizeType<'Avatar'>
 }
 
-const Story = ({uri, username, noRing = false, textStyle}: Props) => {
+const Story = ({
+  uri,
+  username,
+  noRing = false,
+  textStyle,
+  size = 'lg',
+  containerStyle,
+}: Props) => {
   return (
-    <TouchableOpacity style={styles.story}>
+    <TouchableOpacity style={[styles.story, containerStyle]}>
       {noRing ? (
         <View
           padding="5"
@@ -26,7 +36,7 @@ const Story = ({uri, username, noRing = false, textStyle}: Props) => {
       ) : (
         <View>
           <Avatar
-            size="lg"
+            size={size}
             borderColor={COLORS.primary}
             borderWidth={`${noRing ? '0' : '2'}`}
             padding="0.5"
@@ -55,7 +65,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
-    marginLeft: 15,
+    // marginLeft: 15,
     textAlign: 'center',
   },
 })

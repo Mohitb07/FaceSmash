@@ -1,27 +1,80 @@
-import React, {useCallback, useMemo, useState, useEffect, useRef} from 'react'
+import React, {
+  useCallback,
+  useMemo,
+  useState,
+  useRef,
+  Dispatch,
+  SetStateAction,
+  MutableRefObject,
+} from 'react'
 import {View, Text} from 'native-base'
 import {Animated, Dimensions} from 'react-native'
 import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown'
 import {COLORS} from '../../constants'
 import {CloseIcon, SearchIcon} from '../../SVG'
 import firestore from '@react-native-firebase/firestore'
+import {IUserDetail} from '../../types'
 
 type AutoCompleteInputProps = {
   marginAnimation: Animated.Value
+  setFoundUsers: Dispatch<SetStateAction<IUserDetail[] | null>>
+  currentInputValue: MutableRefObject<string>
 }
 type SuggestionList = {
   id: string
-  title: string
+  title: string | null
 }
 
 const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
   marginAnimation,
+  setFoundUsers,
+  currentInputValue,
 }) => {
   const [suggestionsList, setSuggestionsList] =
     useState<Array<SuggestionList> | null>(null)
   const [selectedItem, setSelectedItem] = useState<string | null>(null)
   const [isFocus, setIsFocus] = useState(false)
   const currentText = useRef('')
+
+  const getUsersDetails = (query: string) => {
+    if (query) {
+      currentInputValue.current = query
+      try {
+        firestore()
+          .collection('Users')
+          .where('qusername', '>=', query.toLowerCase())
+          .where('qusername', '<=', query.toLowerCase() + '\uf8ff')
+          .limit(5)
+          .get()
+          .then(
+            snapshot => {
+              const usersList: Array<IUserDetail> = []
+              snapshot.docs.map(d => {
+                usersList.push({
+                  createdAt: '',
+                  email: '',
+                  followers: [],
+                  followings: [],
+                  lastSignIn: '',
+                  profilePic: '',
+                  qusername: '',
+                  uid: '',
+                  username: '',
+                  ...d.data(),
+                })
+              })
+              setFoundUsers(usersList)
+            },
+            error => {
+              console.log('Error getSuggestions', error)
+            },
+          )
+      } catch (e) {
+        console.log('errorStyle', e)
+      }
+    }
+  }
+
   const getSuggestions = (value: string) => {
     currentText.current = value
     if (value) {
@@ -69,6 +122,7 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
       }
     }
   }
+
   const onClearPress = useCallback(() => {
     Animated.timing(marginAnimation, {
       toValue: 0,
@@ -79,6 +133,7 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
     setSuggestionsList(null)
     setIsFocus(false)
   }, [])
+
   const onSelectClear = useCallback((text?: string) => {
     console.log('onSelectClear called', text)
     Animated.timing(marginAnimation, {
@@ -94,6 +149,27 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
     setIsFocus(true)
   }
 
+  const onSelectItem = (item: SuggestionList) => {
+    if (item.title) {
+      setSelectedItem(item.id)
+      onSelectClear()
+      getUsersDetails(item.title)
+    }
+  }
+  const onSubmitHandler = useCallback((text: string) => {
+    if (text) {
+      Animated.timing(marginAnimation, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start()
+      getUsersDetails(text)
+      setSuggestionsList(null)
+      setIsFocus(false)
+      setSelectedItem(text)
+    }
+  }, [])
+
   const ItemSeparatorComponent = useMemo(() => {
     return () => (
       <View
@@ -102,42 +178,19 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
     )
   }, [])
 
-  const onSubmitHandler = useCallback((text: string) => {
-    console.log('onSelectClear called', text)
-    Animated.timing(marginAnimation, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start()
-    setSuggestionsList(null)
-    setIsFocus(false)
-    setSelectedItem(text)
-  }, [])
-
-  console.log('selectedItem', selectedItem)
-  console.log('suggestionList', suggestionsList)
-
-  // const onOpenSuggestionsList = useCallback(isOpened => !isOpened, [])
-
   return (
     <AutocompleteDropdown
       inputHeight={40}
-      // onOpenSuggestionsList={onOpenSuggestionsList}
       // @ts-ignore
       dataSet={suggestionsList}
       onChangeText={getSuggestions}
-      onSelectItem={item => {
-        if (item) {
-          setSelectedItem(item.id)
-          onSelectClear()
-        }
-      }}
+      onSelectItem={(item: SuggestionList) => item && onSelectItem(item)}
       closeOnSubmit={true}
       onSubmit={({nativeEvent: {text}}) => onSubmitHandler(text)}
       debounce={600}
       suggestionsListMaxHeight={(Dimensions.get('window').height * 0.4) / 2}
       onClear={onClearPress}
-      useFilter={false} // set false to prevent rerender twice
+      useFilter={false}
       textInputProps={{
         placeholder: 'Search',
         placeholderTextColor: COLORS.gray,
@@ -151,7 +204,6 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
           fontSize: 14,
         },
       }}
-      // onFocus={inputFocus}
       rightButtonsContainerStyle={{
         right: 8,
         height: 30,

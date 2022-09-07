@@ -219,7 +219,7 @@ function HomeHeader() {
             unPressedBorderColor={COLORS.primary}
             data={data}
             duration={10}
-            avatarTextStyle={{color: 'white'}}
+            avatarTextStyle={{color: 'white', fontSize: 12}}
             // onStart={item => console.log(item)}
             // onClose={item => console.log('close: ', item)}
             customSwipeUpComponent={
