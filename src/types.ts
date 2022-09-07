@@ -14,3 +14,15 @@ export interface FeedProps {
   hasUserLikedPost: Boolean
   imageRef?: string
 }
+
+export interface IUserDetail {
+  createdAt: string
+  email: string
+  followers: Array<string>
+  followings: Array<string>
+  lastSignIn: string
+  profilePic: string
+  qusername: string
+  uid: string
+  username: string
+}
