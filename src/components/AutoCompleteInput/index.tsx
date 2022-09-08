@@ -214,7 +214,7 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
         borderRadius: 25,
       }}
       suggestionsListContainerStyle={{
-        backgroundColor: 'transparent',
+        backgroundColor: COLORS.mainBackground,
         marginVertical: 10,
       }}
       containerStyle={{
