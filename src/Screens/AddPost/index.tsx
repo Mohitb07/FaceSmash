@@ -154,12 +154,11 @@ const AddPost = ({
       <View>
         <Header
           label="Create post"
-          showBackButton
           onPress={handlePostCreation}
-          rightSection
-          disabled={!title || !textAreaValue || (showLink && !link)}
-          loading={loading}
-          navigation={navigation}
+          hasRightSection
+          isDisabled={!title || !textAreaValue || (showLink && !link)}
+          isLoading={loading}
+          navigate={() => navigation.goBack()}
           leftIcon={<CloseIcon />}
           rightIcon={<CheckIcon />}
         />
