@@ -19,7 +19,7 @@ interface Props {
   icon?: ReactElement
   style?: object
   textStyle?: TextStyle
-  loader: boolean
+  loader?: boolean
   showRing?: boolean
   loadingText?: string
 }
