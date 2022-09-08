@@ -3,14 +3,21 @@ import {ScrollView, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
 
 import {Divider, HStack, Image, Text, View, VStack} from 'native-base'
 
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import StyledButton from '../../components/Button'
 import StyledError from '../../components/Error'
 import {COLORS} from '../../constants'
 import {FIREBASE_ERRORS} from '../../firebase/errors'
-import {useRegister} from '../../hooks/register'
+import {useRegister} from '../../hooks/useRegister'
+import {RootStackParamList} from '../../Navigation/Root'
 import {FacebookIcon, GoogleIcon} from '../../SVG'
 
-const Register = ({navigation}) => {
+type LoginScreenNavigationProp = NativeStackScreenProps<
+  RootStackParamList,
+  'SignUp'
+>
+
+const Register = ({navigation}: LoginScreenNavigationProp) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -18,23 +25,6 @@ const Register = ({navigation}) => {
   const [charactersLeft, setCharactersLeft] = useState(30)
 
   const {onRegisterAttempt, error, setError, loading} = useRegister()
-
-  const isDisabled =
-    email.length === 0 ||
-    password.length === 0 ||
-    confirmPassword.length === 0 ||
-    username.length === 0 ||
-    password !== confirmPassword ||
-    loading
-
-  const confirmPasswordErrorMsg =
-    confirmPassword.length > 0 &&
-    confirmPassword !== password &&
-    'Password do not match'
-
-  const signUpAttempt = () => {
-    onRegisterAttempt({email, password, username})
-  }
 
   useEffect(() => {
     setError(prev => ({
@@ -50,7 +40,24 @@ const Register = ({navigation}) => {
     }))
   }, [email])
 
-  const handleUsername = text => {
+  const isDisabled =
+    email.length === 0 ||
+    password.length === 0 ||
+    confirmPassword.length === 0 ||
+    username.length === 0 ||
+    password !== confirmPassword ||
+    loading
+
+  const confirmPasswordErrorMsg =
+    Boolean(confirmPassword) && confirmPassword !== password
+      ? 'Password must match'
+      : ''
+
+  const signUpAttempt = () => {
+    onRegisterAttempt(email, password, username)
+  }
+
+  const handleUsername = (text: string) => {
     if (text.length > 30) return
     setUsername(text)
     setCharactersLeft(30 - text.length)
@@ -102,23 +109,37 @@ const Register = ({navigation}) => {
             placeholderTextColor={COLORS.white2}
             value={email}
             onChangeText={text => setEmail(text)}
-            style={[styles.textInput, error.email && styles.textInputError]}
+            style={[
+              styles.textInput,
+              Boolean(error.email) && styles.textInputError,
+            ]}
             maxLength={30}
             keyboardType="email-address"
             textContentType="emailAddress"
           />
-          <StyledError message={FIREBASE_ERRORS[error.email]} />
+          <StyledError
+            message={
+              FIREBASE_ERRORS[error.email as keyof typeof FIREBASE_ERRORS]
+            }
+          />
         </View>
         <View>
           <TextInput
             secureTextEntry
             placeholder="Password"
             placeholderTextColor={COLORS.white2}
-            style={[styles.textInput, error.password && styles.textInputError]}
+            style={[
+              styles.textInput,
+              Boolean(error.password) && styles.textInputError,
+            ]}
             value={password}
             onChangeText={text => setPassword(text)}
           />
-          <StyledError message={FIREBASE_ERRORS[error.password]} />
+          <StyledError
+            message={
+              FIREBASE_ERRORS[error.password as keyof typeof FIREBASE_ERRORS]
+            }
+          />
         </View>
         <View>
           <TextInput

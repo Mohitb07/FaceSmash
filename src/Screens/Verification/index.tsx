@@ -13,12 +13,11 @@ const Verification = () => {
   const [loadingResend, setLoadingResend] = useState(false)
   const {authUser, setAuth} = useContext(AuthUserContext)
 
-  const sendEmailVerifiationLink = async () => {
+  const sendEmailVerifiationLink = () => {
     setLoadingResend(true)
     auth()
-      .currentUser.sendEmailVerification()
+      .currentUser?.sendEmailVerification()
       .then(() => {
-        setLoadingResend(false)
         toast.show({
           render: () => {
             return (
@@ -30,7 +29,18 @@ const Verification = () => {
         })
       })
       .catch(err => {
-        console.log('Error', err.message)
+        toast.show({
+          render: () => {
+            return (
+              <Box bg="emerald.500" px="2" py="2" rounded="sm">
+                {err}
+              </Box>
+            )
+          },
+        })
+      })
+      .finally(() => {
+        setLoadingResend(false)
       })
   }
 
@@ -38,7 +48,7 @@ const Verification = () => {
     setLoadingVerify(true)
     if (!!authUser && !authUser?.emailVerified) {
       console.log('checking verification status interval')
-      await auth()?.currentUser?.reload()
+      await auth().currentUser?.reload()
       const user = auth()?.currentUser
       if (user?.emailVerified) {
         setLoadingVerify(false)

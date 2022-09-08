@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import Toast from 'react-native-toast-message'
+import {DEFAULT_PROFILE_PIC} from '../constants'
 
 export function useRegister() {
   const [error, setError] = useState({
@@ -11,14 +12,19 @@ export function useRegister() {
     confirmPassword: '',
   })
   const [loading, setLoading] = useState(false)
-  const onRegisterAttempt = ({email = '', password = '', username = ''}) => {
+
+  const onRegisterAttempt = (
+    email: string = '',
+    password: string = '',
+    username: string = '',
+  ) => {
     setLoading(true)
     auth()
       .createUserWithEmailAndPassword(email, password)
       .then(async user => {
         console.log('inside user', user.user.metadata)
 
-        await auth().currentUser.sendEmailVerification()
+        await auth().currentUser?.sendEmailVerification()
 
         firestore()
           .collection('Users')
@@ -26,16 +32,15 @@ export function useRegister() {
           .set({
             email: user.user.email,
             username: username,
+            qusername: username.toLowerCase(),
             uid: user.user.uid,
             followers: [],
             followings: [],
             createdAt: user.user.metadata.creationTime,
             lastSignIn: user.user.metadata.lastSignInTime,
-            profilePic:
-              'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTG3eLpTAMWO-mtILepXLwg68-IChyGcXJgog&usqp=CAU',
+            profilePic: DEFAULT_PROFILE_PIC,
           })
           .then(() => {
-            console.log('User added!')
             Toast.show({
               type: 'success',
               text1: 'Account Created',
@@ -44,8 +49,8 @@ export function useRegister() {
           })
       })
       .catch(async error => {
-        await auth().currentUser.delete()
-        setLoading(false)
+        await auth().currentUser?.delete()
+
         console.log('error', error.message)
         if (error.code === 'auth/weak-password') {
           setError(prev => ({
@@ -67,6 +72,9 @@ export function useRegister() {
             text2: error.message,
           })
         }
+      })
+      .finally(() => {
+        setLoading(false)
       })
   }
 

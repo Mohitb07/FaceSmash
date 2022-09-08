@@ -10,9 +10,16 @@ import Header from '../../../components/Header'
 import {COLORS} from '../../../constants/theme'
 import {AuthUserContext} from '../../../Context/auth'
 import {UserDataContext} from '../../../Context/userData'
+import {RootStackParamList} from '../../../Navigation/Root'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-const UpdateProfile = ({navigation}) => {
-  const [image, setImage] = useState(null)
+type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
+  RootStackParamList,
+  'UpdateProfile'
+>
+
+const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
+  const [image, setImage] = useState<string>('')
   const {authUser} = useContext(AuthUserContext)
   const {contextUser, updateUserData} = useContext(UserDataContext)
   const [loading, setLoading] = useState(false)
@@ -20,62 +27,69 @@ const UpdateProfile = ({navigation}) => {
   const disabled = !image
 
   const handleChooseGallary = () => {
-    ImagePicker.launchImageLibrary({}, response => {
+    ImagePicker.launchImageLibrary({mediaType: 'photo'}, response => {
       if (response.didCancel) {
-        setImage(null)
-      } else if (response.error) {
-        console.log('Image picker error', response.error)
+        return
+      } else if (response.errorCode) {
+        console.log('Image picker error', response.errorMessage)
       } else {
-        setImage(response.assets[0].uri)
+        if (response.assets) {
+          const value = response.assets[0].uri
+          setImage(value!)
+        }
       }
     })
   }
 
   const handleTakePhoto = () => {
-    ImagePicker.launchCamera({}, response => {
+    ImagePicker.launchCamera({mediaType: 'photo'}, response => {
       if (response.didCancel) {
-        setImage(null)
-      } else if (response.error) {
-        console.log('Image picker error', response.error)
+        return
+      } else if (response.errorCode) {
+        console.log('Image picker error', response.errorMessage)
       } else {
-        setImage(response.assets[0].uri)
+        if (response.assets) {
+          const value = response.assets[0].uri
+          setImage(value!)
+        }
       }
     })
   }
 
   const handleUploadImage = () => {
-    setLoading(true)
-    storage()
-      .ref(authUser.uid)
-      .putFile(image)
-      .then(snapshot => {
-        console.log('IMAGE UPLOADED', snapshot)
-        const imageRef = storage().ref(authUser.uid)
-        imageRef
-          .getDownloadURL()
-          .then(url => {
-            console.log('UPLOADED IMAGE URL', url)
-            updateUserData(url, navigation, setLoading, authUser.uid)
-          })
-          .catch(err => {
-            console.log('image download error', err)
-          })
-      })
-      .catch(err => {
-        console.log('IMAGE UPLOAD ERROR', err)
-      })
+    if (image) {
+      setLoading(true)
+      storage()
+        .ref(authUser.uid)
+        .putFile(image)
+        .then(snapshot => {
+          console.log('IMAGE UPLOADED', snapshot)
+          const imageRef = storage().ref(authUser.uid)
+          imageRef
+            .getDownloadURL()
+            .then(url => {
+              console.log('UPLOADED IMAGE URL', url)
+              updateUserData(url, navigation, setLoading, authUser.uid)
+            })
+            .catch(err => {
+              console.log('image download error', err)
+            })
+        })
+        .catch(err => {
+          console.log('IMAGE UPLOAD ERROR', err)
+        })
+    }
   }
 
   return (
     <>
       <Header
         label="Update Profile"
-        showBackButton
         onPress={handleUploadImage}
-        rightSection
-        disabled={disabled}
-        loading={loading}
-        navigation={navigation}
+        hasRightSection
+        isDisabled={disabled}
+        isLoading={loading}
+        navigate={() => navigation.goBack()}
         leftIcon={<CloseIcon />}
         rightIcon={<CheckIcon />}
       />
@@ -100,6 +114,7 @@ const UpdateProfile = ({navigation}) => {
             color={COLORS.white2}
             showRing={false}
             textStyle={{fontFamily: 'Lato-Heavy'}}
+            disabled={loading}
           />
           <Button
             text="Take Now"
@@ -107,10 +122,10 @@ const UpdateProfile = ({navigation}) => {
             color={COLORS.primary}
             showRing={false}
             textStyle={{
-              // fontSize: 15,
               fontFamily: 'Lato-Heavy',
               color: COLORS.white2,
             }}
+            disabled={loading}
           />
         </HStack>
       </View>
