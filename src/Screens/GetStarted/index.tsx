@@ -4,7 +4,8 @@ import {ImageBackground, StatusBar, Text, View} from 'react-native'
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 import LinearGradient from 'react-native-linear-gradient'
 
-import {Button, Text as NText, View as NView} from 'native-base'
+import {ArrowForwardIcon, Text as NText, View as NView} from 'native-base'
+import StyledButton from '../../components/Button'
 
 import {COLORS, FONTS, SIZES} from '../../constants'
 import {RootStackParamList} from '../../Navigation/Root'
@@ -14,7 +15,7 @@ type GetStartedScreenNavigationProp = NativeStackScreenProps<
   'GetStarted'
 >
 
-const ASSET_PATH = '../../../assets/giving-rupiah-coin.png'
+const ASSET_PATH = '../../../assets/getStarted.png'
 
 const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
   navigation,
@@ -81,43 +82,31 @@ const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
         style={{
           flex: 1,
           paddingHorizontal: SIZES.padding,
+          justifyContent: 'space-between',
         }}>
-        <Text
-          style={{
-            marginTop: SIZES.radius,
-            width: '70%',
-            color: COLORS.gray,
-            ...FONTS.body3,
-            fontFamily: 'Lato-Regular',
-          }}>
-          Connect with your friends and family to see who’s around and what
-          they’re up to.
-        </Text>
-
-        <View
-          style={{
-            flex: 1,
-            justifyContent: 'center',
-          }}>
-          <NView
-            borderColor={COLORS.white2}
-            borderWidth={2}
-            padding="0.5"
-            rounded="full">
-            <Button
-              height="12"
-              borderRadius="full"
-              backgroundColor={COLORS.white2}
-              borderColor={COLORS.white2}
-              onPress={() => navigation.navigate('Login')}
-              _text={{
-                color: COLORS.background,
-                fontFamily: 'Lato-Black',
-              }}>
-              Get Started
-            </Button>
-          </NView>
+        <View>
+          <Text
+            style={{
+              marginTop: SIZES.radius,
+              width: '70%',
+              color: COLORS.gray,
+              ...FONTS.body3,
+              fontFamily: 'Lato-Regular',
+            }}>
+            Connect with your friends and family to see who’s around and what
+            they’re up to.
+          </Text>
         </View>
+        <NView pb="5">
+          <StyledButton
+            onPress={() => navigation.navigate('Login')}
+            icon={<ArrowForwardIcon />}
+            text="Get Started"
+            color={COLORS.white2}
+            disabled={false}
+            showRing={false}
+          />
+        </NView>
       </View>
     )
   }
