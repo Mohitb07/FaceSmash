@@ -43,49 +43,37 @@ const Button: React.FC<Props> = ({
       flexGrow={1}
       borderWidth="2"
       rounded="full">
-      <PresenceTransition
-        visible={true}
-        initial={{
-          opacity: 0,
-        }}
-        animate={{
-          opacity: 1,
-          transition: {
-            duration: 250,
-          },
-        }}>
-        <TouchableOpacity
-          disabled={disabled}
-          style={[
-            styles.btn,
-            color.length > 0 && {backgroundColor: color},
-            // disabled && styles.disabled,
-            customStyle,
-          ]}
-          onPress={onPress}>
-          {icon && icon}
-          {loader ? (
-            // <ActivityIndicator color={COLORS.primary} />
-            <Text
-              style={[
-                styles.btnText,
-                // disabled && styles.disabled,
-                textStyle,
-              ]}>
-              {loadingText}
-            </Text>
-          ) : (
-            <Text
-              style={[
-                styles.btnText,
-                // disabled && styles.disabled,
-                textStyle,
-              ]}>
-              {text}
-            </Text>
-          )}
-        </TouchableOpacity>
-      </PresenceTransition>
+      <TouchableOpacity
+        disabled={disabled}
+        style={[
+          styles.btn,
+          color.length > 0 && {backgroundColor: color},
+          // disabled && styles.disabled,
+          customStyle,
+        ]}
+        onPress={onPress}>
+        {icon && icon}
+        {loader ? (
+          <ActivityIndicator color={COLORS.primary} />
+        ) : (
+          // <Text
+          //   style={[
+          //     styles.btnText,
+          //     // disabled && styles.disabled,
+          //     textStyle,
+          //   ]}>
+          //   {loadingText}
+          // </Text>
+          <Text
+            style={[
+              styles.btnText,
+              // disabled && styles.disabled,
+              textStyle,
+            ]}>
+            {text}
+          </Text>
+        )}
+      </TouchableOpacity>
     </View>
   )
 }
@@ -95,8 +83,8 @@ export default Button
 const styles = StyleSheet.create({
   btnText: {
     textAlign: 'center',
-    fontSize: 13,
-    fontFamily: 'Lato-Semibold',
+    fontSize: 14,
+    fontFamily: 'Lato-Heavy',
     color: COLORS.transparentBlack7,
     marginHorizontal: 10,
   },
