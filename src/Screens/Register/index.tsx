@@ -67,14 +67,10 @@ const Register = ({navigation}: LoginScreenNavigationProp) => {
     <ScrollView
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.container}>
-      <View alignItems="center" justifyContent="center">
+      <View p="2" alignItems="center">
         <Image
-          style={{
-            height: 200,
-            width: 200,
-          }}
           source={require('../../../assets/register.png')}
-          alt="Illustration"
+          alt="Register Illustration"
         />
       </View>
       <Text fontSize="4xl" fontFamily="Lato-Medium">
