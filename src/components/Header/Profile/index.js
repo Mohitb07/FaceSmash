@@ -27,8 +27,6 @@ const redis = new Redis({
 const ProfileHeader = ({userId, totalPosts = 0}) => {
   const navigation = useNavigation()
   const [userData, setUserData] = useState({})
-  const [isConnected, setIsConnected] = useState(false)
-  const [loading, setLoading] = useState(false)
   const authUser = auth().currentUser.uid
   const isMounted = useRef(false)
   useEffect(() => {
@@ -73,38 +71,6 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
       title: userData?.username,
     })
   }, [userData?.username])
-
-  const handleButtonToggle = () => {
-    setLoading(true)
-    const promise = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve()
-      }, 2000)
-    })
-
-    promise.then(() => {
-      setLoading(false)
-      setIsConnected(!isConnected)
-    })
-  }
-
-  const buttonStyle = isConnected
-    ? {
-        loadingText: 'Disconnecting...',
-        text: 'Disconnect',
-        color: COLORS.primary,
-        activity: {
-          color: COLORS.white2,
-        },
-      }
-    : {
-        loadingText: 'Connecting...',
-        text: 'Connect',
-        color: COLORS.white2,
-        activity: {
-          color: COLORS.primary,
-        },
-      }
 
   return (
     <Box my="2" mb="5" paddingX="2">
@@ -171,23 +137,10 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
 
       <HStack alignItems="center" space="10">
         <StyledButton
-          loader={loading}
-          onPress={handleButtonToggle}
-          icon={
-            loading ? (
-              <ActivityIndicator {...buttonStyle.activity} />
-            ) : (
-              <LightningIcon height="20" />
-            )
-          }
-          textStyle={{
-            fontSize: 15,
-            fontFamily: 'Lato-Heavy',
-            color: isConnected ? COLORS.white2 : COLORS.black,
-          }}
-          style={{padding: 12}}
+          onPress={() => {}}
+          text="Follow"
           showRing={false}
-          {...buttonStyle}
+          color={COLORS.white2}
         />
         {authUser === userId && (
           <TouchableOpacity

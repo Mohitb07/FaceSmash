@@ -43,14 +43,10 @@ const Login: React.FC<LoginScreenNavigationProp> = ({
     <ScrollView
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.container}>
-      <View alignItems="center" justifyContent="center">
+      <View p="2" alignItems="center">
         <Image
-          style={{
-            height: 200,
-            width: 200,
-          }}
-          source={require('../../../assets/login2.png')}
-          alt="Illustration"
+          source={require('../../../assets/login.png')}
+          alt="Login Illustration"
         />
       </View>
       <Text fontSize="4xl" fontFamily="Lato-Medium">
