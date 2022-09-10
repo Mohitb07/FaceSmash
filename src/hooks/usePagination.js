@@ -17,7 +17,6 @@ const usePagination = () => {
     ) => {
       console.log('calling')
       if (!lastVisible) {
-        // setLoading(false)
         return
       }
       setter(prev => ({
