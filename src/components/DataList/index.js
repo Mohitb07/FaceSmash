@@ -13,7 +13,6 @@ const DataList = ({
   onRefresh = () => {},
   refreshing = false,
   loading = false,
-  // userLikedPosts = [],
 }) => {
   const {userLikedPosts} = useLikedPosts()
   const renderItems = ({item}) => (
