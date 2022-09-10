@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from 'react'
+import React, {useCallback, useEffect, useState} from 'react'
 
 import firestore from '@react-native-firebase/firestore'
 
 import {IDefaultPostState, IPost} from '../../../atoms/postAtom'
-import useLikedPosts from '../../../hooks/useLikedPosts'
 import usePagination from '../../../hooks/usePagination'
+import {getLastVisibleDocRef} from '../../../utils/getLastVisibleDocRef'
 import DataList from '../../DataList'
 import Footer from '../../DataList/DataListFooter'
 import EmptyList from '../../DataList/EmptyDataList'
@@ -13,16 +13,17 @@ import HomeHeader from '../../Header/Home'
 const LIMIT = 5
 
 function HomeFeed() {
+  console.log('calling HomeFeed')
   const [postStateValue, setPostStateValue] = useState<IDefaultPostState>({
     loading: true,
     lastVisible: null,
     posts: [],
     selectedPost: null,
   })
-  const [refreshing, setRefreshing] = useState(false)
+  const [refreshing, setRefreshing] = useState(true)
   const {retrieveMore} = usePagination()
-  const {userLikedPosts} = useLikedPosts()
-  const getPosts = () => {
+  const getPosts = useCallback(() => {
+    console.log('calling getPosts home feed')
     try {
       firestore()
         .collection('Posts')
@@ -30,6 +31,7 @@ function HomeFeed() {
         .limit(LIMIT)
         .onSnapshot(
           snapshot => {
+            console.log('calling home feed snapshot')
             const postList: Array<IPost> = snapshot.docs.map(d => ({
               key: d.id,
               createdAt: {},
@@ -42,16 +44,16 @@ function HomeFeed() {
               imageRef: '',
               ...d.data(),
             }))
-            const lastVisiblePostDoc = snapshot.docs[snapshot.docs.length - 1]
+            const lastVisiblePostRef = getLastVisibleDocRef(snapshot)
             setPostStateValue(prev => ({
               ...prev,
               posts: postList,
-              lastVisible: lastVisiblePostDoc,
+              lastVisible: lastVisiblePostRef,
               loading: false,
             }))
           },
           error => {
-            console.log('home post fetching error', error)
+            console.log('snapshot home post fetching error', error)
           },
         )
     } catch (error) {
@@ -60,13 +62,14 @@ function HomeFeed() {
         ...prev,
         loading: false,
       }))
+    } finally {
+      setRefreshing(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
-    console.log('fetching firebase posts')
     getPosts()
-  }, [])
+  }, [getPosts])
 
   const onRefresh = () => {
     try {
@@ -74,8 +77,6 @@ function HomeFeed() {
       getPosts()
     } catch (error) {
       console.log('On Refresh Error:', error)
-    } finally {
-      setRefreshing(false)
     }
   }
 
@@ -101,9 +102,8 @@ function HomeFeed() {
       refreshing={refreshing}
       retrieveMore={getMoreData}
       loading={postStateValue.loading}
-      userLikedPosts={userLikedPosts}
     />
   )
 }
 
-export default HomeFeed
+export default React.memo(HomeFeed)
