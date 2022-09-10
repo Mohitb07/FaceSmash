@@ -1,6 +1,7 @@
 import React from 'react'
 import {FlatList, RefreshControl, StyleSheet} from 'react-native'
 import {COLORS} from '../../constants'
+import useLikedPosts from '../../hooks/useLikedPosts'
 import Feed from '../Feed'
 
 const DataList = ({
@@ -12,8 +13,8 @@ const DataList = ({
   onRefresh = () => {},
   refreshing = false,
   loading = false,
-  userLikedPosts = [],
 }) => {
+  const {userLikedPosts} = useLikedPosts()
   const renderItems = ({item}) => (
     <Feed
       postId={item.key}
