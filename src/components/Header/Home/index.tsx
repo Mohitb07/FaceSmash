@@ -22,10 +22,6 @@ import {RootStackParamList} from '../../../Navigation/Root'
 import {PhotoIcon, SearchIcon} from '../../../SVG'
 import Story from '../../Story'
 
-interface navigation {
-  navigate: (screen: string, params?: object) => void
-}
-
 export const dummyStoryData = [
   {
     uri: 'https://media.istockphoto.com/photos/portrait-of-a-young-african-man-at-studio-high-fashion-male-model-in-picture-id1325359218?b=1&k=20&m=1325359218&s=170667a&w=0&h=MflA10Erq46yR-LFSREN6svtgXP7OeKuiBGXkYnBWls=',
@@ -158,11 +154,6 @@ const data = [
   },
 ]
 
-// type SearchUserScreenNavigationProp = NativeStackScreenProps<
-//   RootStackParamList,
-//   'SearchUser'
-// >
-
 function HomeHeader() {
   const {contextUser} = useContext(UserDataContext)
   const {handleChooseGallary} = useSelectImage()
@@ -271,7 +262,7 @@ function HomeHeader() {
   )
 }
 
-export default HomeHeader
+export default React.memo(HomeHeader)
 
 const styles = StyleSheet.create({
   headerContainer: {

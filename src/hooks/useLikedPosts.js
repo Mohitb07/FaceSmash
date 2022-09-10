@@ -6,7 +6,7 @@ import firestore from '@react-native-firebase/firestore'
 const useLikedPosts = () => {
   const [userLikedPosts, setUserLikedPosts] = useState([])
   const [error, setError] = useState('')
-  const authUserId = auth()?.currentUser?.uid
+  const authUserId = auth().currentUser?.uid
 
   useEffect(() => {
     let unsub
