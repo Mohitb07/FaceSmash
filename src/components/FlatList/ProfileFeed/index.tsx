@@ -1,32 +1,31 @@
-import React, {useEffect, useState} from 'react'
-import {View, Text} from 'react-native'
-import {Spinner} from 'native-base'
+import React, {useEffect, useState, useRef, useCallback} from 'react'
+import {Spinner, View} from 'native-base'
 
 import firestore from '@react-native-firebase/firestore'
 
 import {IDefaultUserDataState} from '../../../atoms/userAtom'
-import useLikedPosts from '../../../hooks/useLikedPosts'
 import usePagination from '../../../hooks/usePagination'
 import DataList from '../../DataList'
 import DataListFooter from '../../DataList/DataListFooter'
 import EmptyDataList from '../../DataList/EmptyDataList'
 import ProfileHeader from '../../Header/Profile'
 import {IPost} from '../../../atoms/postAtom'
-import Loader from '../../Loader'
+import {getLastVisibleDocRef} from '../../../utils/getLastVisibleDocRef'
 
 const LIMIT = 5
 
 const ProfileFeed = ({userId}: {userId: string}) => {
   const {retrieveMore} = usePagination()
-  const {userLikedPosts} = useLikedPosts()
+
   const [totalUserPosts, setTotalUserPosts] = useState(0)
   const [myRecentPosts, setMyRecentPosts] = useState<IDefaultUserDataState>({
     posts: [],
     loading: true,
     lastVisible: null,
   })
-  const getPosts = () => {
-    console.log('inside post effect')
+  const initialLoad = useRef(true)
+
+  const getPosts = useCallback(() => {
     const query = firestore()
       .collection('Posts')
       .where('user', '==', userId)
@@ -46,13 +45,12 @@ const ProfileFeed = ({userId}: {userId: string}) => {
           username: '',
           ...d.data(),
         }))
-        let lastVisiblePostDoc = snapshot.docs[snapshot.docs.length - 1]
-        console.log('inside profile useEffect')
+        const lastVisiblePostRef = getLastVisibleDocRef(snapshot)
         setMyRecentPosts(prev => ({
           ...prev,
           posts: postList,
           loading: false,
-          lastVisible: lastVisiblePostDoc,
+          lastVisible: lastVisiblePostRef,
         }))
       },
       error => {
@@ -67,18 +65,18 @@ const ProfileFeed = ({userId}: {userId: string}) => {
     )
 
     return onsub
-  }
+  }, [userId])
 
   useEffect(() => {
+    initialLoad.current = false
     const onsub = getPosts()
     return () => {
-      console.log('unmouning prfo')
+      console.log('unmounting profile screen')
       onsub()
     }
-  }, [])
+  }, [getPosts])
 
   useEffect(() => {
-    console.log('inside length effect')
     const unsub = firestore()
       .collection('Posts')
       .where('user', '==', userId)
@@ -88,7 +86,7 @@ const ProfileFeed = ({userId}: {userId: string}) => {
     return () => {
       unsub()
     }
-  }, [])
+  }, [userId])
 
   const getMoreData = () =>
     retrieveMore(
@@ -102,9 +100,9 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       userId,
     )
 
-  if (myRecentPosts.loading) {
+  if (initialLoad.current && myRecentPosts.loading) {
     return (
-      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+      <View flex={1} justifyContent="center" alignItems="center">
         <Spinner />
       </View>
     )
@@ -123,9 +121,8 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       }
       retrieveMore={getMoreData}
       loading={myRecentPosts.loading}
-      userLikedPosts={userLikedPosts}
     />
   )
 }
 
-export default React.memo(ProfileFeed)
+export default ProfileFeed
