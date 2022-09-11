@@ -17,7 +17,7 @@
     "@react-navigation/native": "^6.0.8",
     "@react-navigation/native-stack": "^6.5.0",
     "@upstash/redis": "^1.13.0",
-    "moment": "^2.29.3",
+    "dayjs": "^1.11.5",
     "native-base": "^3.4.1",
     "react": "17.0.2",
     "react-native": "0.67.3",
@@ -36,9 +36,7 @@
     "react-native-ui-lib": "^6.16.0",
     "react-native-vector-icons": "^9.2.0",
     "react-native-webview": "^11.22.6",
-    "recoil": "^0.7.4",
-    "rn-slick-bottom-tabs": "^1.1.1",
-    "use-debounce": "^8.0.1"
+    "recoil": "^0.7.4"
   },
   "devDependencies": {
     "@babel/core": "^7.17.5",
