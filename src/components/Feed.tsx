@@ -1,7 +1,6 @@
-import React, {useContext} from 'react'
 import firestore from '@react-native-firebase/firestore'
 import {useNavigation} from '@react-navigation/native'
-import moment from 'moment'
+import dayjs from 'dayjs'
 import {
   Actionsheet,
   HStack,
@@ -12,6 +11,7 @@ import {
   View as NView,
   VStack,
 } from 'native-base'
+import React, {useContext} from 'react'
 import {
   StyleSheet,
   Text,
@@ -23,11 +23,14 @@ import FastImage from 'react-native-fast-image'
 import {HeartFilledIcon, HeartOutlinIcon, LinkIcon} from '../SVG'
 
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
+import relativeTime from 'dayjs/plugin/relativeTime'
 import {COLORS} from '../constants'
 import {AuthUserContext} from '../Context/auth'
 import {RootStackParamList} from '../Navigation/Root'
 import {FeedProps} from '../types'
 const FeedMore = React.lazy(() => import('./BottomSheet/FeedMore'))
+
+dayjs.extend(relativeTime)
 
 const Feed = ({
   image,
@@ -100,9 +103,6 @@ const Feed = ({
           />
           <View>
             <Text style={styles.usernameText}>{username}</Text>
-            {/* <Text style={styles.timePosted}>
-              {moment(createdAt?.toDate()).fromNow()}
-            </Text> */}
           </View>
         </TouchableOpacity>
         {authUser?.uid === userId && (
@@ -168,18 +168,16 @@ const Feed = ({
                 <HeartOutlinIcon height="22" />
               )}
             </TouchableOpacity>
-            {/* <TouchableOpacity>
-              <CommentOutlinedIcon style={{marginLeft: 4}} />
-            </TouchableOpacity> */}
           </HStack>
           <Text style={styles.likes}>{likes} likes</Text>
         </VStack>
       </NView>
       <NView ml="2%">
         <Text style={styles.timePosted}>
-          {moment(createdAt?.toDate()).fromNow()}
+          {dayjs(createdAt?.toDate()).fromNow()}
         </Text>
       </NView>
+
       <Actionsheet disableOverlay isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content style={{backgroundColor: COLORS.mainBackground}}>
           <React.Suspense
@@ -220,35 +218,25 @@ const styles = StyleSheet.create({
   outerContainer: {
     paddingTop: 0,
   },
-  innerContainerReverse: {
-    // flexDirection: 'column-reverse',
-  },
   feedInfo: {
     paddingVertical: 10,
   },
   feedTitle: {
     fontSize: 16,
     color: COLORS.white2,
-    // fontWeight: 'bold',
     fontFamily: 'Lato-Heavy',
     lineHeight: 23,
   },
   usernameText: {
     color: COLORS.white2,
     fontSize: 15,
-    // fontWeight: 'bold',
     fontFamily: 'Lato-Semibold',
   },
   imageContainer: {
-    // height: 250,
-    // borderRadius: 15,
     overflow: 'hidden',
     marginBottom: 5,
   },
   image: {
-    // width: '50%',
-    // height: '',
-    // height: '50%',
     aspectRatio: 3 / 2,
     width: '100%',
   },
@@ -284,7 +272,6 @@ const styles = StyleSheet.create({
   },
   likes: {
     color: COLORS.white,
-    // fontWeight: '700',
     marginLeft: 5,
     fontFamily: 'Lato-Bold',
   },
