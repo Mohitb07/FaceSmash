@@ -13,7 +13,7 @@ import {NativeBaseProvider} from 'native-base'
 import 'react-native-gesture-handler'
 import SplashScreen from 'react-native-splash-screen'
 import {RecoilRoot} from 'recoil'
-const Toast = React.lazy(() => import('react-native-toast-message'))
+import Toast from 'react-native-toast-message'
 
 import AuthUserContext from './src/Context/auth'
 import UserDataContext from './src/Context/userData'
