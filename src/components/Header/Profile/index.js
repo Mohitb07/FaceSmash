@@ -1,21 +1,15 @@
 import {Box, Flex, HStack, Text, View} from 'native-base'
 import React, {memo, useEffect, useRef, useState} from 'react'
-import {ActivityIndicator, TouchableOpacity} from 'react-native'
+import {TouchableOpacity} from 'react-native'
 
-import {Redis} from '@upstash/redis'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
-import FastImage from 'react-native-fast-image'
 import {useNavigation} from '@react-navigation/native'
+import {Redis} from '@upstash/redis'
+import FastImage from 'react-native-fast-image'
 
 import {COLORS} from '../../../constants'
-import {
-  EditIcon,
-  FilterIcon,
-  GridIcon,
-  LightningIcon,
-  UserIcon,
-} from '../../../SVG'
+import {EditIcon, FilterIcon, GridIcon, UserIcon} from '../../../SVG'
 import StyledButton from '../../Button'
 
 const redis = new Redis({
@@ -68,7 +62,17 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
 
   useEffect(() => {
     navigation.setOptions({
-      title: userData?.username,
+      // title: userData?.username,
+      headerTitle: () => (
+        <Text
+          fontFamily="Lato-Semibold"
+          maxW={300}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          fontSize="lg">
+          {userData?.username}
+        </Text>
+      ),
     })
   }, [userData?.username])
 

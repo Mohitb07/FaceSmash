@@ -15,8 +15,8 @@ import {
 import AutoCompleteInput from '../../components/AutoCompleteInput'
 import {dummyStoryData} from '../../components/Header/Home'
 import Story from '../../components/Story'
-import {BackIcon, SearchIcon1, TrendingIcon, UserGroup} from '../../SVG'
-import {IUserDetail} from '../../types'
+import {BackIcon, SearchIcon1, UserGroup} from '../../SVG'
+import {IUserDetail} from '../../interface'
 
 type SearchUserScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -48,7 +48,7 @@ const SearchUser: React.FC<SearchUserScreenNavigationProp> = ({navigation}) => {
             translateY: marginAnimation,
           },
         ]}>
-        <View style={styles.recommendedTextContainer}>
+        <View style={styles.headingContainer}>
           <UserGroup />
           <Text style={styles.recommendedUserText}>Recommended User</Text>
         </View>
@@ -91,9 +91,12 @@ const SearchUser: React.FC<SearchUserScreenNavigationProp> = ({navigation}) => {
               translateY: marginAnimation,
             },
           ]}>
-          <NView alignItems="center" flexDirection="row">
+          <NView style={styles.headingContainer}>
             <SearchIcon1 height="16px" width="16px" />
-            <Text style={styles.recommendedUserText}>
+            <Text
+              numberOfLines={1}
+              ellipsizeMode="tail"
+              style={styles.recommendedUserText}>
               Result for {currentInputValue.current}
             </Text>
           </NView>
@@ -111,7 +114,7 @@ const SearchUser: React.FC<SearchUserScreenNavigationProp> = ({navigation}) => {
                   marginY="3"
                   alignItems="center"
                   justifyContent="space-between">
-                  <NView flexDirection="row" alignItems="center">
+                  <NView flexDirection="row" alignItems="center" flex={1}>
                     <Avatar
                       size="lg"
                       borderColor={COLORS.primary}
@@ -122,14 +125,22 @@ const SearchUser: React.FC<SearchUserScreenNavigationProp> = ({navigation}) => {
                         uri: item.profilePic,
                       }}
                     />
-                    <View>
-                      <NText color="white" fontWeight={600}>
+                    <NView flex={1}>
+                      <NText
+                        color="white"
+                        fontWeight={600}
+                        numberOfLines={1}
+                        ellipsizeMode="tail">
                         {item.username}
                       </NText>
-                      <NText color="gray.500" fontWeight={600}>
+                      <NText
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        color="gray.500"
+                        fontWeight={600}>
                         {item.email}
                       </NText>
-                    </View>
+                    </NView>
                   </NView>
                   <Button
                     onPress={() => console.log('follow', item.uid)}
@@ -160,18 +171,17 @@ const styles = StyleSheet.create({
     position: 'relative',
     flexDirection: 'row',
     alignItems: 'center',
-    // paddingHorizontal: 10,
   },
   recommendedUser: {
-    // paddingHorizontal: 5,
+    padding: 1,
   },
-  recommendedTextContainer: {
+  headingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 10,
-    marginBottom: 5,
+    marginBottom: 3,
   },
   recommendedUserText: {
+    flex: 1,
     fontSize: 18,
     color: COLORS.white,
     marginBottom: 10,
@@ -189,7 +199,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   foundUserContainer: {
-    marginVertical: 10,
-    marginHorizontal: 10,
+    marginVertical: 8,
+    padding: 1,
   },
 })
