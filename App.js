@@ -6,16 +6,15 @@
  * @flow strict-local
  */
 
-import React, {Suspense, useEffect} from 'react'
+import React, {useEffect} from 'react'
 
 import {NavigationContainer} from '@react-navigation/native'
 import {NativeBaseProvider} from 'native-base'
 import 'react-native-gesture-handler'
 import SplashScreen from 'react-native-splash-screen'
 import {RecoilRoot} from 'recoil'
-const Toast = React.lazy(() => import('react-native-toast-message'))
+import Toast from 'react-native-toast-message'
 
-import Loader from './src/components/Loader'
 import AuthUserContext from './src/Context/auth'
 import UserDataContext from './src/Context/userData'
 import Navigation, {navigationRef} from './src/Navigation/Root'
@@ -27,7 +26,7 @@ const App = () => {
   }, [])
 
   return (
-    <Suspense fallback={<Loader />}>
+    <>
       <RecoilRoot>
         <NativeBaseProvider theme={theme}>
           <AuthUserContext>
@@ -40,7 +39,7 @@ const App = () => {
         </NativeBaseProvider>
       </RecoilRoot>
       <Toast />
-    </Suspense>
+    </>
   )
 }
 

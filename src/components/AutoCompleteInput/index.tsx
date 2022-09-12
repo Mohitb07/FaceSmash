@@ -13,7 +13,7 @@ import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown'
 import {COLORS} from '../../constants'
 import {CloseIcon, SearchIcon} from '../../SVG'
 import firestore from '@react-native-firebase/firestore'
-import {IUserDetail} from '../../types'
+import {IUserDetail} from '../../interface'
 
 type AutoCompleteInputProps = {
   marginAnimation: Animated.Value
@@ -38,31 +38,29 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
 
   const getUsersDetails = (query: string) => {
     if (query) {
+      query = query.trim().toLowerCase()
       currentInputValue.current = query
       try {
         firestore()
           .collection('Users')
-          .where('qusername', '>=', query.toLowerCase())
-          .where('qusername', '<=', query.toLowerCase() + '\uf8ff')
+          .where('qusername', '>=', query)
+          .where('qusername', '<=', query + '\uf8ff')
           .limit(5)
           .get()
           .then(
             snapshot => {
-              const usersList: Array<IUserDetail> = []
-              snapshot.docs.map(d => {
-                usersList.push({
-                  createdAt: '',
-                  email: '',
-                  followers: [],
-                  followings: [],
-                  lastSignIn: '',
-                  profilePic: '',
-                  qusername: '',
-                  uid: '',
-                  username: '',
-                  ...d.data(),
-                })
-              })
+              const usersList: Array<IUserDetail> = snapshot.docs.map(d => ({
+                createdAt: '',
+                email: '',
+                followers: [],
+                followings: [],
+                lastSignIn: '',
+                profilePic: '',
+                qusername: '',
+                uid: '',
+                username: '',
+                ...d.data(),
+              }))
               setFoundUsers(usersList)
             },
             error => {
@@ -75,43 +73,30 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
     }
   }
 
-  const getSuggestions = (value: string) => {
-    currentText.current = value
-    if (value) {
+  const getSuggestions = (query: string) => {
+    currentText.current = query
+    if (query) {
+      query = query.trim().toLowerCase()
       Animated.timing(marginAnimation, {
         toValue: (Dimensions.get('window').height * 0.4) / 2,
         duration: 300,
         useNativeDriver: true,
       }).start()
-    } else {
-      Animated.timing(marginAnimation, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start()
-    }
-    console.log(value)
-    console.log('firing firestore')
-    setSuggestionsList(null)
-    if (value) {
       try {
         firestore()
           .collection('Users')
-          .where('qusername', '>=', value)
-          .where('qusername', '<=', value + '\uf8ff')
+          .where('qusername', '>=', query)
+          .where('qusername', '<=', query + '\uf8ff')
           .limit(5)
           .get()
           .then(
             snapshot => {
-              const list: Array<SuggestionList> = []
-              snapshot.docs.map(d => {
-                list.push({
-                  id: d.data().uid,
-                  title: d.data().username,
-                })
-              })
-              console.log('list', list)
-              setSuggestionsList(list)
+              const suggList: Array<SuggestionList> = snapshot.docs.map(d => ({
+                id: d.data().uid,
+                title: d.data().username,
+              }))
+              console.log('list', suggList)
+              setSuggestionsList(suggList)
             },
             error => {
               console.log('Error getSuggestions', error)
@@ -120,6 +105,13 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
       } catch (e) {
         console.log('errorStyle', e)
       }
+    } else {
+      Animated.timing(marginAnimation, {
+        toValue: 0,
+        duration: 300,
+        useNativeDriver: true,
+      }).start()
+      setSuggestionsList(null)
     }
   }
 

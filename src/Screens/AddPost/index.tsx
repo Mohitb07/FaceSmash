@@ -49,7 +49,7 @@ const AddPost = ({
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const [textAreaValue, setTextAreaValue] = useState<string>('')
   const [title, setTitle] = useState<string>('')
-  const {authUser} = useContext(AuthUserContext)
+  const {user} = useContext(AuthUserContext)
   const {contextUser} = useContext(UserDataContext)
   const {selectedImage, selectedImageRef, handleChooseGallary, clearImage} =
     useSelectImage()
@@ -66,10 +66,10 @@ const AddPost = ({
     if (selectedImage || imageFromNav) {
       try {
         await storage()
-          .ref(`${authUser?.uid}/posts/${imageRef || selectedImageRef}`)
+          .ref(`${user?.uid}/posts/${imageRef || selectedImageRef}`)
           .putFile(selectedImage || imageFromNav)
         const imageURL = await storage()
-          .ref(`${authUser?.uid}/posts/${imageRef || selectedImageRef}`)
+          .ref(`${user?.uid}/posts/${imageRef || selectedImageRef}`)
           .getDownloadURL()
 
         if (!imageURL) {
@@ -82,15 +82,13 @@ const AddPost = ({
               title: title,
               description: textAreaValue,
               image: imageURL,
-              user: authUser?.uid,
+              user: user?.uid,
               userProfile: contextUser.profilePic,
               username: contextUser.username,
               likes: 0,
               link: link,
               createdAt: new Date(),
-              imageRef: `${authUser?.uid}/posts/${
-                imageRef || selectedImageRef
-              }`,
+              imageRef: `${user?.uid}/posts/${imageRef || selectedImageRef}`,
             })
           navigation.navigate('Home')
         } catch (error: any) {
@@ -115,7 +113,7 @@ const AddPost = ({
           title: title,
           description: textAreaValue,
           image: null,
-          user: authUser?.uid,
+          user: user?.uid,
           userProfile: contextUser.profilePic,
           username: contextUser.username,
           likes: 0,

@@ -7,16 +7,16 @@ export const UserDataContext = React.createContext()
 const UserDataProvider = props => {
   // console.log('user data context render')
   const [contextUser, setContextUser] = useState(null)
-  const {authUser} = useContext(AuthUserContext)
+  const {user} = useContext(AuthUserContext)
 
   console.log('auth User inside user data context 🎯', contextUser)
 
   useEffect(() => {
     function getData() {
-      if (authUser) {
+      if (user) {
         firestore()
           .collection('Users')
-          .doc(authUser?.uid)
+          .doc(user?.uid)
           .onSnapshot(
             snapshot => {
               setContextUser(snapshot.data())
@@ -28,7 +28,7 @@ const UserDataProvider = props => {
       }
     }
     getData()
-  }, [authUser?.uid, authUser?.emailVerified])
+  }, [user?.uid, user?.emailVerified])
 
   const updateUserData = useCallback(
     async (url, navigation, setLoading, userId) => {

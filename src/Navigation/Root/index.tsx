@@ -1,5 +1,6 @@
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
 import React, {createRef, useContext} from 'react'
+import {Dimensions} from 'react-native'
 
 import Loader from '../../components/Loader'
 import {COLORS} from '../../constants'
@@ -36,7 +37,7 @@ const RootStack = createNativeStackNavigator<RootStackParamList>()
 export const navigationRef = createRef()
 
 const Root = () => {
-  const {authUser, initializing} = useContext(AuthUserContext)
+  const {user, initializing} = useContext(AuthUserContext)
 
   if (initializing) {
     return <Loader />
@@ -45,9 +46,9 @@ const Root = () => {
   return (
     <RootStack.Navigator
       screenOptions={{headerShown: false, animation: 'slide_from_right'}}>
-      {!!authUser ? (
+      {!!user ? (
         <>
-          {!authUser?.emailVerified ? (
+          {!user?.emailVerified ? (
             <RootStack.Screen name="Verification" component={Verification} />
           ) : (
             <>

@@ -9,7 +9,7 @@ import {AuthUserContext} from '../../../Context/auth'
 import {DocumentIcon, LogoutIcon, PrivacyIcon} from '../../../SVG'
 
 const ProfileBottomSheet = () => {
-  const {authUser} = useContext(AuthUserContext)
+  const {user} = useContext(AuthUserContext)
   const setPostState = useResetRecoilState(postState)
   const setBottom = useResetRecoilState(bottomSheetState)
 
@@ -53,7 +53,7 @@ const ProfileBottomSheet = () => {
           </Text>
         </TouchableOpacity>
       </Actionsheet.Item>
-      {!!authUser && (
+      {!!user && (
         <Actionsheet.Item style={styles.defaultStyle}>
           <TouchableOpacity style={styles.btnLogout} onPress={onLogoutAttempt}>
             <LogoutIcon style={{marginRight: 5}} />

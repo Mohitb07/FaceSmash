@@ -242,6 +242,7 @@ function HomeHeader() {
         </TouchableOpacity>
         <TouchableOpacity
           style={{width: '70%', height: '100%'}}
+          activeOpacity={0.6}
           onPress={() => navigation.navigate('AddPost')}>
           <Input
             isReadOnly

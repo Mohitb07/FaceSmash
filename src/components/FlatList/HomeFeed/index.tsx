@@ -20,7 +20,7 @@ function HomeFeed() {
     posts: [],
     selectedPost: null,
   })
-  const [refreshing, setRefreshing] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
   const {retrieveMore} = usePagination()
   const getPosts = useCallback(() => {
     console.log('calling getPosts home feed')

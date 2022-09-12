@@ -1,10 +1,22 @@
-import React, {createContext, useMemo, useState} from 'react'
 import {useDisclose} from 'native-base'
+import React, {createContext, useMemo} from 'react'
 import BottomSheet from '../components/BottomSheet'
 
-export const BottomSheetContext = createContext()
+interface IBottomSheetState {
+  isOpen: boolean
+  onOpen: () => void
+  onClose: () => void
+}
 
-function BottomSheetProvider({children}) {
+const initialState = {
+  isOpen: false,
+  onOpen: () => {},
+  onClose: () => {},
+}
+
+export const BottomSheetContext = createContext<IBottomSheetState>(initialState)
+
+function BottomSheetProvider({children}: {children: React.ReactNode}) {
   const {isOpen, onOpen, onClose} = useDisclose()
   const values = useMemo(
     () => ({
