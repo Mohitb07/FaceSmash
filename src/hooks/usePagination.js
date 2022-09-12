@@ -41,13 +41,10 @@ const usePagination = () => {
             .limit(LIMIT)
             .get()
         }
-        const latestPost = []
-        dataList.docs.map(item => {
-          latestPost.push({
-            ...item.data(),
-            key: item.id,
-          })
-        })
+        const latestPost = dataList.docs.map(item => ({
+          ...item.data(),
+          key: item.id,
+        }))
         let lastVisibleDoc = dataList.docs[dataList.docs.length - 1]
         setter(prev => ({
           ...prev,
