@@ -12,7 +12,6 @@ const DataList = ({
   retrieveMore = () => {},
   onRefresh = () => {},
   refreshing = false,
-  loading = false,
 }) => {
   const {userLikedPosts} = useLikedPosts()
   const renderItems = ({item}) => (
@@ -51,7 +50,6 @@ const DataList = ({
           colors={[COLORS.white2]}
         />
       }
-      refreshing={loading}
       renderItem={renderItems}
       keyExtractor={item => item.key}
     />
