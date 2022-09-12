@@ -1,7 +1,7 @@
 import React, {useContext, useState} from 'react'
 import {StyleSheet} from 'react-native'
 import {Box, Button, Image, Text, View} from 'native-base'
-import {AuthUserContext} from '../../Context/auth'
+import {AuthUserContext, IAuthUser} from '../../Context/auth'
 import auth from '@react-native-firebase/auth'
 import {COLORS} from '../../constants'
 import {ReSendIcon, VerifyIcon} from '../../SVG'
@@ -11,7 +11,7 @@ const Verification = () => {
   const toast = useToast()
   const [loadingVerify, setLoadingVerify] = useState(false)
   const [loadingResend, setLoadingResend] = useState(false)
-  const {authUser, setAuth} = useContext(AuthUserContext)
+  const {user, setAuthUser} = useContext(AuthUserContext)
 
   const sendEmailVerifiationLink = () => {
     setLoadingResend(true)
@@ -46,13 +46,16 @@ const Verification = () => {
 
   const checkUserVerificationStatus = async () => {
     setLoadingVerify(true)
-    if (!!authUser && !authUser?.emailVerified) {
+    if (!!user && !user?.emailVerified) {
       console.log('checking verification status interval')
       await auth().currentUser?.reload()
       const user = auth()?.currentUser
       if (user?.emailVerified) {
         setLoadingVerify(false)
-        setAuth(user)
+        setAuthUser((prev: IAuthUser) => ({
+          ...prev,
+          user: user,
+        }))
       } else {
         setLoadingVerify(false)
         toast.show({

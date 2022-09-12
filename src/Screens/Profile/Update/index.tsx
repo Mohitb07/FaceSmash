@@ -20,7 +20,7 @@ type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
 
 const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
   const [image, setImage] = useState<string>('')
-  const {authUser} = useContext(AuthUserContext)
+  const {user} = useContext(AuthUserContext)
   const {contextUser, updateUserData} = useContext(UserDataContext)
   const [loading, setLoading] = useState(false)
 
@@ -60,16 +60,16 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
     if (image) {
       setLoading(true)
       storage()
-        .ref(authUser.uid)
+        .ref(user.uid)
         .putFile(image)
         .then(snapshot => {
           console.log('IMAGE UPLOADED', snapshot)
-          const imageRef = storage().ref(authUser.uid)
+          const imageRef = storage().ref(user.uid)
           imageRef
             .getDownloadURL()
             .then(url => {
               console.log('UPLOADED IMAGE URL', url)
-              updateUserData(url, navigation, setLoading, authUser.uid)
+              updateUserData(url, navigation, setLoading, user.uid)
             })
             .catch(err => {
               console.log('image download error', err)

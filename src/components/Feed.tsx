@@ -27,7 +27,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import {COLORS} from '../constants'
 import {AuthUserContext} from '../Context/auth'
 import {RootStackParamList} from '../Navigation/Root'
-import {FeedProps} from '../types'
+import {FeedProps} from '../interface'
 const FeedMore = React.lazy(() => import('./BottomSheet/FeedMore'))
 
 dayjs.extend(relativeTime)
@@ -50,13 +50,13 @@ const Feed = ({
   const updateUIBasedOnImage = Boolean(image) ? 'column-reverse' : 'column'
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
-  const {authUser} = useContext(AuthUserContext)
+  const {user} = useContext(AuthUserContext)
   const {onOpen, onClose, isOpen} = useDisclose()
 
   const handleLikes = () => {
     const postlikesRef = firestore()
       .collection('Users')
-      .doc(authUser?.uid)
+      .doc(user?.uid)
       .collection('postlikes')
       .doc(postId)
 
@@ -105,7 +105,7 @@ const Feed = ({
             <Text style={styles.usernameText}>{username}</Text>
           </View>
         </TouchableOpacity>
-        {authUser?.uid === userId && (
+        {user?.uid === userId && (
           <TouchableOpacity onPress={onOpen}>
             <NView
               backgroundColor={COLORS.transparentBlack1}

@@ -7,7 +7,7 @@ import firestore from '@react-native-firebase/firestore'
 import storage from '@react-native-firebase/storage'
 
 const FeedMore = ({postId, onClose, hasImage, imageRef, hasLiked}) => {
-  const {authUser} = useContext(AuthUserContext)
+  const {user} = useContext(AuthUserContext)
   console.log('has imageRef', imageRef)
   const handleDeletePost = async () => {
     // remove image from storage if an image exists (DONE)
@@ -29,7 +29,7 @@ const FeedMore = ({postId, onClose, hasImage, imageRef, hasLiked}) => {
         if (hasLiked) {
           const postlikesRef = firestore()
             .collection('Users')
-            .doc(authUser?.uid)
+            .doc(user?.uid)
             .collection('postlikes')
             .doc(postId)
           postlikesRef.delete()
@@ -68,7 +68,7 @@ const FeedMore = ({postId, onClose, hasImage, imageRef, hasLiked}) => {
           </NText>
         </TouchableOpacity>
       </Actionsheet.Item>
-      {!!authUser && (
+      {!!user && (
         <Actionsheet.Item
           startIcon={<Icon as={DeleteIcon} mr="1" size="5" />}
           style={styles.defaultStyle}>
