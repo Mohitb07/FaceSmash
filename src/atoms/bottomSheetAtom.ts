@@ -1,9 +1,5 @@
 import {atom} from 'recoil'
-
-export interface IBottomSheetState {
-  type: 'profile' | 'someother'
-  isOpen: boolean
-}
+import {IBottomSheetState} from '../interface'
 
 export const defaultBottomSheetValues: IBottomSheetState = {
   type: 'someother',
