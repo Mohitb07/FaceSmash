@@ -1,19 +1,6 @@
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore'
 import {atom} from 'recoil'
-
-export interface IPost {
-  createdAt: object
-  description: string
-  key: string
-  image?: string
-  likes: number
-  link?: string
-  title: string
-  user: string
-  userProfile: string
-  username: string
-  imageRef?: string
-}
+import {IPost} from '../interface'
 
 export interface IDefaultPostState {
   selectedPost: IPost | null
