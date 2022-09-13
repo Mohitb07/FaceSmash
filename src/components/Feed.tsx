@@ -190,7 +190,7 @@ const Feed = ({
               imageRef={imageRef}
               postId={postId}
               hasImage={Boolean(image)}
-              onClose={() => onClose()}
+              onClose={onClose}
               hasLiked={hasUserLikedPost}
             />
           </React.Suspense>
