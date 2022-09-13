@@ -9,13 +9,13 @@ import DataList from '../../DataList'
 import DataListFooter from '../../DataList/DataListFooter'
 import EmptyDataList from '../../DataList/EmptyDataList'
 import ProfileHeader from '../../Header/Profile'
-import {IPost} from '../../../atoms/postAtom'
 import {getLastVisibleDocRef} from '../../../utils/getLastVisibleDocRef'
+import {IPost} from '../../../interface'
 
 const LIMIT = 5
 
 const ProfileFeed = ({userId}: {userId: string}) => {
-  const {retrieveMore} = usePagination()
+  const {withCondition} = usePagination()
 
   const [totalUserPosts, setTotalUserPosts] = useState(0)
   const [myRecentPosts, setMyRecentPosts] = useState<IDefaultUserDataState>({
@@ -36,7 +36,7 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       snapshot => {
         const postList: Array<IPost> = snapshot.docs.map(d => ({
           key: d.id,
-          createdAt: {},
+          createdAt: null,
           description: '',
           likes: 0,
           title: '',
@@ -88,17 +88,34 @@ const ProfileFeed = ({userId}: {userId: string}) => {
     }
   }, [userId])
 
-  const getMoreData = () =>
-    retrieveMore(
-      myRecentPosts.lastVisible,
-      'Posts',
-      myRecentPosts.posts,
-      setMyRecentPosts,
-      true,
-      'user',
-      '==',
-      userId,
-    )
+  const getMoreData = async () => {
+    setMyRecentPosts(prev => ({
+      ...prev,
+      loading: true,
+    }))
+    try {
+      const {paginatedResult, lastVisibleDocRef} = await withCondition(
+        myRecentPosts.lastVisible,
+        'Posts',
+        'user',
+        '==',
+        userId,
+      )
+      setMyRecentPosts(prev => ({
+        ...prev,
+        posts: [...myRecentPosts.posts, ...paginatedResult],
+        loading: false,
+        lastVisible: lastVisibleDocRef,
+      }))
+    } catch (error) {
+      console.error('ERROR while fetching paginated posts home screen', error)
+    } finally {
+      setMyRecentPosts(prev => ({
+        ...prev,
+        loading: false,
+      }))
+    }
+  }
 
   if (initialLoad.current && myRecentPosts.loading) {
     return (
@@ -120,7 +137,6 @@ const ProfileFeed = ({userId}: {userId: string}) => {
         />
       }
       retrieveMore={getMoreData}
-      loading={myRecentPosts.loading}
     />
   )
 }

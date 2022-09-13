@@ -2,7 +2,18 @@ import React from 'react'
 import {FlatList, RefreshControl, StyleSheet} from 'react-native'
 import {COLORS} from '../../constants'
 import useLikedPosts from '../../hooks/useLikedPosts'
+import {IPost, IPostLikes} from '../../interface'
 import Feed from '../Feed'
+
+interface IDataListProps {
+  dataList: IPost[]
+  Header: JSX.Element
+  Footer: JSX.Element
+  EmptyList: JSX.Element
+  retrieveMore: () => void
+  onRefresh?: () => void
+  refreshing?: boolean
+}
 
 const DataList = ({
   dataList = [],
@@ -12,9 +23,9 @@ const DataList = ({
   retrieveMore = () => {},
   onRefresh = () => {},
   refreshing = false,
-}) => {
+}: IDataListProps) => {
   const {userLikedPosts} = useLikedPosts()
-  const renderItems = ({item}) => (
+  const renderItems = ({item}: {item: IPost}) => (
     <Feed
       postId={item.key}
       userProfilePic={item.userProfile}
@@ -23,10 +34,11 @@ const DataList = ({
       postTitle={item.title}
       image={item?.image}
       description={item.description}
-      likes={dataList.find(post => post.key === item.key).likes}
+      // @ts-ignore
+      likes={dataList.find((post: IPost) => post.key === item.key)?.likes}
       userId={item.user}
       hasUserLikedPost={Boolean(
-        userLikedPosts.find(post => post.postId === item.key),
+        userLikedPosts.find((post: IPostLikes) => post.postId === item.key),
       )}
       link={item?.link}
       imageRef={item?.imageRef}

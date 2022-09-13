@@ -62,7 +62,6 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
 
   useEffect(() => {
     navigation.setOptions({
-      // title: userData?.username,
       headerTitle: () => (
         <Text
           fontFamily="Lato-Semibold"

@@ -6,7 +6,21 @@ import {FeedEditIcon, DeleteIcon, FeedShareIcon} from '../../../SVG'
 import firestore from '@react-native-firebase/firestore'
 import storage from '@react-native-firebase/storage'
 
-const FeedMore = ({postId, onClose, hasImage, imageRef, hasLiked}) => {
+interface IFeedMoreProps {
+  postId: string
+  onClose: () => void
+  hasImage: boolean
+  imageRef?: string
+  hasLiked: boolean
+}
+
+const FeedMore = ({
+  postId,
+  onClose,
+  hasImage,
+  imageRef,
+  hasLiked,
+}: IFeedMoreProps) => {
   const {user} = useContext(AuthUserContext)
   console.log('has imageRef', imageRef)
   const handleDeletePost = async () => {
@@ -53,7 +67,7 @@ const FeedMore = ({postId, onClose, hasImage, imageRef, hasLiked}) => {
       <Actionsheet.Item
         style={styles.defaultStyle}
         startIcon={<Icon as={FeedEditIcon} mr="1" size="5" />}>
-        <TouchableOpacity style={styles.btnLogout}>
+        <TouchableOpacity>
           <NText color="white" fontFamily="Lato-Semibold">
             Edit Post
           </NText>
@@ -62,7 +76,7 @@ const FeedMore = ({postId, onClose, hasImage, imageRef, hasLiked}) => {
       <Actionsheet.Item
         style={styles.defaultStyle}
         startIcon={<Icon as={FeedShareIcon} name="share" mr="1" size="5" />}>
-        <TouchableOpacity style={styles.btnLogout}>
+        <TouchableOpacity>
           <NText color="white" fontFamily="Lato-Semibold">
             Share Post
           </NText>
@@ -72,7 +86,7 @@ const FeedMore = ({postId, onClose, hasImage, imageRef, hasLiked}) => {
         <Actionsheet.Item
           startIcon={<Icon as={DeleteIcon} mr="1" size="5" />}
           style={styles.defaultStyle}>
-          <TouchableOpacity style={styles.btnLogout} onPress={handleDeletePost}>
+          <TouchableOpacity onPress={handleDeletePost}>
             <NText color="red.700" fontFamily="Lato-Semibold">
               Delete Post
             </NText>
@@ -83,10 +97,10 @@ const FeedMore = ({postId, onClose, hasImage, imageRef, hasLiked}) => {
   )
 }
 
-export default React.memo(FeedMore)
-
 const styles = StyleSheet.create({
   defaultStyle: {
     backgroundColor: 'none',
   },
 })
+
+export default React.memo(FeedMore)

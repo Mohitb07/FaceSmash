@@ -1,16 +1,14 @@
 import auth from '@react-native-firebase/auth'
 import {Actionsheet, Box, Text as NText} from 'native-base'
 import React, {useContext} from 'react'
-import {StyleSheet, Text, TouchableOpacity} from 'react-native'
+import {StyleSheet, TouchableOpacity} from 'react-native'
 import {useResetRecoilState} from 'recoil'
 import {bottomSheetState} from '../../../atoms/bottomSheetAtom'
-import {postState} from '../../../atoms/postAtom'
 import {AuthUserContext} from '../../../Context/auth'
 import {DocumentIcon, LogoutIcon, PrivacyIcon} from '../../../SVG'
 
 const ProfileBottomSheet = () => {
   const {user} = useContext(AuthUserContext)
-  const setPostState = useResetRecoilState(postState)
   const setBottom = useResetRecoilState(bottomSheetState)
 
   const onLogoutAttempt = () => {
@@ -18,7 +16,6 @@ const ProfileBottomSheet = () => {
       .signOut()
       .then(() => {
         console.log('user logged out')
-        setPostState()
         setBottom()
       })
       .catch(err => console.log('SIGN OUT ERROR', err))
@@ -38,28 +35,28 @@ const ProfileBottomSheet = () => {
         </NText>
       </Box>
       <Actionsheet.Item style={styles.defaultStyle}>
-        <TouchableOpacity style={styles.btnLogout}>
+        <TouchableOpacity style={styles.btn}>
           <DocumentIcon style={{marginRight: 5}} />
-          <Text style={{color: 'white', fontFamily: 'Lato-Semibold'}}>
+          <NText color="white" fontFamily="Font-Semibold">
             Settings and Privacy
-          </Text>
+          </NText>
         </TouchableOpacity>
       </Actionsheet.Item>
       <Actionsheet.Item style={styles.defaultStyle}>
-        <TouchableOpacity style={styles.btnLogout}>
+        <TouchableOpacity style={styles.btn}>
           <PrivacyIcon style={{marginRight: 5}} />
-          <Text style={{color: 'white', fontFamily: 'Lato-Semibold'}}>
+          <NText color="white" fontFamily="Font-Semibold">
             Settings and Privacy
-          </Text>
+          </NText>
         </TouchableOpacity>
       </Actionsheet.Item>
       {!!user && (
         <Actionsheet.Item style={styles.defaultStyle}>
-          <TouchableOpacity style={styles.btnLogout} onPress={onLogoutAttempt}>
+          <TouchableOpacity style={styles.btn} onPress={onLogoutAttempt}>
             <LogoutIcon style={{marginRight: 5}} />
-            <Text style={{color: 'red', fontFamily: 'Lato-Semibold'}}>
+            <NText color="red.500" fontFamily="Font-Semibold">
               Log Out
-            </Text>
+            </NText>
           </TouchableOpacity>
         </Actionsheet.Item>
       )}
@@ -70,7 +67,7 @@ const ProfileBottomSheet = () => {
 export default ProfileBottomSheet
 
 const styles = StyleSheet.create({
-  btnLogout: {
+  btn: {
     flexDirection: 'row',
     alignItems: 'center',
   },

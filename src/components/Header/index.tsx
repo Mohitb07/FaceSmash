@@ -7,7 +7,6 @@ import {
   GestureResponderEvent,
 } from 'react-native'
 import React from 'react'
-// import {ArrowBackIcon, CheckIcon} from 'native-base';
 import {COLORS} from '../../constants'
 import {BackIcon} from '../../SVG'
 

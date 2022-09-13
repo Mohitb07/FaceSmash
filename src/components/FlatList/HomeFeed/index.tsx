@@ -2,13 +2,14 @@ import React, {useCallback, useEffect, useState} from 'react'
 
 import firestore from '@react-native-firebase/firestore'
 
-import {IDefaultPostState, IPost} from '../../../atoms/postAtom'
+import {IDefaultPostState} from '../../../atoms/postAtom'
 import usePagination from '../../../hooks/usePagination'
 import {getLastVisibleDocRef} from '../../../utils/getLastVisibleDocRef'
 import DataList from '../../DataList'
 import Footer from '../../DataList/DataListFooter'
 import EmptyList from '../../DataList/EmptyDataList'
 import HomeHeader from '../../Header/Home'
+import {IPost} from '../../../interface'
 
 const LIMIT = 5
 
@@ -21,7 +22,7 @@ function HomeFeed() {
     selectedPost: null,
   })
   const [refreshing, setRefreshing] = useState(false)
-  const {retrieveMore} = usePagination()
+  const {withoutCondition} = usePagination()
   const getPosts = useCallback(() => {
     console.log('calling getPosts home feed')
     try {
@@ -34,7 +35,7 @@ function HomeFeed() {
             console.log('calling home feed snapshot')
             const postList: Array<IPost> = snapshot.docs.map(d => ({
               key: d.id,
-              createdAt: {},
+              createdAt: null,
               description: '',
               likes: 0,
               title: '',
@@ -80,13 +81,33 @@ function HomeFeed() {
     }
   }
 
-  const getMoreData = () =>
-    retrieveMore(
-      postStateValue.lastVisible,
-      'Posts',
-      postStateValue.posts,
-      setPostStateValue,
-    )
+  const getMoreData = async () => {
+    setPostStateValue(prev => ({
+      ...prev,
+      loading: true,
+    }))
+    try {
+      const {paginatedResult, lastVisibleDocRef} = await withoutCondition(
+        postStateValue.lastVisible,
+        'Posts',
+      )
+      setPostStateValue(prev => ({
+        ...prev,
+        posts: [...postStateValue.posts, ...paginatedResult],
+        loading: false,
+        lastVisible: lastVisibleDocRef,
+      }))
+    } catch (error) {
+      console.error('ERROR while fetching paginated posts home screen', error)
+    } finally {
+      setPostStateValue(prev => ({
+        ...prev,
+        loading: false,
+      }))
+    }
+  }
+  const value = <EmptyList loading={postStateValue.loading} />
+
   return (
     <DataList
       dataList={postStateValue.posts}
@@ -101,7 +122,6 @@ function HomeFeed() {
       onRefresh={onRefresh}
       refreshing={refreshing}
       retrieveMore={getMoreData}
-      loading={postStateValue.loading}
     />
   )
 }

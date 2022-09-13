@@ -4,10 +4,11 @@ import {bottomSheetState} from '../../atoms/bottomSheetAtom'
 import {Actionsheet} from 'native-base'
 import ProfileBottomSheet from './Profile'
 import {COLORS} from '../../constants'
+import {IBottomSheetState} from '../../interface'
 
 const BottomSheet = () => {
   const [bottomSheetStateValue, setBottomSheetStateValue] =
-    useRecoilState(bottomSheetState)
+    useRecoilState<IBottomSheetState>(bottomSheetState)
   return (
     <Actionsheet
       disableOverlay
