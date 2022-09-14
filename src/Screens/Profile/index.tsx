@@ -4,11 +4,12 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native'
 import {RouteProp, useNavigation} from '@react-navigation/native'
 import {useSetRecoilState} from 'recoil'
 
-import {bottomSheetState, IBottomSheetState} from '../../atoms/bottomSheetAtom'
+import {bottomSheetState} from '../../atoms/bottomSheetAtom'
 import ProfileFeed from '../../components/FlatList/ProfileFeed'
 import {COLORS} from '../../constants'
 import BottomSheetProvider from '../../Context/BottomSheet'
 import {ThreeDotsIcon} from '../../SVG'
+import {IBottomSheetState} from '../../interface'
 
 const MyProfile = ({
   route,
