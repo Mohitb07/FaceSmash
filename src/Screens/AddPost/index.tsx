@@ -87,7 +87,7 @@ const AddPost = ({
               username: contextUser.username,
               likes: 0,
               link: link,
-              createdAt: new Date(),
+              createdAt: firestore.Timestamp,
               imageRef: `${user?.uid}/posts/${imageRef || selectedImageRef}`,
             })
           navigation.navigate('Home')
@@ -118,7 +118,7 @@ const AddPost = ({
           username: contextUser.username,
           likes: 0,
           link: link,
-          createdAt: new Date(),
+          createdAt: firestore.Timestamp,
         })
         navigation.navigate('Home')
       } catch (error: any) {
@@ -206,7 +206,7 @@ const AddPost = ({
             </>
           )}
 
-          {(selectedImage || !!imageFromNav) && (
+          {(!!selectedImage || !!imageFromNav) && (
             <Box
               style={styles.imageContainer}
               position="relative"
@@ -271,7 +271,7 @@ const AddPost = ({
             <HStack borderTopColor="gray.600" borderTopWidth="1" paddingY="3">
               <TouchableOpacity
                 disabled={!!selectedImage || !!imageFromNav || loading}
-                onPress={() => handleChooseGallary(false)}
+                onPress={() => handleChooseGallary({})}
                 style={{flexDirection: 'row', alignItems: 'center'}}>
                 <PhotoIcon width="24" height="24" />
                 <Text
