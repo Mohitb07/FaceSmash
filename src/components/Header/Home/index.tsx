@@ -161,7 +161,7 @@ function HomeHeader() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
   const handleGetImageThenNavigate = () => {
-    handleChooseGallary(true, navigation) // true for navigation
+    handleChooseGallary({navigate: true, screen: 'AddPost'}) // true to navigate
   }
 
   const user = auth().currentUser?.uid
@@ -243,7 +243,7 @@ function HomeHeader() {
         <TouchableOpacity
           style={{width: '70%', height: '100%'}}
           activeOpacity={0.6}
-          onPress={() => navigation.navigate('AddPost')}>
+          onPress={() => navigation.navigate('AddPost', {})}>
           <Input
             isReadOnly
             borderRadius="full"

@@ -1,7 +1,7 @@
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore'
 import {atom} from 'recoil'
+import { IPost } from '../interface'
 
-import {IPost} from './postAtom'
 
 export interface IDefaultUserDataState {
   posts: IPost[]

@@ -26,7 +26,10 @@ export type RootStackParamList = {
     providedUserId: string
   }
   UpdateProfile: undefined
-  AddPost: undefined
+  AddPost: {
+    selectedImageURI?: string
+    selectedImageRef?: string
+  }
   Browser: {
     uri: string
   }
