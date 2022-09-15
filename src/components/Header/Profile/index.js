@@ -125,7 +125,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
         {userData?.bio && (
           <HStack alignItems="center">
             <Text fontSize="sm" color={COLORS.gray} fontFamily="Lato-Regular">
-              {userData?.bio}
+              {userData.bio}
             </Text>
           </HStack>
         )}

@@ -1,9 +1,11 @@
 import {HStack} from 'native-base'
 import React, {useContext, useState} from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
+import {View as NView} from 'native-base'
 import Button from '../../../components/Button'
 import {CheckIcon, CloseIcon} from '../../../SVG'
 
+import firestore from '@react-native-firebase/firestore'
 import storage from '@react-native-firebase/storage'
 import * as ImagePicker from 'react-native-image-picker'
 import Header from '../../../components/Header'
@@ -12,6 +14,8 @@ import {AuthUserContext} from '../../../Context/auth'
 import {UserDataContext} from '../../../Context/userData'
 import {RootStackParamList} from '../../../Navigation/Root'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import Label from '../../../components/Label'
+import StyledTextInput from '../../../components/TextInput'
 
 type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -21,10 +25,16 @@ type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
 const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
   const [image, setImage] = useState<string>('')
   const {user} = useContext(AuthUserContext)
+  const [userBio, setUserBio] = useState<string>('')
   const {contextUser, updateUserData} = useContext(UserDataContext)
   const [loading, setLoading] = useState(false)
 
-  const disabled = !image
+  const disabled = !(!!image || !!userBio)
+
+  console.log('context User ', contextUser)
+
+  console.log('image', !!image)
+  console.log('userBio', !!userBio)
 
   const handleChooseGallary = () => {
     ImagePicker.launchImageLibrary({mediaType: 'photo'}, response => {
@@ -56,9 +66,26 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
     })
   }
 
-  const handleUploadImage = () => {
+  const handleUploadImage = async () => {
+    setLoading(true)
+    if (userBio) {
+      const filterdUserBio = userBio.trim()
+      firestore()
+        .collection('Users')
+        .doc(user.uid)
+        .set(
+          {
+            bio: filterdUserBio,
+          },
+          {merge: true},
+        )
+        .then(() => {
+          console.log('bio updated')
+          !Boolean(image) && navigation.goBack()
+        })
+    }
     if (image) {
-      setLoading(true)
+      console.log('inside image')
       storage()
         .ref(user.uid)
         .putFile(image)
@@ -93,6 +120,7 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
         leftIcon={<CloseIcon />}
         rightIcon={<CheckIcon />}
       />
+
       <View style={styles.container}>
         <View style={styles.userInfo}>
           <Image
@@ -105,8 +133,16 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
             <Text style={styles.textFullName}>{contextUser?.username}</Text>
           </View>
           <Text style={styles.email}>{contextUser?.email}</Text>
+          <NView mb="5">
+            <Label label="Bio" labelStyle={{fontSize: 15}} />
+            <StyledTextInput
+              value={userBio || contextUser?.bio}
+              placeholder="Your bio here..."
+              onChangeText={text => setUserBio(text)}
+              maxLength={30}
+            />
+          </NView>
         </View>
-
         <HStack space="10">
           <Button
             text="Open Gallary"
@@ -143,13 +179,13 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.mainBackground,
   },
   userInfo: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    // flex: 1,
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   profilePic: {
-    width: 150,
-    height: 150,
+    width: 100,
+    height: 100,
     borderRadius: 80,
     marginBottom: 10,
   },
