@@ -14,11 +14,9 @@ const useLogin = () => {
         console.log('User logged in!', user)
       })
       .catch(err => {
+        setLoading(false)
         console.log('ERROR', err.message)
         setError(err.message)
-      })
-      .finally(() => {
-        setLoading(false)
       })
   }
 
