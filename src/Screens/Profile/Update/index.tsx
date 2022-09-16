@@ -87,7 +87,7 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
     if (image) {
       console.log('inside image')
       storage()
-        .ref(user.uid)
+        .ref(`${contextUser?.uid}/profilePic/`)
         .putFile(image)
         .then(snapshot => {
           console.log('IMAGE UPLOADED', snapshot)
