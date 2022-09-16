@@ -22,7 +22,6 @@ import Header from '../../components/Header'
 import Label from '../../components/Label'
 import StyledTextInput from '../../components/TextInput'
 import {COLORS} from '../../constants'
-import {AuthUserContext} from '../../Context/auth'
 import {UserDataContext} from '../../Context/userData'
 import useSelectImage from '../../hooks/useSelectImage'
 import {CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '../../SVG'
@@ -49,7 +48,6 @@ const AddPost = ({
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const [textAreaValue, setTextAreaValue] = useState<string>('')
   const [title, setTitle] = useState<string>('')
-  const {user} = useContext(AuthUserContext)
   const {contextUser} = useContext(UserDataContext)
   const {selectedImage, selectedImageRef, handleChooseGallary, clearImage} =
     useSelectImage()
@@ -61,44 +59,55 @@ const AddPost = ({
   console.log('selectedFromnav', imageFromNav)
   console.log('ref image', selectedImageRef)
 
+  const createPost = async (
+    imageURL?: string,
+    imageRef?: string,
+    selectedImageRef?: string,
+  ) => {
+    try {
+      await firestore()
+        .collection('Posts')
+        .add({
+          title: title,
+          description: textAreaValue,
+          image: !!imageURL ? imageURL : null,
+          user: contextUser?.uid,
+          userProfile: contextUser.profilePic,
+          username: contextUser.username,
+          likes: 0,
+          link,
+          createdAt: firestore.FieldValue.serverTimestamp(),
+          imageRef:
+            !!imageRef || !!selectedImageRef
+              ? `${contextUser?.uid}/posts/${imageRef || selectedImageRef}`
+              : null,
+        })
+      navigation.navigate('Home')
+    } catch (error: any) {
+      setLoading(false)
+      Toast.show({
+        type: 'error',
+        text1: 'Post Creation Error',
+        text2: error.message,
+      })
+    }
+  }
+
   const handlePostCreation = async () => {
     setLoading(true)
     if (selectedImage || imageFromNav) {
       try {
         await storage()
-          .ref(`${user?.uid}/posts/${imageRef || selectedImageRef}`)
+          .ref(`${contextUser?.uid}/posts/${imageRef || selectedImageRef}`)
           .putFile(selectedImage || imageFromNav)
         const imageURL = await storage()
-          .ref(`${user?.uid}/posts/${imageRef || selectedImageRef}`)
+          .ref(`${contextUser?.uid}/posts/${imageRef || selectedImageRef}`)
           .getDownloadURL()
 
         if (!imageURL) {
           throw new Error('Image Upload failed')
         }
-        try {
-          await firestore()
-            .collection('Posts')
-            .add({
-              title: title,
-              description: textAreaValue,
-              image: imageURL,
-              user: user?.uid,
-              userProfile: contextUser.profilePic,
-              username: contextUser.username,
-              likes: 0,
-              link: link,
-              createdAt: firestore.Timestamp,
-              imageRef: `${user?.uid}/posts/${imageRef || selectedImageRef}`,
-            })
-          navigation.navigate('Home')
-        } catch (error: any) {
-          setLoading(false)
-          Toast.show({
-            type: 'error',
-            text1: 'Post Creation Error',
-            text2: error.message,
-          })
-        }
+        createPost(imageURL, imageRef, selectedImageRef)
       } catch (error: any) {
         setLoading(false)
         Toast.show({
@@ -108,27 +117,7 @@ const AddPost = ({
         })
       }
     } else {
-      try {
-        await firestore().collection('Posts').add({
-          title: title,
-          description: textAreaValue,
-          image: null,
-          user: user?.uid,
-          userProfile: contextUser.profilePic,
-          username: contextUser.username,
-          likes: 0,
-          link: link,
-          createdAt: firestore.Timestamp,
-        })
-        navigation.navigate('Home')
-      } catch (error: any) {
-        setLoading(false)
-        Toast.show({
-          type: 'error',
-          text1: 'Post Creation Error',
-          text2: error.message,
-        })
-      }
+      createPost()
     }
   }
   const linkText = showLink ? 'Remove Link' : 'Add Link'
