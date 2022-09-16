@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
   description: {
     color: '#747474',
     fontFamily: 'Lato-Semibold',
-    fontSize: 11,
+    fontSize: 13,
     marginVertical: 5,
   },
   titleNuser: {
