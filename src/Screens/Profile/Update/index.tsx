@@ -91,7 +91,7 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
         .putFile(image)
         .then(snapshot => {
           console.log('IMAGE UPLOADED', snapshot)
-          const imageRef = storage().ref(user.uid)
+          const imageRef = storage().ref(`${contextUser?.uid}/profilePic/`)
           imageRef
             .getDownloadURL()
             .then(url => {
