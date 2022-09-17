@@ -11,7 +11,7 @@ import {
   View as NView,
   VStack,
 } from 'native-base'
-import React, {useContext} from 'react'
+import React, {useCallback, useContext, useRef, useState} from 'react'
 import {
   StyleSheet,
   Text,
@@ -26,8 +26,8 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import {COLORS} from '../constants'
 import {AuthUserContext} from '../Context/auth'
-import {RootStackParamList} from '../Navigation/Root'
 import {FeedProps} from '../interface'
+import {RootStackParamList} from '../Navigation/Root'
 const FeedMore = React.lazy(() => import('./BottomSheet/FeedMore'))
 
 dayjs.extend(relativeTime)
@@ -52,6 +52,17 @@ const Feed = ({
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const {user} = useContext(AuthUserContext)
   const {onOpen, onClose, isOpen} = useDisclose()
+  const [showMore, setShowMore] = useState(false)
+  const [numberOfLines, setNumberOfLines] = useState(2)
+  const calc = useRef(true)
+
+  const onTextLayout = useCallback((e: any) => {
+    if (calc.current) {
+      console.log('lines', e.nativeEvent.lines.length)
+      setShowMore(e.nativeEvent.lines.length > numberOfLines)
+    }
+    calc.current = false
+  }, [])
 
   const handleLikes = () => {
     const postlikesRef = firestore()
@@ -85,7 +96,6 @@ const Feed = ({
       console.log('handlelikes error', err)
     }
   }
-
   return (
     <NView style={styles.container}>
       <NView style={styles.userInfo}>
@@ -153,8 +163,20 @@ const Feed = ({
               <Text style={styles.feedTitle}>{postTitle}</Text>
             </TouchableWithoutFeedback>
           )}
-          <Text style={styles.description} numberOfLines={2}>
+          <Text
+            style={styles.description}
+            numberOfLines={numberOfLines}
+            onTextLayout={onTextLayout}>
             {description}
+          </Text>
+          <Text
+            style={styles.seeMore}
+            onPress={() => {
+              // @ts-ignore
+              setNumberOfLines(showMore ? undefined : 2)
+              setShowMore(prev => !prev)
+            }}>
+            See {showMore ? 'More' : 'Less'}
           </Text>
         </NView>
 
@@ -237,8 +259,10 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   image: {
-    aspectRatio: 3 / 2,
-    width: '100%',
+    // flex: 1,
+    aspectRatio: 1,
+    // width: '100%',
+    // height: '100%',
   },
   text: {
     color: 'white',
@@ -262,7 +286,8 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   description: {
-    color: '#747474',
+    // color: '#747474',
+    color: COLORS.white2,
     fontFamily: 'Lato-Semibold',
     fontSize: 13,
     marginVertical: 5,
@@ -278,5 +303,10 @@ const styles = StyleSheet.create({
   linkTitle: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  seeMore: {
+    fontSize: 11,
+    color: 'white',
+    fontWeight: '600',
   },
 })
