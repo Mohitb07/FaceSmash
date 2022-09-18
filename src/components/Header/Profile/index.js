@@ -143,7 +143,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
           onPress={() => {}}
           text="Follow"
           showRing={false}
-          color={COLORS.white2}
+          bgColor={COLORS.white2}
         />
         {authUser === userId && (
           <TouchableOpacity

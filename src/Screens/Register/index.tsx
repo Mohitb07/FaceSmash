@@ -155,7 +155,7 @@ const Register = ({navigation}: LoginScreenNavigationProp) => {
       <StyledButton
         onPress={signUpAttempt}
         text="Sign Up"
-        color={isDisabled ? COLORS.gray : COLORS.white2}
+        bgColor={isDisabled ? COLORS.gray : COLORS.white2}
         loader={loading}
         disabled={isDisabled}
       />

@@ -103,7 +103,7 @@ const Login: React.FC<LoginScreenNavigationProp> = ({
       <StyledButton
         onPress={() => onLoginAttempt(email, password)}
         text="Login"
-        color={isDisabled ? COLORS.gray : COLORS.white2}
+        bgColor={isDisabled ? COLORS.gray : COLORS.white2}
         loader={loading}
         disabled={isDisabled}
       />

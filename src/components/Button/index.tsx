@@ -15,7 +15,7 @@ interface Props {
   onPress: () => void
   text: string
   disabled: boolean
-  color?: string
+  bgColor?: string
   icon?: ReactElement
   style?: object
   textStyle?: TextStyle
@@ -28,7 +28,7 @@ const Button: React.FC<Props> = ({
   onPress = () => {},
   text = '',
   disabled = false,
-  color = '',
+  bgColor = '',
   icon,
   style: customStyle = {},
   textStyle,
@@ -47,7 +47,7 @@ const Button: React.FC<Props> = ({
         disabled={disabled}
         style={[
           styles.btn,
-          color.length > 0 && {backgroundColor: color},
+          bgColor.length > 0 && {backgroundColor: bgColor},
           // disabled && styles.disabled,
           customStyle,
         ]}

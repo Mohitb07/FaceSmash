@@ -147,7 +147,7 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
           <Button
             text="Open Gallary"
             onPress={handleChooseGallary}
-            color={COLORS.white2}
+            bgColor={COLORS.white2}
             showRing={false}
             textStyle={{fontFamily: 'Lato-Heavy'}}
             disabled={loading}
@@ -155,7 +155,7 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
           <Button
             text="Take Now"
             onPress={handleTakePhoto}
-            color={COLORS.primary}
+            bgColor={COLORS.primary}
             showRing={false}
             textStyle={{
               fontFamily: 'Lato-Heavy',
