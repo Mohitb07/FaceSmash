@@ -178,11 +178,12 @@ function HomeHeader() {
           </NText>
           <NView
             ml="4"
-            bgColor={COLORS.primary}
+            bgColor="primary.800"
             height="3"
             width="3"
             fontFamily="Lato-Bold"
-            rounded="full"></NView>
+            rounded="full"
+          />
         </NView>
 
         <TouchableOpacity
