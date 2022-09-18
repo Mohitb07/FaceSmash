@@ -7,9 +7,7 @@ import {COLORS} from '../../constants'
 const Home = () => {
   return (
     <View style={styles.container}>
-      <View style={styles.innerContainer}>
-        <HomeFeedContainer />
-      </View>
+      <HomeFeedContainer />
     </View>
   )
 }
@@ -19,9 +17,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.mainBackground,
-  },
-  innerContainer: {
-    flex: 1,
-    paddingVertical: 10,
   },
 })
