@@ -102,7 +102,7 @@ const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
             onPress={() => navigation.navigate('Login')}
             icon={<ArrowForwardIcon />}
             text="Get Started"
-            color={COLORS.white2}
+            bgColor={COLORS.white2}
             disabled={false}
             showRing={false}
           />

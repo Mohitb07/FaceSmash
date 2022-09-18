@@ -46,6 +46,7 @@ const DataList = ({
   )
   return (
     <FlatList
+      initialNumToRender={3}
       contentContainerStyle={styles.container}
       showsVerticalScrollIndicator={false}
       data={dataList}

@@ -52,17 +52,17 @@ const Feed = ({
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const {user} = useContext(AuthUserContext)
   const {onOpen, onClose, isOpen} = useDisclose()
-  const [showMore, setShowMore] = useState(false)
-  const [numberOfLines, setNumberOfLines] = useState(2)
+  const [show, setShow] = useState(false)
+  // const [numberOfLines, setNumberOfLines] = useState(2)
   const calc = useRef(true)
 
-  const onTextLayout = useCallback((e: any) => {
-    if (calc.current) {
-      console.log('lines', e.nativeEvent.lines.length)
-      setShowMore(e.nativeEvent.lines.length > numberOfLines)
-    }
-    calc.current = false
-  }, [])
+  // const onTextLayout = useCallback((e: any) => {
+  //   if (calc.current) {
+  //     console.log('lines', e.nativeEvent.lines.length)
+  //     setShowMore(e.nativeEvent.lines.length > numberOfLines)
+  //   }
+  //   calc.current = false
+  // }, [])
 
   const handleLikes = () => {
     const postlikesRef = firestore()
@@ -137,7 +137,7 @@ const Feed = ({
               uri: image,
               priority: FastImage.priority.normal,
             }}
-            resizeMode={FastImage.resizeMode.contain}
+            resizeMode={FastImage.resizeMode.cover}
           />
         </NView>
       )}
@@ -165,19 +165,24 @@ const Feed = ({
           )}
           <Text
             style={styles.description}
-            numberOfLines={numberOfLines}
-            onTextLayout={onTextLayout}>
-            {description}
+            // numberOfLines={2}
+            // onTextLayout={onTextLayout}
+          >
+            {description.slice(0, !show ? 80 : Infinity)}
           </Text>
-          <Text
-            style={styles.seeMore}
-            onPress={() => {
-              // @ts-ignore
-              setNumberOfLines(showMore ? undefined : 2)
-              setShowMore(prev => !prev)
-            }}>
-            See {showMore ? 'More' : 'Less'}
-          </Text>
+
+          {description.length > 100 && (
+            <Text
+              style={styles.seeMore}
+              // onPress={() => {
+              //   // @ts-ignore
+              //   setNumberOfLines(showMore ? undefined : 2)
+              //   setShowMore(prev => !prev)
+              // }}
+              onPress={() => setShow(prev => !prev)}>
+              {show ? 'See Less' : 'See More'}
+            </Text>
+          )}
         </NView>
 
         {/* USER INTERACTIONS */}
@@ -259,10 +264,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   image: {
-    // flex: 1,
     aspectRatio: 1,
-    // width: '100%',
-    // height: '100%',
   },
   text: {
     color: 'white',
