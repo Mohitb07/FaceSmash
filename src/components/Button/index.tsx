@@ -1,27 +1,26 @@
-import React, {ReactElement, SVGProps} from 'react'
+import React, {ReactElement} from 'react'
 
 import {
-  Text,
-  StyleSheet,
-  TouchableOpacity,
   ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
 } from 'react-native'
 
-import {COLORS} from '../../constants'
-import {PresenceTransition, View} from 'native-base'
+import {View} from 'native-base'
 import {TextStyle} from 'react-native'
+import {COLORS} from '../../constants'
 
 interface Props {
   onPress: () => void
   text: string
-  disabled: boolean
+  disabled?: boolean
   bgColor?: string
   icon?: ReactElement
-  style?: object
+  style?: TextStyle
   textStyle?: TextStyle
   loader?: boolean
   showRing?: boolean
-  loadingText?: string
 }
 
 const Button: React.FC<Props> = ({
@@ -34,7 +33,6 @@ const Button: React.FC<Props> = ({
   textStyle,
   loader = false,
   showRing = true,
-  loadingText = 'Loading...',
 }: Props) => {
   return (
     <View
@@ -42,13 +40,13 @@ const Button: React.FC<Props> = ({
       padding="0.5"
       flexGrow={1}
       borderWidth="2"
-      rounded="full">
+      rounded="full"
+      opacity={disabled ? 0.5 : 1}>
       <TouchableOpacity
         disabled={disabled}
         style={[
           styles.btn,
           bgColor.length > 0 && {backgroundColor: bgColor},
-          // disabled && styles.disabled,
           customStyle,
         ]}
         onPress={onPress}>
@@ -56,22 +54,7 @@ const Button: React.FC<Props> = ({
         {loader ? (
           <ActivityIndicator color={COLORS.primary} />
         ) : (
-          // <Text
-          //   style={[
-          //     styles.btnText,
-          //     // disabled && styles.disabled,
-          //     textStyle,
-          //   ]}>
-          //   {loadingText}
-          // </Text>
-          <Text
-            style={[
-              styles.btnText,
-              // disabled && styles.disabled,
-              textStyle,
-            ]}>
-            {text}
-          </Text>
+          <Text style={[styles.btnText, textStyle]}>{text}</Text>
         )}
       </TouchableOpacity>
     </View>
