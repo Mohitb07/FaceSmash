@@ -5,7 +5,7 @@ import {StyleSheet, TouchableOpacity} from 'react-native'
 import {useResetRecoilState} from 'recoil'
 import {bottomSheetState} from '../../../atoms/bottomSheetAtom'
 import {AuthUserContext} from '../../../Context/auth'
-import {DocumentIcon, LogoutIcon, PrivacyIcon} from '../../../SVG'
+import {LogoutIcon} from '../../../SVG'
 
 const ProfileBottomSheet = () => {
   const {user} = useContext(AuthUserContext)
@@ -34,22 +34,6 @@ const ProfileBottomSheet = () => {
           Personal Settings
         </NText>
       </Box>
-      <Actionsheet.Item style={styles.defaultStyle}>
-        <TouchableOpacity style={styles.btn}>
-          <DocumentIcon style={{marginRight: 5}} />
-          <NText color="white" fontFamily="Font-Semibold">
-            Settings and Privacy
-          </NText>
-        </TouchableOpacity>
-      </Actionsheet.Item>
-      <Actionsheet.Item style={styles.defaultStyle}>
-        <TouchableOpacity style={styles.btn}>
-          <PrivacyIcon style={{marginRight: 5}} />
-          <NText color="white" fontFamily="Font-Semibold">
-            Settings and Privacy
-          </NText>
-        </TouchableOpacity>
-      </Actionsheet.Item>
       {!!user && (
         <Actionsheet.Item style={styles.defaultStyle}>
           <TouchableOpacity style={styles.btn} onPress={onLogoutAttempt}>

@@ -1,10 +1,10 @@
+import firestore from '@react-native-firebase/firestore'
+import storage from '@react-native-firebase/storage'
 import {Actionsheet, Box, Icon, Text as NText} from 'native-base'
 import React, {useContext} from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
 import {AuthUserContext} from '../../../Context/auth'
-import {FeedEditIcon, DeleteIcon, FeedShareIcon} from '../../../SVG'
-import firestore from '@react-native-firebase/firestore'
-import storage from '@react-native-firebase/storage'
+import {DeleteIcon} from '../../../SVG'
 
 interface IFeedMoreProps {
   postId: string
@@ -24,8 +24,6 @@ const FeedMore = ({
   const {user} = useContext(AuthUserContext)
   console.log('has imageRef', imageRef)
   const handleDeletePost = async () => {
-    // remove image from storage if an image exists (DONE)
-    // remove doc from postlikes subcollection if present
     firestore()
       .collection('Posts')
       .doc(postId)
@@ -64,24 +62,6 @@ const FeedMore = ({
           Post Detail
         </NText>
       </Box>
-      <Actionsheet.Item
-        style={styles.defaultStyle}
-        startIcon={<Icon as={FeedEditIcon} mr="1" size="5" />}>
-        <TouchableOpacity>
-          <NText color="white" fontFamily="Lato-Semibold">
-            Edit Post
-          </NText>
-        </TouchableOpacity>
-      </Actionsheet.Item>
-      <Actionsheet.Item
-        style={styles.defaultStyle}
-        startIcon={<Icon as={FeedShareIcon} name="share" mr="1" size="5" />}>
-        <TouchableOpacity>
-          <NText color="white" fontFamily="Lato-Semibold">
-            Share Post
-          </NText>
-        </TouchableOpacity>
-      </Actionsheet.Item>
       {!!user && (
         <Actionsheet.Item
           startIcon={<Icon as={DeleteIcon} mr="1" size="5" />}
