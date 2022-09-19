@@ -11,6 +11,8 @@ import FastImage from 'react-native-fast-image'
 import {COLORS} from '../../../constants'
 import {EditIcon, FilterIcon, GridIcon, UserIcon} from '../../../SVG'
 import StyledButton from '../../Button'
+import {RootStackParamList} from '../../../Navigation/Root'
+import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 const redis = new Redis({
   url: 'https://usw2-welcomed-duckling-30227.upstash.io',
@@ -18,11 +20,48 @@ const redis = new Redis({
     'AXYTASQgOWMyNTcwZTQtMzQ3Yy00NWEyLTkzZjktNzM5ZmJkNTdiOWUzNjg4N2RhOGEzMTQwNDc0Nzk0ZGRmNTAwODc4ZWYyMjE=',
 })
 
-const ProfileHeader = ({userId, totalPosts = 0}) => {
-  const navigation = useNavigation()
-  const [userData, setUserData] = useState({})
-  const authUser = auth().currentUser.uid
+interface IProfileHeaderProps {
+  userId: string
+  totalPosts: number
+}
+
+interface IUserData {
+  bio: string
+  createdAt: string
+  email: string
+  followers: Array<string>
+  followings: Array<string>
+  key: string
+  lastSignIn: string
+  profilePic: string
+  qusername: string
+  uid: string
+  username: string
+}
+
+const defaultValues = {
+  bio: '',
+  createdAt: '',
+  email: '',
+  followers: [],
+  followings: [],
+  key: '',
+  lastSignIn: '',
+  profilePic: '',
+  qusername: '',
+  uid: '',
+  username: '',
+}
+
+// {"bio": "Front End Engineer", "createdAt": "2022-09-16T17:32:01.168Z", "email": "bmohit980@gmail.com", "followers": [], "followings": [], "key": "6TvlX8oyiXQwNzxhm7Dj3vLuGsr1", "lastSignIn": "2022-09-16T17:32:01.168Z", "profilePic": "https://firebasestorage.googleapis.com/v0/b/facesmash-8ff0b.appspot.com/o/6TvlX8oyiXQwNzxhm7Dj3vLuGsr1%2FprofilePic?alt=media&token=2053901a-69f2-4ab6-9064-e26ace73981d", "qusername": "mohitb07", "uid": "6TvlX8oyiXQwNzxhm7Dj3vLuGsr1", "username": "Mohitb07"}
+
+const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
+  const navigation =
+    useNavigation<NativeStackNavigationProp<RootStackParamList>>()
+  const [userData, setUserData] = useState<IUserData>(defaultValues)
+  const authUser = auth().currentUser?.uid
   const isMounted = useRef(false)
+  console.log('userdata', userData)
   useEffect(() => {
     isMounted.current = true
     async function fetchUserData() {
@@ -44,6 +83,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
               //   JSON.stringify({...snapshot.data(), key: snapshot.id}),
               // )
               setUserData({
+                ...defaultValues,
                 ...snapshot.data(),
                 key: snapshot.id,
               })
@@ -69,11 +109,11 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
           numberOfLines={1}
           ellipsizeMode="tail"
           fontSize="lg">
-          {userData?.username}
+          {userData.username}
         </Text>
       ),
     })
-  }, [userData?.username])
+  }, [userData.username])
 
   return (
     <Box my="2" mb="5" paddingX="2">
@@ -85,7 +125,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
             borderRadius: 100,
           }}
           source={{
-            uri: userData?.profilePic,
+            uri: userData.profilePic,
             priority: FastImage.priority.normal,
           }}
           resizeMode={FastImage.resizeMode.cover}
@@ -101,7 +141,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
           </View>
           <View>
             <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
-              {userData?.followers?.length ?? 0}
+              {userData.followers.length}
             </Text>
             <Text color={COLORS.white2} fontFamily="Lato-Regular">
               Followers
@@ -109,7 +149,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
           </View>
           <View>
             <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
-              {userData?.followings?.length ?? 0}
+              {userData.followings.length}
             </Text>
             <Text color={COLORS.white2} fontFamily="Lato-Regular">
               Following
@@ -120,9 +160,9 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
 
       <View my="2" mb="2">
         <Text fontSize="md" letterSpacing="lg" fontFamily="Lato-Regular">
-          {userData?.username ?? ''}
+          {userData.username}
         </Text>
-        {userData?.bio && (
+        {Boolean(userData.bio) && (
           <HStack alignItems="center">
             <Text fontSize="sm" color={COLORS.gray} fontFamily="Lato-Regular">
               {userData.bio}
@@ -134,7 +174,7 @@ const ProfileHeader = ({userId, totalPosts = 0}) => {
           fontSize="sm"
           color={COLORS.gray}
           fontFamily="Lato-Regular">
-          {userData?.email ?? ''}
+          {userData.email}
         </Text>
       </View>
 
