@@ -1,6 +1,6 @@
+import {NavigationContainerRef} from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
-import React, {createRef, useContext} from 'react'
-import {Dimensions} from 'react-native'
+import React, {createRef, Ref, useContext} from 'react'
 
 import Loader from '../../components/Loader'
 import {COLORS} from '../../constants'
@@ -37,7 +37,8 @@ export type RootStackParamList = {
 }
 
 const RootStack = createNativeStackNavigator<RootStackParamList>()
-export const navigationRef = createRef()
+export const navigationRef: Ref<NavigationContainerRef<RootStackParamList>> =
+  createRef()
 
 const Root = () => {
   const {user, initializing} = useContext(AuthUserContext)
