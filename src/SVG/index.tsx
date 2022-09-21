@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from 'react'
 import {View} from 'react-native'
 import Svg, {
@@ -11,10 +12,11 @@ import Svg, {
   Rect,
   Stop,
   ClipPath,
+  SvgProps,
 } from 'react-native-svg'
 import {COLORS} from '../constants'
 
-export const SearchIcon = () => {
+export const SearchIcon = (props: SvgProps) => {
   return (
     <View>
       <Svg
@@ -22,7 +24,8 @@ export const SearchIcon = () => {
         height="16"
         viewBox="0 0 20 20"
         fill="none"
-        xmlns="http://www.w3.org/2000/svg">
+        xmlns="http://www.w3.org/2000/svg"
+        {...props}>
         <Path
           d="M15.0258 13.8475L18.595 17.4159L17.4158 18.595L13.8475 15.0259C12.5198 16.0902 10.8683 16.6691 9.16666 16.6667C5.02666 16.6667 1.66666 13.3067 1.66666 9.16669C1.66666 5.02669 5.02666 1.66669 9.16666 1.66669C13.3067 1.66669 16.6667 5.02669 16.6667 9.16669C16.6691 10.8684 16.0902 12.5198 15.0258 13.8475ZM13.3542 13.2292C14.4118 12.1416 15.0024 10.6837 15 9.16669C15 5.94335 12.3892 3.33335 9.16666 3.33335C5.94333 3.33335 3.33333 5.94335 3.33333 9.16669C3.33333 12.3892 5.94333 15 9.16666 15C10.6837 15.0024 12.1416 14.4118 13.2292 13.3542L13.3542 13.2292Z"
           fill="#9CA7B9"
@@ -32,7 +35,7 @@ export const SearchIcon = () => {
   )
 }
 
-export const HeartOutlinIcon = props => (
+export const HeartOutlinIcon = (props: SvgProps) => (
   <Svg
     width="24px"
     height="24px"
@@ -49,7 +52,7 @@ export const HeartOutlinIcon = props => (
   </Svg>
 )
 
-export const HeartFilledIcon = props => (
+export const HeartFilledIcon = (props: SvgProps) => (
   <Svg
     width="24px"
     height="24px"
@@ -64,57 +67,14 @@ export const HeartFilledIcon = props => (
   </Svg>
 )
 
-export const CommentIcon = props => {
-  return (
-    <Svg
-      width="24px"
-      height="24px"
-      viewBox="0 0 24 24"
-      id="magicoon-Filled"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}>
-      <Defs></Defs>
-      <G id="comment-Filled">
-        <Path
-          id="comment-Filled-2"
-          data-name="comment-Filled"
-          className="cls-1"
-          d="M21.5,8v6A4.505,4.505,0,0,1,17,18.5H6.829a1.491,1.491,0,0,0-1.061.439L3.354,21.354A.5.5,0,0,1,3,21.5a.512.512,0,0,1-.191-.038A.5.5,0,0,1,2.5,21V8A4.505,4.505,0,0,1,7,3.5H17A4.505,4.505,0,0,1,21.5,8Z"
-          fill="#fff"
-        />
-      </G>
-    </Svg>
-  )
-}
-
-export const CommentOutlinedIcon = props => (
-  <Svg
-    width="24px"
-    height="24px"
-    viewBox="0 0 24 24"
-    id="magicoon-Regular"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}>
-    <Defs></Defs>
-    <G id="comment-Regular">
-      <Path
-        id="comment-Regular-2"
-        data-name="comment-Regular"
-        className="cls-1"
-        d="M17,3.25H7A4.756,4.756,0,0,0,2.25,8V21a.75.75,0,0,0,1.28.53l2.414-2.414a1.246,1.246,0,0,1,.885-.366H17A4.756,4.756,0,0,0,21.75,14V8A4.756,4.756,0,0,0,17,3.25ZM20.25,14A3.254,3.254,0,0,1,17,17.25H6.829a2.73,2.73,0,0,0-1.945.806L3.75,19.189V8A3.254,3.254,0,0,1,7,4.75H17A3.254,3.254,0,0,1,20.25,8Z"
-        fill="#fff"
-      />
-    </G>
-  </Svg>
-)
-
-export const FacebookIcon = () => {
+export const FacebookIcon = (props: SvgProps) => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 48 48"
       width="26px"
-      height="26px">
+      height="26px"
+      {...props}>
       <LinearGradient
         id="Ld6sqrtcxMyckEl6xeDdMa"
         x1="9.993"
@@ -137,13 +97,14 @@ export const FacebookIcon = () => {
   )
 }
 
-export const GoogleIcon = () => {
+export const GoogleIcon = (props: SvgProps) => {
   return (
     <Svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 48 48"
       width="26px"
-      height="26px">
+      height="26px"
+      {...props}>
       <Path
         fill="#fbc02d"
         d="M43.611,20.083H42V20H24v8h11.303c-1.649,4.657-6.08,8-11.303,8c-6.627,0-12-5.373-12-12	s5.373-12,12-12c3.059,0,5.842,1.154,7.961,3.039l5.657-5.657C34.046,6.053,29.268,4,24,4C12.955,4,4,12.955,4,24s8.955,20,20,20	s20-8.955,20-20C44,22.659,43.862,21.35,43.611,20.083z"
@@ -164,7 +125,7 @@ export const GoogleIcon = () => {
   )
 }
 
-export const VerificationIcon = props => (
+export const VerificationIcon = (props: SvgProps) => (
   <Svg
     width="24px"
     height="24px"
@@ -189,7 +150,7 @@ export const VerificationIcon = props => (
   </Svg>
 )
 
-export const GearIcon = props => (
+export const GearIcon = (props: SvgProps) => (
   <Svg
     width="20px"
     height="20px"
@@ -209,7 +170,7 @@ export const GearIcon = props => (
   </Svg>
 )
 
-export const LogoutIcon = props => (
+export const LogoutIcon = (props: SvgProps) => (
   <Svg
     width="15px"
     height="20px"
@@ -230,7 +191,7 @@ export const LogoutIcon = props => (
   </Svg>
 )
 
-export const PrivacyIcon = props => (
+export const PrivacyIcon = (props: SvgProps) => (
   <Svg
     width="15px"
     height="20px"
@@ -246,7 +207,7 @@ export const PrivacyIcon = props => (
   </Svg>
 )
 
-export const DocumentIcon = props => (
+export const DocumentIcon = (props: SvgProps) => (
   <Svg
     width="15px"
     height="20px"
@@ -298,7 +259,7 @@ export const DocumentIcon = props => (
   </Svg>
 )
 
-export const HomeIcon = props => (
+export const HomeIcon = (props: SvgProps) => (
   <Svg
     width="24px"
     height="24px"
@@ -313,7 +274,7 @@ export const HomeIcon = props => (
   </Svg>
 )
 
-export const GallaryIcon = props => (
+export const GallaryIcon = (props: SvgProps) => (
   <Svg
     width="15px"
     height="20px"
@@ -325,7 +286,7 @@ export const GallaryIcon = props => (
   </Svg>
 )
 
-export const CameraIcon = props => (
+export const CameraIcon = (props: SvgProps) => (
   <Svg
     width="14px"
     height="14px"
@@ -359,22 +320,7 @@ export const CameraIcon = props => (
   </Svg>
 )
 
-// export const CheckIcon = props => (
-//   <Svg
-//     width="28px"
-//     height="28px"
-//     viewBox="0 0 24 24"
-//     xmlns="http://www.w3.org/2000/svg"
-//     {...props}>
-//     <Polyline
-//       fill="none"
-//       stroke="#fff"
-//       strokeWidth={2}
-//       points="6 13 10.2 16.6 18 7"
-//     />
-//   </Svg>
-// );
-export const CheckIcon = props => (
+export const CheckIcon = (props: SvgProps) => (
   <Svg
     width="24px"
     height="24px"
@@ -391,7 +337,7 @@ export const CheckIcon = props => (
   </Svg>
 )
 
-export const CloseIcon = props => (
+export const CloseIcon = (props: SvgProps) => (
   <Svg
     width="24px"
     height="24px"
@@ -406,7 +352,7 @@ export const CloseIcon = props => (
   </Svg>
 )
 
-export const BackIcon = props => (
+export const BackIcon = (props: SvgProps) => (
   <Svg
     width="20px"
     height="20px"
@@ -418,7 +364,7 @@ export const BackIcon = props => (
   </Svg>
 )
 
-export const EditIcon = props => (
+export const EditIcon = (props: SvgProps) => (
   <Svg
     width="20px"
     height="20px"
@@ -445,7 +391,7 @@ export const EditIcon = props => (
   </Svg>
 )
 
-export const AddIcon = props => (
+export const AddIcon = (props: SvgProps) => (
   <Svg
     width="24px"
     height="24px"
@@ -466,7 +412,7 @@ export const AddIcon = props => (
   </Svg>
 )
 
-export const PhotoIcon = props => (
+export const PhotoIcon = (props: SvgProps) => (
   <Svg
     id="Layer_1"
     xmlns="http://www.w3.org/2000/svg"
@@ -595,7 +541,7 @@ export const PhotoIcon = props => (
   </Svg>
 )
 
-export const LinkIcon = props => (
+export const LinkIcon = (props: SvgProps) => (
   <Svg
     id="Layer_1"
     xmlns="http://www.w3.org/2000/svg"
@@ -649,7 +595,7 @@ export const LinkIcon = props => (
   </Svg>
 )
 
-export const SecondaryDocumentIcon = props => (
+export const SecondaryDocumentIcon = (props: SvgProps) => (
   <Svg
     width="24px"
     height="24px"
@@ -664,7 +610,7 @@ export const SecondaryDocumentIcon = props => (
   </Svg>
 )
 
-export const LightningIcon = props => (
+export const LightningIcon = (props: SvgProps) => (
   <Svg
     width="24px"
     height="24px"
@@ -681,7 +627,7 @@ export const LightningIcon = props => (
   </Svg>
 )
 
-export const ThreeDotsIcon = props => (
+export const ThreeDotsIcon = (props: SvgProps) => (
   <Svg
     width="20px"
     height="20px"
@@ -690,12 +636,12 @@ export const ThreeDotsIcon = props => (
     {...props}>
     <Path
       d="M10.001 7.8a2.2 2.2 0 1 0 0 4.402A2.2 2.2 0 0 0 10 7.8zm-7 0a2.2 2.2 0 1 0 0 4.402A2.2 2.2 0 0 0 3 7.8zm14 0a2.2 2.2 0 1 0 0 4.402A2.2 2.2 0 0 0 17 7.8z"
-      fill={props.fillColor || COLORS.primary}
+      fill={props.fill || COLORS.primary}
     />
   </Svg>
 )
 
-export const GridIcon = props => (
+export const GridIcon = (props: SvgProps) => (
   <Svg
     width="48px"
     height="48px"
@@ -725,7 +671,7 @@ export const GridIcon = props => (
   </Svg>
 )
 
-export const FilterIcon = props => (
+export const FilterIcon = (props: SvgProps) => (
   <Svg
     width="24px"
     height="24px"
@@ -742,7 +688,7 @@ export const FilterIcon = props => (
   </Svg>
 )
 
-export const UserIcon = props => (
+export const UserIcon = (props: SvgProps) => (
   <Svg
     width="48px"
     height="48px"
@@ -803,7 +749,7 @@ export const UserIcon = props => (
   </Svg>
 )
 
-export const VerifyIcon = props => (
+export const VerifyIcon = (props: SvgProps) => (
   <Svg
     id="Capa_1"
     xmlns="http://www.w3.org/2000/svg"
@@ -828,7 +774,7 @@ export const VerifyIcon = props => (
   </Svg>
 )
 
-export const ReSendIcon = props => (
+export const ReSendIcon = (props: SvgProps) => (
   <Svg
     width="24px"
     height="24px"
@@ -848,7 +794,7 @@ export const ReSendIcon = props => (
   </Svg>
 )
 
-export const DeleteIcon = props => (
+export const DeleteIcon = (props: SvgProps) => (
   <Svg
     id="Layer_1"
     xmlns="http://www.w3.org/2000/svg"
@@ -916,7 +862,7 @@ export const DeleteIcon = props => (
   </Svg>
 )
 
-export const FeedShareIcon = props => (
+export const FeedShareIcon = (props: SvgProps) => (
   <Svg
     id="Layer_1"
     xmlns="http://www.w3.org/2000/svg"
@@ -986,7 +932,7 @@ export const FeedShareIcon = props => (
   </Svg>
 )
 
-export const FeedEditIcon = props => (
+export const FeedEditIcon = (props: SvgProps) => (
   <Svg
     id="Layer_1"
     xmlns="http://www.w3.org/2000/svg"
@@ -1142,7 +1088,7 @@ export const FeedEditIcon = props => (
   </Svg>
 )
 
-export const DocumentNotFound = props => (
+export const DocumentNotFound = (props: SvgProps) => (
   <Svg
     id="Layer_1"
     xmlns="http://www.w3.org/2000/svg"
@@ -1200,7 +1146,7 @@ export const DocumentNotFound = props => (
   </Svg>
 )
 
-export const TrendingIcon = props => (
+export const TrendingIcon = (props: SvgProps) => (
   <Svg
     width="24px"
     height="24px"
@@ -1218,7 +1164,7 @@ export const TrendingIcon = props => (
   </Svg>
 )
 
-export const SearchIcon1 = props => (
+export const SearchIcon1 = (props: SvgProps) => (
   <Svg
     id="Capa_1"
     xmlns="http://www.w3.org/2000/svg"
@@ -1256,7 +1202,7 @@ export const SearchIcon1 = props => (
   </Svg>
 )
 
-export const UserGroup = props => (
+export const UserGroup = (props: SvgProps) => (
   <Svg
     width="24px"
     height="24px"

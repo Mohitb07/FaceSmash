@@ -122,7 +122,7 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
       />
 
       <View style={styles.container}>
-        <View style={styles.userInfo}>
+        <View>
           <Image
             style={styles.profilePic}
             source={{
@@ -178,11 +178,6 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: COLORS.mainBackground,
   },
-  userInfo: {
-    // flex: 1,
-    // alignItems: 'center',
-    // justifyContent: 'center',
-  },
   profilePic: {
     width: 100,
     height: 100,
@@ -203,7 +198,6 @@ const styles = StyleSheet.create({
     color: '#747474',
   },
   btnContainer: {
-    // marginVertical: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-evenly',

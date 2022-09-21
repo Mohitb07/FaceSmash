@@ -8,7 +8,7 @@ import {AddIcon} from '../../SVG'
 import {ThemeComponentSizeType} from 'native-base/lib/typescript/components/types'
 
 type Props = {
-  uri: string
+  uri: string | undefined
   username?: string
   noRing?: boolean
   textStyle?: TextStyle

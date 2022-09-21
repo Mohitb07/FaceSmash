@@ -11,7 +11,7 @@ import {
   View as NView,
   VStack,
 } from 'native-base'
-import React, {useCallback, useContext, useRef, useState} from 'react'
+import React, {useContext, useState} from 'react'
 import {
   StyleSheet,
   Text,
@@ -53,16 +53,6 @@ const Feed = ({
   const {user} = useContext(AuthUserContext)
   const {onOpen, onClose, isOpen} = useDisclose()
   const [show, setShow] = useState(false)
-  // const [numberOfLines, setNumberOfLines] = useState(2)
-  const calc = useRef(true)
-
-  // const onTextLayout = useCallback((e: any) => {
-  //   if (calc.current) {
-  //     console.log('lines', e.nativeEvent.lines.length)
-  //     setShowMore(e.nativeEvent.lines.length > numberOfLines)
-  //   }
-  //   calc.current = false
-  // }, [])
 
   const handleLikes = () => {
     const postlikesRef = firestore()
@@ -163,23 +153,12 @@ const Feed = ({
               <Text style={styles.feedTitle}>{postTitle}</Text>
             </TouchableWithoutFeedback>
           )}
-          <Text
-            style={styles.description}
-            // numberOfLines={2}
-            // onTextLayout={onTextLayout}
-          >
+          <Text style={styles.description}>
             {description.slice(0, !show ? 80 : Infinity)}
           </Text>
 
           {description.length > 100 && (
-            <Text
-              style={styles.seeMore}
-              // onPress={() => {
-              //   // @ts-ignore
-              //   setNumberOfLines(showMore ? undefined : 2)
-              //   setShowMore(prev => !prev)
-              // }}
-              onPress={() => setShow(prev => !prev)}>
+            <Text style={styles.seeMore} onPress={() => setShow(prev => !prev)}>
               {show ? 'See Less' : 'See More'}
             </Text>
           )}

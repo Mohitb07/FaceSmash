@@ -1,16 +1,34 @@
-import React, {useEffect, useState, useContext, useCallback} from 'react'
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  ReactNode,
+} from 'react'
 import firestore from '@react-native-firebase/firestore'
 import {AuthUserContext} from './auth'
+import {IUserDetail} from '../interface'
+import {defaultValues} from '../components/Header/Profile'
 
-export const UserDataContext = React.createContext()
+interface IUserDataContext {
+  contextUser: IUserDetail | null
+  updateUserData: (
+    url: string,
+    navigation: any,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+    userId: string,
+  ) => void
+}
 
-const UserDataProvider = props => {
-  // console.log('user data context render')
-  const [contextUser, setContextUser] = useState(null)
+export const UserDataContext = React.createContext<IUserDataContext>({
+  contextUser: null,
+  updateUserData(url, navigation, setLoading, userId) {},
+})
+
+const UserDataProvider = ({children}: {children: ReactNode}) => {
+  const [contextUser, setContextUser] = useState<IUserDetail | null>(null)
   const {user} = useContext(AuthUserContext)
-
   console.log('auth User inside user data context 🎯', contextUser)
-
   useEffect(() => {
     function getData() {
       if (user) {
@@ -19,7 +37,10 @@ const UserDataProvider = props => {
           .doc(user?.uid)
           .onSnapshot(
             snapshot => {
-              setContextUser(snapshot.data())
+              setContextUser({
+                ...defaultValues,
+                ...snapshot.data(),
+              })
             },
             error => {
               console.log('fetching user context error', error)
@@ -31,8 +52,12 @@ const UserDataProvider = props => {
   }, [user?.uid, user?.emailVerified])
 
   const updateUserData = useCallback(
-    async (url, navigation, setLoading, userId) => {
-      console.log('authuser insdier', userId)
+    async (
+      url: string,
+      navigation: any,
+      setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+      userId: string,
+    ) => {
       if (userId) {
         const userRef = firestore().collection('Users').doc(userId)
 
@@ -57,7 +82,7 @@ const UserDataProvider = props => {
         allPosts.docs.forEach(doc => {
           const docRef = firestore().collection('Posts').doc(doc.id)
           batch.update(docRef, {
-            userProfile: updatedUser.data().profilePic,
+            userProfile: updatedUser.data()?.profilePic,
           })
         })
 
@@ -65,7 +90,10 @@ const UserDataProvider = props => {
           .commit()
           .then(() => {
             setLoading(false)
-            setContextUser(updatedUser.data())
+            setContextUser({
+              ...defaultValues,
+              ...updatedUser.data(),
+            })
             navigation.navigate('Profile', {
               providedUserId: userId,
             })
@@ -87,7 +115,11 @@ const UserDataProvider = props => {
 
   const value = {...memoizedUser, updateUserData}
 
-  return <UserDataContext.Provider value={value} {...props} />
+  return (
+    <UserDataContext.Provider value={value}>
+      {children}
+    </UserDataContext.Provider>
+  )
 }
 
 export default UserDataProvider

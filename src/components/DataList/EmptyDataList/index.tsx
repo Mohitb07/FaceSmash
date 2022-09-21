@@ -4,7 +4,6 @@ import {Text, View} from 'native-base'
 
 import {COLORS} from '../../../constants'
 import FeedSkeleton from '../../FeedSkeleton'
-// import FeedSkeleton from '../../FeedSkeleton'
 import {DocumentNotFound} from '../../../SVG'
 
 const EmptyList = ({loading}: {loading: boolean}) => {
