@@ -25,6 +25,7 @@ export interface IUserDetail {
   qusername: string
   uid: string
   username: string
+  bio?: string
 }
 
 export interface IBottomSheetState {
