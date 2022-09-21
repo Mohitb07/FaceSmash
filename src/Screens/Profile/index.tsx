@@ -34,7 +34,7 @@ const MyProfile = ({
         <TouchableOpacity
           onPress={handleModalState}
           style={styles.threeDotsIconContainer}>
-          <ThreeDotsIcon fillColor="#fff" />
+          <ThreeDotsIcon fill="#fff" />
         </TouchableOpacity>
       ),
     })
