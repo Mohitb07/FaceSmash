@@ -9,7 +9,7 @@ import React from 'react'
 
 type TextInputProps = {
   onChangeText: (text: string) => void
-  value: string
+  value: string | undefined
   placeholder: string
   icon?: any
   secure?: boolean

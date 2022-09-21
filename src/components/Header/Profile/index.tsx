@@ -39,7 +39,7 @@ interface IUserData {
   username: string
 }
 
-const defaultValues = {
+export const defaultValues = {
   bio: '',
   createdAt: '',
   email: '',
