@@ -51,3 +51,16 @@ export interface IPost {
   username: string
   imageRef?: string
 }
+
+export interface IDefaultUserDataState {
+  posts: IPost[]
+  loading: boolean
+  lastVisible: FirebaseFirestoreTypes.DocumentData | null
+}
+
+export interface IDefaultPostState {
+  selectedPost: IPost | null
+  posts: IPost[]
+  loading: boolean
+  lastVisible: FirebaseFirestoreTypes.DocumentData | null
+}

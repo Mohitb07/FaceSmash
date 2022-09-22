@@ -3,19 +3,17 @@ import {Spinner, View} from 'native-base'
 
 import firestore from '@react-native-firebase/firestore'
 
-import {IDefaultUserDataState} from '../../../atoms/userAtom'
 import usePagination from '../../../hooks/usePagination'
 import DataList from '../../DataList'
 import DataListFooter from '../../DataList/DataListFooter'
 import EmptyDataList from '../../DataList/EmptyDataList'
 import ProfileHeader from '../../Header/Profile'
 import {getLastVisibleDocRef} from '../../../utils/getLastVisibleDocRef'
-import {IPost} from '../../../interface'
-
-const LIMIT = 5
+import {IDefaultUserDataState, IPost} from '../../../interface'
+import {FEED_LIMIT} from '../../../constants'
 
 const ProfileFeed = ({userId}: {userId: string}) => {
-  const {withCondition} = usePagination()
+  const {queryMoreFilter} = usePagination()
 
   const [totalUserPosts, setTotalUserPosts] = useState(0)
   const [myRecentPosts, setMyRecentPosts] = useState<IDefaultUserDataState>({
@@ -30,7 +28,7 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       .collection('Posts')
       .where('user', '==', userId)
       .orderBy('createdAt', 'desc')
-      .limit(LIMIT)
+      .limit(FEED_LIMIT)
 
     const onsub = query.onSnapshot(
       snapshot => {
@@ -55,12 +53,11 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       },
       error => {
         console.log('fetchUserPosts error: ', error)
-        setMyRecentPosts(prev => ({
-          ...prev,
+        setMyRecentPosts({
           posts: [],
           loading: false,
           lastVisible: null,
-        }))
+        })
       },
     )
 
@@ -94,7 +91,7 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       loading: true,
     }))
     try {
-      const {paginatedResult, lastVisibleDocRef} = await withCondition(
+      const {paginatedResult, lastVisibleDocRef} = await queryMoreFilter(
         myRecentPosts.lastVisible,
         'Posts',
         'user',

@@ -2,16 +2,14 @@ import React, {useCallback, useEffect, useState} from 'react'
 
 import firestore from '@react-native-firebase/firestore'
 
-import {IDefaultPostState} from '../../../atoms/postAtom'
 import usePagination from '../../../hooks/usePagination'
 import {getLastVisibleDocRef} from '../../../utils/getLastVisibleDocRef'
 import DataList from '../../DataList'
 import Footer from '../../DataList/DataListFooter'
 import EmptyList from '../../DataList/EmptyDataList'
 import HomeHeader from '../../Header/Home'
-import {IPost} from '../../../interface'
-
-const LIMIT = 5
+import {IDefaultPostState, IPost} from '../../../interface'
+import {FEED_LIMIT} from '../../../constants'
 
 function HomeFeed() {
   console.log('calling HomeFeed')
@@ -22,14 +20,14 @@ function HomeFeed() {
     selectedPost: null,
   })
   const [refreshing, setRefreshing] = useState(false)
-  const {withoutCondition} = usePagination()
+  const {queryMore} = usePagination()
   const getPosts = useCallback(() => {
     console.log('calling getPosts home feed')
     try {
       firestore()
         .collection('Posts')
         .orderBy('createdAt', 'desc')
-        .limit(LIMIT)
+        .limit(FEED_LIMIT)
         .onSnapshot(
           snapshot => {
             console.log('calling home feed snapshot')
@@ -87,7 +85,7 @@ function HomeFeed() {
       loading: true,
     }))
     try {
-      const {paginatedResult, lastVisibleDocRef} = await withoutCondition(
+      const {paginatedResult, lastVisibleDocRef} = await queryMore(
         postStateValue.lastVisible,
         'Posts',
       )
@@ -106,7 +104,6 @@ function HomeFeed() {
       }))
     }
   }
-  const value = <EmptyList loading={postStateValue.loading} />
 
   return (
     <DataList

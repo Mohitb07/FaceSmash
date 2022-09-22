@@ -10,7 +10,7 @@ import React, {
 import {View, Text} from 'native-base'
 import {Animated, Dimensions} from 'react-native'
 import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown'
-import {COLORS} from '../../constants'
+import {COLORS, USERS_LIMIT} from '../../constants'
 import {CloseIcon, SearchIcon} from '../../SVG'
 import firestore from '@react-native-firebase/firestore'
 import {IUserDetail} from '../../interface'
@@ -45,7 +45,7 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
           .collection('Users')
           .where('qusername', '>=', query)
           .where('qusername', '<=', query + '\uf8ff')
-          .limit(5)
+          .limit(USERS_LIMIT)
           .get()
           .then(
             snapshot => {
@@ -87,7 +87,7 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
           .collection('Users')
           .where('qusername', '>=', query)
           .where('qusername', '<=', query + '\uf8ff')
-          .limit(5)
+          .limit(USERS_LIMIT)
           .get()
           .then(
             snapshot => {

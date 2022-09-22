@@ -1,5 +1,4 @@
 import {extendTheme} from 'native-base'
-import {COLORS} from '../constants'
 
 export const theme = extendTheme({
   colors: {
@@ -16,13 +15,12 @@ export const theme = extendTheme({
       800: '#4b2c8d',
       900: '#3a2368',
     },
-    // Redefinig only one shade, rest of the color will remain same.
-    amber: {
-      400: '#d97706',
-    },
   },
   config: {
     // Changing initialColorMode to 'dark'
     initialColorMode: 'dark',
+  },
+  fonts: {
+    fontFamily: 'Lato',
   },
 })
