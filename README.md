@@ -11,9 +11,10 @@ It's a social media platform where users can interact with friends or family. It
 - Email and Password based authentication with refresh token
 - Post Creation with or without images
 - Post Like/Dislike
-- Infinite querying
+- Infinite Feed Scrolling
 - User Profile
 - Edit Profile
+- Search Users
 - more to come...
 
 ## Environment Variables
