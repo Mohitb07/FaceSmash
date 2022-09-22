@@ -1,73 +1,12 @@
 import firestore, {
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore'
-import {useCallback} from 'react'
+import {FEED_LIMIT} from '../constants'
 import {IPost} from '../interface'
 import {getLastVisibleDocRef} from '../utils/getLastVisibleDocRef'
 
-const LIMIT = 5
-
 const usePagination = () => {
-  // const retrieveMore = useCallback(
-  //   async (
-  //     lastVisible,
-  //     collection,
-  //     getterData,
-  //     setter,
-  //     where = false,
-  //     arg1 = '',
-  //     arg2 = '',
-  //     arg3 = '',
-  //   ) => {
-  //     console.log('calling')
-  //     if (!lastVisible) {
-  //       return
-  //     }
-  //     setter(prev => ({
-  //       ...prev,
-  //       loading: true,
-  //     }))
-  //     let dataList
-  //     try {
-  //       if (where) {
-  //         dataList = await firestore()
-  //           .collection(collection)
-  //           .where(arg1, arg2, arg3)
-  //           .orderBy('createdAt', 'desc')
-  //           .startAfter(lastVisible)
-  //           .limit(LIMIT)
-  //           .get()
-  //       } else {
-  //         dataList = await firestore()
-  //           .collection(collection)
-  //           .orderBy('createdAt', 'desc')
-  //           .startAfter(lastVisible)
-  //           .limit(LIMIT)
-  //           .get()
-  //       }
-  //       const latestPost = dataList.docs.map(item => ({
-  //         ...item.data(),
-  //         key: item.id,
-  //       }))
-  //       let lastVisibleDoc = dataList.docs[dataList.docs.length - 1]
-  //       setter(prev => ({
-  //         ...prev,
-  //         posts: [...getterData, ...latestPost],
-  //         loading: false,
-  //         lastVisible: lastVisibleDoc,
-  //       }))
-  //     } catch (error) {
-  //       console.log('getPosts error', error)
-  //       setter(prev => ({
-  //         ...prev,
-  //         loading: false,
-  //       }))
-  //     }
-  //   },
-  //   [],
-  // )
-
-  const withoutCondition = async (
+  const queryMore = async (
     lastVisibleDoc: FirebaseFirestoreTypes.DocumentData | null,
     collection: string,
   ): Promise<{
@@ -82,7 +21,7 @@ const usePagination = () => {
       .collection(collection)
       .orderBy('createdAt', 'desc')
       .startAfter(lastVisibleDoc)
-      .limit(LIMIT)
+      .limit(FEED_LIMIT)
       .get()
     const paginatedResult = queryResult.docs.map(doc => ({
       createdAt: null,
@@ -101,7 +40,7 @@ const usePagination = () => {
     return {paginatedResult, lastVisibleDocRef}
   }
 
-  const withCondition = async (
+  const queryMoreFilter = async (
     lastVisibleDoc: FirebaseFirestoreTypes.DocumentData | null,
     collection: string,
     arg1: string,
@@ -120,7 +59,7 @@ const usePagination = () => {
       .where(arg1, arg2, arg3)
       .orderBy('createdAt', 'desc')
       .startAfter(lastVisibleDoc)
-      .limit(LIMIT)
+      .limit(FEED_LIMIT)
       .get()
     const paginatedResult = queryResult.docs.map(doc => ({
       createdAt: null,
@@ -139,7 +78,7 @@ const usePagination = () => {
     return {paginatedResult, lastVisibleDocRef}
   }
 
-  return {withoutCondition, withCondition}
+  return {queryMore, queryMoreFilter}
 }
 
 export default usePagination
