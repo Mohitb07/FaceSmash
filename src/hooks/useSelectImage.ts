@@ -28,7 +28,7 @@ const useSelectImage = () => {
 
   const handleChooseGallary = ({
     navigate = false,
-    screen = 'AddPost',
+    screen,
   }: HandleChooseGallary) => {
     ImagePicker.launchImageLibrary(
       {mediaType: 'photo', quality: 0.8},
