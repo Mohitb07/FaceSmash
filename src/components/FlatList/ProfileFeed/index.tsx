@@ -14,9 +14,8 @@ import {FEED_LIMIT} from '../../../constants'
 
 const ProfileFeed = ({userId}: {userId: string}) => {
   const {queryMoreFilter} = usePagination()
-
   const [totalUserPosts, setTotalUserPosts] = useState(0)
-  const [myRecentPosts, setMyRecentPosts] = useState<IDefaultUserDataState>({
+  const [allUserPosts, setAllUserPosts] = useState<IDefaultUserDataState>({
     posts: [],
     loading: true,
     lastVisible: null,
@@ -30,7 +29,7 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       .orderBy('createdAt', 'desc')
       .limit(FEED_LIMIT)
 
-    const onsub = query.onSnapshot(
+    const subscriber = query.onSnapshot(
       snapshot => {
         const postList: Array<IPost> = snapshot.docs.map(d => ({
           key: d.id,
@@ -44,7 +43,7 @@ const ProfileFeed = ({userId}: {userId: string}) => {
           ...d.data(),
         }))
         const lastVisiblePostRef = getLastVisibleDocRef(snapshot)
-        setMyRecentPosts(prev => ({
+        setAllUserPosts(prev => ({
           ...prev,
           posts: postList,
           loading: false,
@@ -53,68 +52,67 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       },
       error => {
         console.log('fetchUserPosts error: ', error)
-        setMyRecentPosts({
+        setAllUserPosts({
           posts: [],
           loading: false,
           lastVisible: null,
         })
       },
     )
-
-    return onsub
+    return subscriber
   }, [userId])
 
   useEffect(() => {
     initialLoad.current = false
-    const onsub = getPosts()
+    const unsubscribe = getPosts()
     return () => {
       console.log('unmounting profile screen')
-      onsub()
+      unsubscribe()
     }
   }, [getPosts])
 
   useEffect(() => {
-    const unsub = firestore()
+    const unsubscribe = firestore()
       .collection('Posts')
       .where('user', '==', userId)
       .onSnapshot(snapshot => {
         setTotalUserPosts(snapshot.docs.length)
       })
     return () => {
-      unsub()
+      unsubscribe()
     }
   }, [userId])
 
   const getMoreData = async () => {
-    setMyRecentPosts(prev => ({
+    setAllUserPosts(prev => ({
       ...prev,
       loading: true,
     }))
     try {
       const {paginatedResult, lastVisibleDocRef} = await queryMoreFilter(
-        myRecentPosts.lastVisible,
+        allUserPosts.lastVisible,
         'Posts',
         'user',
         '==',
         userId,
       )
-      setMyRecentPosts(prev => ({
+      setAllUserPosts(prev => ({
         ...prev,
-        posts: [...myRecentPosts.posts, ...paginatedResult],
+        posts: [...allUserPosts.posts, ...paginatedResult],
         loading: false,
         lastVisible: lastVisibleDocRef,
       }))
     } catch (error) {
       console.error('ERROR while fetching paginated posts home screen', error)
     } finally {
-      setMyRecentPosts(prev => ({
+      setAllUserPosts(prev => ({
         ...prev,
         loading: false,
       }))
     }
   }
 
-  if (initialLoad.current && myRecentPosts.loading) {
+  if (initialLoad.current && allUserPosts.loading) {
     return (
       <View flex={1} justifyContent="center" alignItems="center">
         <Spinner />
@@ -124,13 +122,13 @@ const ProfileFeed = ({userId}: {userId: string}) => {
   return (
     <DataList
       key={userId}
-      dataList={myRecentPosts.posts}
+      dataList={allUserPosts.posts}
       Header={<ProfileHeader totalPosts={totalUserPosts} userId={userId} />}
-      EmptyList={<EmptyDataList loading={myRecentPosts.loading} />}
+      EmptyList={<EmptyDataList loading={allUserPosts.loading} />}
       Footer={
         <DataListFooter
-          dataList={myRecentPosts.posts}
-          loading={myRecentPosts.loading}
+          dataList={allUserPosts.posts}
+          loading={allUserPosts.loading}
         />
       }
       retrieveMore={getMoreData}

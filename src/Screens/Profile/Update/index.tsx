@@ -1,21 +1,22 @@
-import {HStack} from 'native-base'
 import React, {useContext, useState} from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
-import {View as NView} from 'native-base'
-import Button from '../../../components/Button'
-import {CheckIcon, CloseIcon} from '../../../SVG'
+import {HStack, View as NView} from 'native-base'
 
 import firestore from '@react-native-firebase/firestore'
 import storage from '@react-native-firebase/storage'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import * as ImagePicker from 'react-native-image-picker'
+
+import Button from '../../../components/Button'
+import {CheckIcon, CloseIcon} from '../../../SVG'
 import Header from '../../../components/Header'
+import Label from '../../../components/Label'
+import StyledTextInput from '../../../components/TextInput'
 import {COLORS} from '../../../constants/theme'
 import {AuthUserContext} from '../../../Context/auth'
 import {UserDataContext} from '../../../Context/userData'
 import {RootStackParamList} from '../../../Navigation/Root'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import Label from '../../../components/Label'
-import StyledTextInput from '../../../components/TextInput'
+import useSelectImage from '../../../hooks/useSelectImage'
 
 type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -23,53 +24,50 @@ type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
 >
 
 const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
-  const [image, setImage] = useState<string>('')
-  const {user} = useContext(AuthUserContext)
+  // const [image, setImage] = useState<string>('')
   const [userBio, setUserBio] = useState<string>('')
-  const {contextUser, updateUserData} = useContext(UserDataContext)
   const [loading, setLoading] = useState(false)
+  const {user} = useContext(AuthUserContext)
+  const {contextUser, updateUserData} = useContext(UserDataContext)
+  const {handleChooseGallary, handleTakePhoto, selectedImage} = useSelectImage()
+  const USER_PROFILE_PIC_REFERENCE = `${contextUser?.uid}/profilePic/`
 
-  const disabled = !(!!image || !!userBio)
+  const disabled = !(!!selectedImage || !!userBio)
 
-  console.log('context User ', contextUser)
+  // const handleChooseGallary = () => {
+  //   ImagePicker.launchImageLibrary({mediaType: 'photo'}, response => {
+  //     if (response.didCancel) {
+  //       return
+  //     } else if (response.errorCode) {
+  //       console.log('Image picker error', response.errorMessage)
+  //     } else {
+  //       if (response.assets) {
+  //         const value = response.assets[0].uri
+  //         setImage(value!)
+  //       }
+  //     }
+  //   })
+  // }
 
-  console.log('image', !!image)
-  console.log('userBio', !!userBio)
-
-  const handleChooseGallary = () => {
-    ImagePicker.launchImageLibrary({mediaType: 'photo'}, response => {
-      if (response.didCancel) {
-        return
-      } else if (response.errorCode) {
-        console.log('Image picker error', response.errorMessage)
-      } else {
-        if (response.assets) {
-          const value = response.assets[0].uri
-          setImage(value!)
-        }
-      }
-    })
-  }
-
-  const handleTakePhoto = () => {
-    ImagePicker.launchCamera({mediaType: 'photo'}, response => {
-      if (response.didCancel) {
-        return
-      } else if (response.errorCode) {
-        console.log('Image picker error', response.errorMessage)
-      } else {
-        if (response.assets) {
-          const value = response.assets[0].uri
-          setImage(value!)
-        }
-      }
-    })
-  }
+  // const handleTakePhoto = () => {
+  //   ImagePicker.launchCamera({mediaType: 'photo'}, response => {
+  //     if (response.didCancel) {
+  //       return
+  //     } else if (response.errorCode) {
+  //       console.log('Image picker error', response.errorMessage)
+  //     } else {
+  //       if (response.assets) {
+  //         const value = response.assets[0].uri
+  //         setImage(value!)
+  //       }
+  //     }
+  //   })
+  // }
 
   const handleUploadImage = async () => {
     setLoading(true)
-    if (userBio) {
-      const filterdUserBio = userBio.trim()
+    const filterdUserBio = userBio.trim()
+    if (filterdUserBio) {
       firestore()
         .collection('Users')
         .doc(user.uid)
@@ -77,26 +75,23 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
           {
             bio: filterdUserBio,
           },
-          {merge: true},
+          {merge: true}, // so that it don't overwrite the existing document data
         )
         .then(() => {
           console.log('bio updated')
-          !Boolean(image) && navigation.goBack()
+          !Boolean(selectedImage) && navigation.goBack()
         })
     }
-    if (image) {
-      console.log('inside image')
+    if (selectedImage) {
       storage()
-        .ref(`${contextUser?.uid}/profilePic/`)
-        .putFile(image)
+        .ref(USER_PROFILE_PIC_REFERENCE)
+        .putFile(selectedImage)
         .then(snapshot => {
-          console.log('IMAGE UPLOADED', snapshot)
-          const imageRef = storage().ref(`${contextUser?.uid}/profilePic/`)
-          imageRef
+          storage()
+            .ref(USER_PROFILE_PIC_REFERENCE)
             .getDownloadURL()
             .then(url => {
-              console.log('UPLOADED IMAGE URL', url)
-              updateUserData(url, navigation, setLoading, user.uid)
+              updateUserData(url, navigation, setLoading, contextUser?.uid!)
             })
             .catch(err => {
               console.log('image download error', err)
@@ -126,7 +121,7 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
           <Image
             style={styles.profilePic}
             source={{
-              uri: image ? image : contextUser?.profilePic,
+              uri: selectedImage ? selectedImage : contextUser?.profilePic,
             }}
           />
           <View style={styles.fullNameContainer}>
@@ -146,7 +141,7 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
         <HStack space="10">
           <Button
             text="Open Gallary"
-            onPress={handleChooseGallary}
+            onPress={() => handleChooseGallary({navigate: false})}
             bgColor={COLORS.white2}
             showRing={false}
             textStyle={{fontFamily: 'Lato-Heavy'}}
