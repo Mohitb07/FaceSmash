@@ -59,7 +59,6 @@ export interface IDefaultUserDataState {
 }
 
 export interface IDefaultPostState {
-  selectedPost: IPost | null
   posts: IPost[]
   loading: boolean
   lastVisible: FirebaseFirestoreTypes.DocumentData | null
