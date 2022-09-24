@@ -5,9 +5,10 @@ import {
   TextInput,
   TextStyle,
   ViewStyle,
+  TouchableOpacity,
 } from 'react-native'
+import {Divider, HStack, Image, Text as NText, View, VStack} from 'native-base'
 
-import {Divider, HStack, Image, Text, View, VStack} from 'native-base'
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import StyledButton from '../../components/Button'
@@ -23,7 +24,7 @@ type LoginScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
   'Login'
 >
-
+const LOGIN_SCREEN_ASSET = '../../../assets/login.png'
 const Login: React.FC<LoginScreenNavigationProp> = ({
   navigation,
 }: LoginScreenNavigationProp) => {
@@ -44,14 +45,11 @@ const Login: React.FC<LoginScreenNavigationProp> = ({
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.container}>
       <View p="2" alignItems="center">
-        <Image
-          source={require('../../../assets/login.png')}
-          alt="Login Illustration"
-        />
+        <Image source={require(LOGIN_SCREEN_ASSET)} alt="Login Illustration" />
       </View>
-      <Text fontSize="4xl" fontFamily="Lato-Medium">
+      <NText fontSize="4xl" fontFamily="Lato-Medium">
         Login
-      </Text>
+      </NText>
 
       <VStack space="5" mt="6">
         <View>
@@ -67,6 +65,7 @@ const Login: React.FC<LoginScreenNavigationProp> = ({
             maxLength={30}
             keyboardType="email-address"
             textContentType="emailAddress"
+            clearButtonMode="always"
           />
           <StyledError
             message={
@@ -92,13 +91,13 @@ const Login: React.FC<LoginScreenNavigationProp> = ({
           />
         </View>
       </VStack>
-      <Text
+      <NText
         fontFamily="Lato-Regular"
         textAlign="right"
-        my="5"
+        my="3"
         color="primary.400">
         Forgot Password ?
-      </Text>
+      </NText>
 
       <StyledButton
         onPress={() => onLoginAttempt(email, password)}
@@ -107,28 +106,32 @@ const Login: React.FC<LoginScreenNavigationProp> = ({
         loader={loading}
         disabled={isDisabled}
       />
-      <Text my="6" textAlign="center" fontFamily="Lato-Regular">
+      <NText my="6" textAlign="center" fontFamily="Lato-Regular">
         Or, login with...
-      </Text>
+      </NText>
       <HStack justifyContent="center" space="10" alignItems="center">
-        <GoogleIcon />
+        <TouchableOpacity>
+          <GoogleIcon />
+        </TouchableOpacity>
         <Divider thickness="1" mx="2" orientation="vertical" />
-        <FacebookIcon />
+        <TouchableOpacity>
+          <FacebookIcon />
+        </TouchableOpacity>
       </HStack>
-      <Text
+      <NText
         fontFamily="Lato-Regular"
         mt="8"
         textAlign="center"
         alignItems="center">
         New to FaceSmash?{' '}
-        <Text
+        <NText
           onPress={() => navigation.navigate('SignUp')}
           mt="10"
           fontFamily="Lato-Bold"
           color="primary.400">
           Register
-        </Text>
-      </Text>
+        </NText>
+      </NText>
     </ScrollView>
   )
 }
@@ -145,7 +148,6 @@ const styles = StyleSheet.create<Style>({
   container: {
     padding: 25,
     paddingTop: 10,
-
     backgroundColor: COLORS.mainBackground,
   },
   textInput: {
