@@ -1,17 +1,18 @@
-import React, {useContext, useState} from 'react'
+import React, {useState} from 'react'
 import {StyleSheet} from 'react-native'
 import {Box, Button, Image, Text, View} from 'native-base'
-import {AuthUserContext, IAuthUser} from '../../Context/auth'
+import {IAuthUser} from '../../Context/auth'
 import auth from '@react-native-firebase/auth'
 import {COLORS} from '../../constants'
 import {ReSendIcon, VerifyIcon} from '../../SVG'
 import {useToast} from 'native-base'
+import useAuthUser from '../../hooks/useAuthUser'
 
 const Verification = () => {
   const toast = useToast()
   const [loadingVerify, setLoadingVerify] = useState(false)
   const [loadingResend, setLoadingResend] = useState(false)
-  const {user, setAuthUser} = useContext(AuthUserContext)
+  const {user, setAuthUser} = useAuthUser()
 
   const sendEmailVerifiationLink = () => {
     setLoadingResend(true)

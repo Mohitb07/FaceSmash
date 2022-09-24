@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useState} from 'react'
 import {Image, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
 
 import firestore from '@react-native-firebase/firestore'
@@ -17,17 +17,17 @@ import {
   VStack,
 } from 'native-base'
 import Toast from 'react-native-toast-message'
+import {NativeStackNavigationProp} from '@react-navigation/native-stack'
+import {RouteProp, useNavigation} from '@react-navigation/native'
 
 import Header from '../../components/Header'
 import Label from '../../components/Label'
 import StyledTextInput from '../../components/TextInput'
 import {COLORS} from '../../constants'
-import {UserDataContext} from '../../Context/userData'
 import useSelectImage from '../../hooks/useSelectImage'
 import {CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '../../SVG'
-import {RouteProp, useNavigation} from '@react-navigation/native'
 import {RootStackParamList} from '../../Navigation/Root'
-import {NativeStackNavigationProp} from '@react-navigation/native-stack'
+import useUserData from '../../hooks/useUserData'
 
 const AddPost = ({
   route,
@@ -48,7 +48,7 @@ const AddPost = ({
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const [textAreaValue, setTextAreaValue] = useState<string>('')
   const [title, setTitle] = useState<string>('')
-  const {contextUser} = useContext(UserDataContext)
+  const {contextUser} = useUserData()
   const {selectedImage, selectedImageRef, handleChooseGallary, clearImage} =
     useSelectImage()
   const [imageFromNav, setImageFromNav] = useState<string>(image)

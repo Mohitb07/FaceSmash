@@ -1,14 +1,10 @@
-import React, {
-  useEffect,
-  useState,
-  useContext,
-  useCallback,
-  ReactNode,
-} from 'react'
+import React, {ReactNode, useCallback, useEffect, useState} from 'react'
+
 import firestore from '@react-native-firebase/firestore'
-import {AuthUserContext} from './auth'
-import {IUserDetail} from '../interface'
+
 import {defaultValues} from '../components/Header/Profile'
+import useAuthUser from '../hooks/useAuthUser'
+import {IUserDetail} from '../interface'
 
 interface IUserDataContext {
   contextUser: IUserDetail | null
@@ -27,7 +23,7 @@ export const UserDataContext = React.createContext<IUserDataContext>({
 
 const UserDataProvider = ({children}: {children: ReactNode}) => {
   const [contextUser, setContextUser] = useState<IUserDetail | null>(null)
-  const {user} = useContext(AuthUserContext)
+  const {user} = useAuthUser()
   console.log('auth User inside user data context 🎯', contextUser)
   useEffect(() => {
     function getData() {

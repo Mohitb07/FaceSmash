@@ -1,6 +1,11 @@
-import firestore from '@react-native-firebase/firestore'
-import {useNavigation} from '@react-navigation/native'
-import dayjs from 'dayjs'
+import React, {useState} from 'react'
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from 'react-native'
 import {
   Actionsheet,
   HStack,
@@ -11,21 +16,17 @@ import {
   View as NView,
   VStack,
 } from 'native-base'
-import React, {useContext, useState} from 'react'
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-} from 'react-native'
-import FastImage from 'react-native-fast-image'
-import {HeartFilledIcon, HeartOutlinIcon, LinkIcon} from '../SVG'
 
+import firestore from '@react-native-firebase/firestore'
+import {useNavigation} from '@react-navigation/native'
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
+import dayjs from 'dayjs'
+import FastImage from 'react-native-fast-image'
+
+import {HeartFilledIcon, HeartOutlinIcon, LinkIcon} from '../SVG'
 import relativeTime from 'dayjs/plugin/relativeTime'
 import {COLORS} from '../constants'
-import {AuthUserContext} from '../Context/auth'
+import useAuthUser from '../hooks/useAuthUser'
 import {FeedProps} from '../interface'
 import {RootStackParamList} from '../Navigation/Root'
 const FeedMore = React.lazy(() => import('./BottomSheet/FeedMore'))
@@ -50,7 +51,7 @@ const Feed = ({
   const updateUIBasedOnImage = Boolean(image) ? 'column-reverse' : 'column'
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
-  const {user} = useContext(AuthUserContext)
+  const {user} = useAuthUser()
   const {onOpen, onClose, isOpen} = useDisclose()
   const [show, setShow] = useState(false)
 

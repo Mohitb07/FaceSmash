@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react'
+import React, {useState} from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
 import {HStack, View as NView} from 'native-base'
 
@@ -13,10 +13,10 @@ import Header from '../../../components/Header'
 import Label from '../../../components/Label'
 import StyledTextInput from '../../../components/TextInput'
 import {COLORS} from '../../../constants/theme'
-import {AuthUserContext} from '../../../Context/auth'
-import {UserDataContext} from '../../../Context/userData'
 import {RootStackParamList} from '../../../Navigation/Root'
 import useSelectImage from '../../../hooks/useSelectImage'
+import useUserData from '../../../hooks/useUserData'
+import useAuthUser from '../../../hooks/useAuthUser'
 
 type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -27,8 +27,8 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
   // const [image, setImage] = useState<string>('')
   const [userBio, setUserBio] = useState<string>('')
   const [loading, setLoading] = useState(false)
-  const {user} = useContext(AuthUserContext)
-  const {contextUser, updateUserData} = useContext(UserDataContext)
+  const {user} = useAuthUser()
+  const {contextUser, updateUserData} = useUserData()
   const {handleChooseGallary, handleTakePhoto, selectedImage} = useSelectImage()
   const USER_PROFILE_PIC_REFERENCE = `${contextUser?.uid}/profilePic/`
 

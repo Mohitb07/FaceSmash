@@ -41,7 +41,7 @@ const Button: React.FC<Props> = ({
       flexGrow={1}
       borderWidth="2"
       rounded="full"
-      opacity={disabled ? 0.5 : 1}>
+      opacity={disabled ? 0.8 : 1}>
       <TouchableOpacity
         disabled={disabled}
         style={[
