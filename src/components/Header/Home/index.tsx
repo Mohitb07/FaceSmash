@@ -1,5 +1,5 @@
-import React, {useContext} from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import React from 'react'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import {
   Avatar,
@@ -7,19 +7,19 @@ import {
   Input,
   ScrollView,
   Text as NText,
-  View as NView,
+  View as NView
 } from 'native-base'
 
 import auth from '@react-native-firebase/auth'
-import {useNavigation} from '@react-navigation/native'
+import { useNavigation } from '@react-navigation/native'
 
-import {NativeStackNavigationProp} from '@react-navigation/native-stack'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import InstaStory from 'react-native-insta-story'
-import {COLORS} from '../../../constants'
-import {UserDataContext} from '../../../Context/userData'
+import { COLORS } from '../../../constants'
 import useSelectImage from '../../../hooks/useSelectImage'
-import {RootStackParamList} from '../../../Navigation/Root'
-import {PhotoIcon, SearchIcon} from '../../../SVG'
+import useUserData from '../../../hooks/useUserData'
+import { RootStackParamList } from '../../../Navigation/Root'
+import { PhotoIcon, SearchIcon } from '../../../SVG'
 import Story from '../../Story'
 
 export const dummyStoryData = [
@@ -155,7 +155,7 @@ const data = [
 ]
 
 function HomeHeader() {
-  const {contextUser} = useContext(UserDataContext)
+  const {contextUser} = useUserData()
   const {handleChooseGallary} = useSelectImage()
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
