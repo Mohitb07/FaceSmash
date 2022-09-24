@@ -1,20 +1,21 @@
+import React, {createRef, Ref} from 'react'
+
 import {NavigationContainerRef} from '@react-navigation/native'
 import {createNativeStackNavigator} from '@react-navigation/native-stack'
-import React, {createRef, Ref, useContext} from 'react'
 
-import Loader from '../../components/Loader'
-import {COLORS} from '../../constants'
-import {AuthUserContext} from '../../Context/auth'
 import AddPost from '../../Screens/AddPost'
 import Browser from '../../Screens/Browser'
 import GetStarted from '../../Screens/GetStarted'
 import Home from '../../Screens/Home'
 import Login from '../../Screens/Login'
 import MyProfile from '../../Screens/Profile'
-import UpdateProfile from '../../Screens/Profile/Update'
 import Register from '../../Screens/Register'
 import SearchUser from '../../Screens/Search'
 import Verification from '../../Screens/Verification'
+import UpdateProfile from '../../Screens/Profile/Update'
+import Loader from '../../components/Loader'
+import {COLORS} from '../../constants'
+import useAuthUser from '../../hooks/useAuthUser'
 
 export type RootStackParamList = {
   Verification: undefined
@@ -41,7 +42,7 @@ export const navigationRef: Ref<NavigationContainerRef<RootStackParamList>> =
   createRef()
 
 const Root = () => {
-  const {user, initializing} = useContext(AuthUserContext)
+  const {user, initializing} = useAuthUser()
 
   if (initializing) {
     return <Loader />

@@ -1,14 +1,14 @@
 import auth from '@react-native-firebase/auth'
 import {Actionsheet, Box, Text as NText} from 'native-base'
-import React, {useContext} from 'react'
+import React from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
 import {useResetRecoilState} from 'recoil'
 import {bottomSheetState} from '../../../atoms/bottomSheetAtom'
-import {AuthUserContext} from '../../../Context/auth'
+import useAuthUser from '../../../hooks/useAuthUser'
 import {LogoutIcon} from '../../../SVG'
 
 const ProfileBottomSheet = () => {
-  const {user} = useContext(AuthUserContext)
+  const {user} = useAuthUser()
   const setBottom = useResetRecoilState(bottomSheetState)
 
   const onLogoutAttempt = () => {

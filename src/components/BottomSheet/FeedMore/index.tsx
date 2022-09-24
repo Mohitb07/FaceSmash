@@ -1,9 +1,11 @@
+import React from 'react'
+import {StyleSheet, TouchableOpacity} from 'react-native'
+import {Actionsheet, Box, Icon, Text as NText} from 'native-base'
+
 import firestore from '@react-native-firebase/firestore'
 import storage from '@react-native-firebase/storage'
-import {Actionsheet, Box, Icon, Text as NText} from 'native-base'
-import React, {useContext} from 'react'
-import {StyleSheet, TouchableOpacity} from 'react-native'
-import {AuthUserContext} from '../../../Context/auth'
+
+import useAuthUser from '../../../hooks/useAuthUser'
 import {DeleteIcon} from '../../../SVG'
 
 interface IFeedMoreProps {
@@ -21,7 +23,7 @@ const FeedMore = ({
   imageRef,
   hasLiked,
 }: IFeedMoreProps) => {
-  const {user} = useContext(AuthUserContext)
+  const {user} = useAuthUser()
   console.log('has imageRef', imageRef)
   const handleDeletePost = async () => {
     firestore()
