@@ -1,11 +1,10 @@
 import React, {useState} from 'react'
 import {Image, StyleSheet, Text, View} from 'react-native'
-import {HStack, View as NView} from 'native-base'
 
+import {HStack, View as NView} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 import storage from '@react-native-firebase/storage'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import * as ImagePicker from 'react-native-image-picker'
 
 import Button from '../../../components/Button'
 import {CheckIcon, CloseIcon} from '../../../SVG'
@@ -24,7 +23,6 @@ type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
 >
 
 const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
-  // const [image, setImage] = useState<string>('')
   const [userBio, setUserBio] = useState<string>('')
   const [loading, setLoading] = useState(false)
   const {user} = useAuthUser()
@@ -33,36 +31,6 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
   const USER_PROFILE_PIC_REFERENCE = `${contextUser?.uid}/profilePic/`
 
   const disabled = !(!!selectedImage || !!userBio)
-
-  // const handleChooseGallary = () => {
-  //   ImagePicker.launchImageLibrary({mediaType: 'photo'}, response => {
-  //     if (response.didCancel) {
-  //       return
-  //     } else if (response.errorCode) {
-  //       console.log('Image picker error', response.errorMessage)
-  //     } else {
-  //       if (response.assets) {
-  //         const value = response.assets[0].uri
-  //         setImage(value!)
-  //       }
-  //     }
-  //   })
-  // }
-
-  // const handleTakePhoto = () => {
-  //   ImagePicker.launchCamera({mediaType: 'photo'}, response => {
-  //     if (response.didCancel) {
-  //       return
-  //     } else if (response.errorCode) {
-  //       console.log('Image picker error', response.errorMessage)
-  //     } else {
-  //       if (response.assets) {
-  //         const value = response.assets[0].uri
-  //         setImage(value!)
-  //       }
-  //     }
-  //   })
-  // }
 
   const handleUploadImage = async () => {
     setLoading(true)
