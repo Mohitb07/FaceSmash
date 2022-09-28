@@ -1,4 +1,5 @@
 import React, {useContext} from 'react'
+
 import {AuthUserContext} from '../Context/auth'
 
 export default function useAuthUser() {

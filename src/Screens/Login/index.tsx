@@ -7,8 +7,8 @@ import {
   ViewStyle,
   TouchableOpacity,
 } from 'react-native'
-import {Divider, HStack, Image, Text as NText, View, VStack} from 'native-base'
 
+import {Divider, HStack, Image, Text as NText, View, VStack} from 'native-base'
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import StyledButton from '../../components/Button'

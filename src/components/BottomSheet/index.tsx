@@ -1,7 +1,9 @@
 import React from 'react'
+
 import {useRecoilState} from 'recoil'
-import {bottomSheetState} from '../../atoms/bottomSheetAtom'
 import {Actionsheet} from 'native-base'
+
+import {bottomSheetState} from '../../atoms/bottomSheetAtom'
 import ProfileBottomSheet from './Profile'
 import {COLORS} from '../../constants'
 import {IBottomSheetState} from '../../interface'

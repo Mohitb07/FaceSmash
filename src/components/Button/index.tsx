@@ -1,5 +1,4 @@
 import React, {ReactElement} from 'react'
-
 import {
   ActivityIndicator,
   StyleSheet,
@@ -8,6 +7,7 @@ import {
 } from 'react-native'
 
 import {View} from 'native-base'
+
 import {TextStyle} from 'react-native'
 import {COLORS} from '../../constants'
 

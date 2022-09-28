@@ -1,5 +1,7 @@
-import {useDisclose} from 'native-base'
 import React, {createContext, useMemo} from 'react'
+
+import {useDisclose} from 'native-base'
+
 import BottomSheet from '../components/BottomSheet'
 
 interface IBottomSheetState {

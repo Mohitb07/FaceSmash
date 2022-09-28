@@ -1,11 +1,12 @@
 import React, {useState} from 'react'
 import {StyleSheet} from 'react-native'
-import {Box, Button, Image, Text, View} from 'native-base'
-import {IAuthUser} from '../../Context/auth'
+
+import {Box, Button, Image, Text, View, useToast} from 'native-base'
 import auth from '@react-native-firebase/auth'
+
+import {IAuthUser} from '../../Context/auth'
 import {COLORS} from '../../constants'
 import {ReSendIcon, VerifyIcon} from '../../SVG'
-import {useToast} from 'native-base'
 import useAuthUser from '../../hooks/useAuthUser'
 
 const Verification = () => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import {ImageBackground, StyleSheet} from 'react-native'
-import {ArrowForwardIcon, Text as NText, View as NView} from 'native-base'
 
+import {ArrowForwardIcon, Text as NText, View as NView} from 'native-base'
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 import LinearGradient from 'react-native-linear-gradient'
 

@@ -1,10 +1,11 @@
-import {Box, Flex, HStack, Text, View} from 'native-base'
 import React, {memo, useEffect, useRef, useState} from 'react'
 import {TouchableOpacity} from 'react-native'
 
+import {Box, Flex, HStack, Text, View} from 'native-base'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import {useNavigation} from '@react-navigation/native'
+import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import {Redis} from '@upstash/redis'
 import FastImage from 'react-native-fast-image'
 
@@ -12,7 +13,6 @@ import {COLORS} from '../../../constants'
 import {EditIcon, FilterIcon, GridIcon, UserIcon} from '../../../SVG'
 import StyledButton from '../../Button'
 import {RootStackParamList} from '../../../Navigation/Root'
-import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 
 const redis = new Redis({
   url: 'https://usw2-welcomed-duckling-30227.upstash.io',

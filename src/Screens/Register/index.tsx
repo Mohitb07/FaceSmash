@@ -2,8 +2,8 @@ import React, {useEffect, useState} from 'react'
 import {ScrollView, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
 
 import {Divider, HStack, Image, Text, View, VStack} from 'native-base'
-
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
+
 import StyledButton from '../../components/Button'
 import StyledError from '../../components/Error'
 import {COLORS} from '../../constants'

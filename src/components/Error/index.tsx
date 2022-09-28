@@ -1,6 +1,7 @@
-import {InfoOutlineIcon} from 'native-base'
 import React from 'react'
 import {Text, View, StyleSheet, TextStyle} from 'react-native'
+
+import {InfoOutlineIcon} from 'native-base'
 
 interface Props {
   errorStyle?: TextStyle
