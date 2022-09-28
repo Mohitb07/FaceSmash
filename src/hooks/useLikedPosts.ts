@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, {useEffect, useState} from 'react'
 
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
-import { IPostLikes } from '../interface'
+
+import {IPostLikes} from '../interface'
 
 const useLikedPosts = () => {
   const [userLikedPosts, setUserLikedPosts] = useState<IPostLikes[]>([])
@@ -10,7 +11,7 @@ const useLikedPosts = () => {
   const authUserId = auth().currentUser?.uid
 
   useEffect(() => {
-    let unsub : () => void;
+    let unsub: () => void
     try {
       unsub = firestore()
         .collection('Users')
@@ -18,10 +19,10 @@ const useLikedPosts = () => {
         .collection('postlikes')
         .onSnapshot(
           querySnapshot => {
-            const dataList : IPostLikes[] = querySnapshot.docs.map(d => ({
+            const dataList: IPostLikes[] = querySnapshot.docs.map(d => ({
               likes: false,
               postId: '',
-              ...d.data()
+              ...d.data(),
             }))
             console.log('user likes refetching')
             setUserLikedPosts(dataList)

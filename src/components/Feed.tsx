@@ -6,6 +6,7 @@ import {
   TouchableWithoutFeedback,
   View,
 } from 'react-native'
+
 import {
   Actionsheet,
   HStack,
@@ -16,19 +17,19 @@ import {
   View as NView,
   VStack,
 } from 'native-base'
-
 import firestore from '@react-native-firebase/firestore'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
-import dayjs from 'dayjs'
 import FastImage from 'react-native-fast-image'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
 import {HeartFilledIcon, HeartOutlinIcon, LinkIcon} from '../SVG'
-import relativeTime from 'dayjs/plugin/relativeTime'
 import {COLORS} from '../constants'
 import useAuthUser from '../hooks/useAuthUser'
 import {FeedProps} from '../interface'
 import {RootStackParamList} from '../Navigation/Root'
+
 const FeedMore = React.lazy(() => import('./BottomSheet/FeedMore'))
 
 dayjs.extend(relativeTime)

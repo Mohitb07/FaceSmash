@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   View,
   TextInput,
@@ -5,7 +6,6 @@ import {
   TextStyle,
   TouchableOpacity,
 } from 'react-native'
-import React from 'react'
 
 type TextInputProps = {
   onChangeText: (text: string) => void

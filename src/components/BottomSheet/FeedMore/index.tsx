@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
-import {Actionsheet, Box, Icon, Text as NText} from 'native-base'
 
+import {Actionsheet, Box, Icon, Text as NText} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 import storage from '@react-native-firebase/storage'
 

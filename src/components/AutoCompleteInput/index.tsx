@@ -7,12 +7,14 @@ import React, {
   SetStateAction,
   MutableRefObject,
 } from 'react'
-import {View, Text} from 'native-base'
 import {Animated, Dimensions} from 'react-native'
+
+import {View, Text} from 'native-base'
 import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown'
+import firestore from '@react-native-firebase/firestore'
+
 import {COLORS, USERS_LIMIT} from '../../constants'
 import {CloseIcon, SearchIcon} from '../../SVG'
-import firestore from '@react-native-firebase/firestore'
 import {IUserDetail} from '../../interface'
 
 type AutoCompleteInputProps = {

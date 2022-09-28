@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react'
-import {Spinner, View} from 'native-base'
 
+import {Spinner, View} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 
 import usePagination from '../../../hooks/usePagination'

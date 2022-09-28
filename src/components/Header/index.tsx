@@ -1,3 +1,4 @@
+import React from 'react'
 import {
   View,
   Text,
@@ -6,7 +7,7 @@ import {
   ActivityIndicator,
   GestureResponderEvent,
 } from 'react-native'
-import React from 'react'
+
 import {COLORS} from '../../constants'
 import {BackIcon} from '../../SVG'
 

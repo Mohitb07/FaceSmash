@@ -1,8 +1,10 @@
-import auth from '@react-native-firebase/auth'
-import {Actionsheet, Box, Text as NText} from 'native-base'
 import React from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
+
+import {Actionsheet, Box, Text as NText} from 'native-base'
+import auth from '@react-native-firebase/auth'
 import {useResetRecoilState} from 'recoil'
+
 import {bottomSheetState} from '../../../atoms/bottomSheetAtom'
 import useAuthUser from '../../../hooks/useAuthUser'
 import {LogoutIcon} from '../../../SVG'

@@ -1,5 +1,6 @@
 import React from 'react'
 import {FlatList, RefreshControl, StyleSheet} from 'react-native'
+
 import {COLORS} from '../../constants'
 import useLikedPosts from '../../hooks/useLikedPosts'
 import {IPost, IPostLikes} from '../../interface'

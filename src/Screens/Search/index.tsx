@@ -1,9 +1,7 @@
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import React, {useRef, useState} from 'react'
 import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
-import {COLORS} from '../../constants'
-import {RootStackParamList} from '../../Navigation/Root'
 
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {
   Avatar,
   Button,
@@ -12,11 +10,14 @@ import {
   Text as NText,
   View as NView,
 } from 'native-base'
+
 import AutoCompleteInput from '../../components/AutoCompleteInput'
 import {dummyStoryData} from '../../components/Header/Home'
 import Story from '../../components/Story'
 import {BackIcon, SearchIcon1, UserGroup} from '../../SVG'
 import {IUserDetail} from '../../interface'
+import {COLORS} from '../../constants'
+import {RootStackParamList} from '../../Navigation/Root'
 
 type SearchUserScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
