@@ -19,6 +19,8 @@ import useLogin from '../../hooks/useLogin'
 import {FacebookIcon, GoogleIcon} from '../../SVG'
 import {checkIsEmailValid} from '../../utils'
 import {RootStackParamList} from '../../Navigation/Root'
+import GoogleLogin from '../../components/SocialLogins/Google'
+import FacebookLogin from '../../components/SocialLogins/Facebook'
 
 type LoginScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -110,13 +112,9 @@ const Login: React.FC<LoginScreenNavigationProp> = ({
         Or, login with...
       </NText>
       <HStack justifyContent="center" space="10" alignItems="center">
-        <TouchableOpacity>
-          <GoogleIcon />
-        </TouchableOpacity>
+        <GoogleLogin />
         <Divider thickness="1" mx="2" orientation="vertical" />
-        <TouchableOpacity>
-          <FacebookIcon />
-        </TouchableOpacity>
+        <FacebookLogin />
       </HStack>
       <NText
         fontFamily="Lato-Regular"
