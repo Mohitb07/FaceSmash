@@ -2,9 +2,9 @@ import React, {ReactNode, useCallback, useEffect, useState} from 'react'
 
 import firestore from '@react-native-firebase/firestore'
 
-import {defaultValues} from '../components/Header/Profile'
 import useAuthUser from '../hooks/useAuthUser'
 import {IUserDetail} from '../interface'
+import {DEFAULT_USER_DETAILS} from '../constants'
 
 interface IUserDataContext {
   contextUser: IUserDetail | null
@@ -34,7 +34,7 @@ const UserDataProvider = ({children}: {children: ReactNode}) => {
           .onSnapshot(
             snapshot => {
               setContextUser({
-                ...defaultValues,
+                ...DEFAULT_USER_DETAILS,
                 ...snapshot.data(),
               })
             },
@@ -87,7 +87,7 @@ const UserDataProvider = ({children}: {children: ReactNode}) => {
           .then(() => {
             setLoading(false)
             setContextUser({
-              ...defaultValues,
+              ...DEFAULT_USER_DETAILS,
               ...updatedUser.data(),
             })
             navigation.navigate('Profile', {
