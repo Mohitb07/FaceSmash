@@ -9,15 +9,15 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import {Redis} from '@upstash/redis'
 import FastImage from 'react-native-fast-image'
 
-import {COLORS} from '../../../constants'
+import {COLORS, DEFAULT_USER_DETAILS} from '../../../constants'
 import {EditIcon, FilterIcon, GridIcon, UserIcon} from '../../../SVG'
 import StyledButton from '../../Button'
 import {RootStackParamList} from '../../../Navigation/Root'
+import {REDIS_REST_TOKEN, REDIS_REST_URL} from '../../../../config'
 
 const redis = new Redis({
-  url: 'https://usw2-welcomed-duckling-30227.upstash.io',
-  token:
-    'AXYTASQgOWMyNTcwZTQtMzQ3Yy00NWEyLTkzZjktNzM5ZmJkNTdiOWUzNjg4N2RhOGEzMTQwNDc0Nzk0ZGRmNTAwODc4ZWYyMjE=',
+  url: REDIS_REST_URL,
+  token: REDIS_REST_TOKEN,
 })
 
 interface IProfileHeaderProps {
@@ -39,26 +39,10 @@ interface IUserData {
   username: string
 }
 
-export const defaultValues = {
-  bio: '',
-  createdAt: '',
-  email: '',
-  followers: [],
-  followings: [],
-  key: '',
-  lastSignIn: '',
-  profilePic: '',
-  qusername: '',
-  uid: '',
-  username: '',
-}
-
-// {"bio": "Front End Engineer", "createdAt": "2022-09-16T17:32:01.168Z", "email": "bmohit980@gmail.com", "followers": [], "followings": [], "key": "6TvlX8oyiXQwNzxhm7Dj3vLuGsr1", "lastSignIn": "2022-09-16T17:32:01.168Z", "profilePic": "https://firebasestorage.googleapis.com/v0/b/facesmash-8ff0b.appspot.com/o/6TvlX8oyiXQwNzxhm7Dj3vLuGsr1%2FprofilePic?alt=media&token=2053901a-69f2-4ab6-9064-e26ace73981d", "qusername": "mohitb07", "uid": "6TvlX8oyiXQwNzxhm7Dj3vLuGsr1", "username": "Mohitb07"}
-
 const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
-  const [userData, setUserData] = useState<IUserData>(defaultValues)
+  const [userData, setUserData] = useState<IUserData>(DEFAULT_USER_DETAILS)
   const authUser = auth().currentUser?.uid
   const isMounted = useRef(false)
   console.log('userdata', userData)
@@ -82,11 +66,11 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
               //   userId,
               //   JSON.stringify({...snapshot.data(), key: snapshot.id}),
               // )
-              setUserData({
-                ...defaultValues,
+              setUserData(prev => ({
+                ...prev,
                 ...snapshot.data(),
                 key: snapshot.id,
-              })
+              }))
             }
           },
           error => {

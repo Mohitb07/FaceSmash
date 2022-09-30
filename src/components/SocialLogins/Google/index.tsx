@@ -1,33 +1,43 @@
 import React from 'react'
 import {TouchableOpacity} from 'react-native'
 
-import {GoogleSignin} from '@react-native-google-signin/google-signin'
-import auth from '@react-native-firebase/auth'
+import firestore from '@react-native-firebase/firestore'
 
 import {GoogleIcon} from '../../../SVG'
-import {CLIENT_ID} from '../../../../config'
+import useLogin from '../../../hooks/useLogin'
 
 const GoogleLogin: React.FC = () => {
-  GoogleSignin.configure({
-    webClientId: CLIENT_ID,
-  })
+  const {onGoogleLoginAttempt} = useLogin()
 
-  async function onGoogleButtonPress() {
-    // Get the users ID token
-    const {idToken} = await GoogleSignin.signIn()
-
-    // Create a Google credential with the token
-    const googleCredential = auth.GoogleAuthProvider.credential(idToken)
-
-    // Sign-in the user with the credential
-    return auth().signInWithCredential(googleCredential)
+  const createGoogleUser = () => {
+    onGoogleLoginAttempt()
+      .then(user => {
+        firestore()
+          .collection('Users')
+          .doc(user.user.uid)
+          .set({
+            email: user.user.email,
+            username: user.user.displayName,
+            qusername: user.user.displayName?.toLowerCase(),
+            uid: user.user.uid,
+            followers: [],
+            followings: [],
+            createdAt: user.user.metadata.creationTime,
+            lastSignIn: user.user.metadata.lastSignInTime,
+            profilePic: user.user.photoURL,
+          })
+          .then(() => console.log('firestore user created'))
+          .catch(err => {
+            console.log('firestore user created error: ', err)
+          })
+      })
+      .catch(err => {
+        console.log('error google signin', err)
+      })
   }
 
   return (
-    <TouchableOpacity
-      onPress={() =>
-        onGoogleButtonPress().then(user => console.log('user', user))
-      }>
+    <TouchableOpacity onPress={createGoogleUser}>
       <GoogleIcon />
     </TouchableOpacity>
   )
