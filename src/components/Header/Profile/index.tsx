@@ -9,16 +9,16 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import {Redis} from '@upstash/redis'
 import FastImage from 'react-native-fast-image'
 
-import {COLORS, DEFAULT_USER_DETAILS} from '../../../constants'
-import {EditIcon, FilterIcon, GridIcon, UserIcon} from '../../../SVG'
-import StyledButton from '../../Button'
-import {RootStackParamList} from '../../../Navigation/Root'
-import {REDIS_REST_TOKEN, REDIS_REST_URL} from '../../../../config'
+import {COLORS, DEFAULT_USER_DETAILS} from '@/constants'
+import {EditIcon, FilterIcon, GridIcon, UserIcon} from '@/SVG'
+import StyledButton from '@/components/Button'
+import {RootStackParamList} from '@/Navigation/Root'
+// import {REDIS_REST_TOKEN, REDIS_REST_URL} from '@/../config'
 
-const redis = new Redis({
-  url: REDIS_REST_URL,
-  token: REDIS_REST_TOKEN,
-})
+// const redis = new Redis({
+//   url: REDIS_REST_URL,
+//   token: REDIS_REST_TOKEN,
+// })
 
 interface IProfileHeaderProps {
   userId: string
