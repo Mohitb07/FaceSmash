@@ -3,15 +3,15 @@ import {StyleSheet, View} from 'react-native'
 
 import firestore from '@react-native-firebase/firestore'
 
-import usePagination from '../../hooks/usePagination'
-import {getLastVisibleDocRef} from '../../utils/getLastVisibleDocRef'
-import DataList from '../../components/DataList'
-import Footer from '../../components/DataList/DataListFooter'
-import EmptyList from '../../components/DataList/EmptyDataList'
-import HomeHeader from '../../components/Header/Home'
-import {IDefaultPostState, IPost} from '../../interface'
-import {FEED_LIMIT} from '../../constants'
-import {COLORS} from '../../constants'
+import usePagination from '@/hooks/usePagination'
+import {getLastVisibleDocRef} from '@/utils/getLastVisibleDocRef'
+import DataList from '@/components/DataList'
+import Footer from '@/components/DataList/DataListFooter'
+import EmptyList from '@/components/DataList/EmptyDataList'
+import HomeHeader from '@/components/Header/Home'
+import {IDefaultPostState, IPost} from '@/interface'
+import {FEED_LIMIT} from '@/constants'
+import {COLORS} from '@/constants'
 
 const Home = () => {
   console.log('calling HomeFeed')

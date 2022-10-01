@@ -11,13 +11,13 @@ import {
   View as NView,
 } from 'native-base'
 
-import AutoCompleteInput from '../../components/AutoCompleteInput'
-import {dummyStoryData} from '../../components/Header/Home'
-import Story from '../../components/Story'
-import {BackIcon, SearchIcon1, UserGroup} from '../../SVG'
-import {IUserDetail} from '../../interface'
-import {COLORS} from '../../constants'
-import {RootStackParamList} from '../../Navigation/Root'
+import AutoCompleteInput from '@/components/AutoCompleteInput'
+import {dummyStoryData} from '@/components/Header/Home'
+import Story from '@/components/Story'
+import {BackIcon, SearchIcon1, UserGroup} from '@/SVG'
+import {IUserDetail} from '@/interface'
+import {COLORS} from '@/constants'
+import {RootStackParamList} from '@/Navigation/Root'
 
 type SearchUserScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,

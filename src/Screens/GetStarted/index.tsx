@@ -5,15 +5,15 @@ import {ArrowForwardIcon, Text as NText, View as NView} from 'native-base'
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 import LinearGradient from 'react-native-linear-gradient'
 
-import StyledButton from '../../components/Button'
-import {COLORS, FONTS, SIZES} from '../../constants'
-import {RootStackParamList} from '../../Navigation/Root'
+import StyledButton from '@/components/Button'
+import {COLORS, FONTS, SIZES} from '@/constants'
+import {RootStackParamList} from '@/Navigation/Root'
 
 type GetStartedScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
   'GetStarted'
 >
-const GET_STARTED_SCREEN_ASSET = '../../../assets/getStarted.png'
+const GET_STARTED_SCREEN_ASSET = '@/../assets/getStarted.png'
 
 const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
   navigation,

@@ -4,13 +4,13 @@ import {ScrollView, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
 import {Divider, HStack, Image, Text, View, VStack} from 'native-base'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import StyledButton from '../../components/Button'
-import StyledError from '../../components/Error'
-import {COLORS} from '../../constants'
-import {FIREBASE_ERRORS} from '../../firebase/errors'
-import {useRegister} from '../../hooks/useRegister'
-import {RootStackParamList} from '../../Navigation/Root'
-import {FacebookIcon, GoogleIcon} from '../../SVG'
+import StyledButton from '@/components/Button'
+import StyledError from '@/components/Error'
+import {COLORS} from '@/constants'
+import {FIREBASE_ERRORS} from '@/firebase/errors'
+import {useRegister} from '@/hooks/useRegister'
+import {RootStackParamList} from '@/Navigation/Root'
+import {FacebookIcon, GoogleIcon} from '@/SVG'
 
 type LoginScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -69,7 +69,7 @@ const Register = ({navigation}: LoginScreenNavigationProp) => {
       contentContainerStyle={styles.container}>
       <View p="2" alignItems="center">
         <Image
-          source={require('../../../assets/register.png')}
+          source={require('@/../assets/register.png')}
           alt="Register Illustration"
         />
       </View>

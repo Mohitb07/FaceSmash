@@ -5,8 +5,8 @@ import {Actionsheet, Box, Icon, Text as NText} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 import storage from '@react-native-firebase/storage'
 
-import useAuthUser from '../../../hooks/useAuthUser'
-import {DeleteIcon} from '../../../SVG'
+import useAuthUser from '@/hooks/useAuthUser'
+import {DeleteIcon} from '@/SVG'
 
 interface IFeedMoreProps {
   postId: string

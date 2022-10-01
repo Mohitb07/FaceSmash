@@ -1,10 +1,10 @@
 import React from 'react'
 import {FlatList, RefreshControl, StyleSheet} from 'react-native'
 
-import {COLORS} from '../../constants'
-import useLikedPosts from '../../hooks/useLikedPosts'
-import {IPost, IPostLikes} from '../../interface'
-import Feed from '../Feed'
+import {COLORS} from '@/constants'
+import useLikedPosts from '@/hooks/useLikedPosts'
+import {IPost, IPostLikes} from '@/interface'
+import Feed from '@/components/Feed'
 
 interface IDataListProps {
   dataList: IPost[]

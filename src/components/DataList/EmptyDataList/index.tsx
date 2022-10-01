@@ -2,9 +2,9 @@ import React from 'react'
 
 import {Text, View} from 'native-base'
 
-import {COLORS} from '../../../constants'
-import FeedSkeleton from '../../FeedSkeleton'
-import {DocumentNotFound} from '../../../SVG'
+import {COLORS} from '@/constants'
+import FeedSkeleton from '@/components/FeedSkeleton'
+import {DocumentNotFound} from '@/SVG'
 
 const EmptyList = ({loading}: {loading: boolean}) => {
   return loading ? (

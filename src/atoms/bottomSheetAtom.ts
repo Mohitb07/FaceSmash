@@ -1,5 +1,6 @@
 import {atom} from 'recoil'
-import {IBottomSheetState} from '../interface'
+
+import {IBottomSheetState} from '@/interface'
 
 export const defaultBottomSheetValues: IBottomSheetState = {
   type: 'someother',

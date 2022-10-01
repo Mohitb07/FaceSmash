@@ -15,7 +15,8 @@ import Svg, {
   ClipPath,
   SvgProps,
 } from 'react-native-svg'
-import {COLORS} from '../constants'
+
+import {COLORS} from '@/constants'
 
 export const SearchIcon = (props: SvgProps) => {
   return (

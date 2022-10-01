@@ -3,14 +3,14 @@ import React, {useEffect, useState, useRef, useCallback} from 'react'
 import {Spinner, View} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 
-import usePagination from '../../../hooks/usePagination'
-import DataList from '../../DataList'
-import DataListFooter from '../../DataList/DataListFooter'
-import EmptyDataList from '../../DataList/EmptyDataList'
-import ProfileHeader from '../../Header/Profile'
-import {getLastVisibleDocRef} from '../../../utils/getLastVisibleDocRef'
-import {IDefaultUserDataState, IPost} from '../../../interface'
-import {FEED_LIMIT} from '../../../constants'
+import usePagination from '@/hooks/usePagination'
+import DataList from '@/components/DataList'
+import DataListFooter from '@/components/DataList/DataListFooter'
+import EmptyDataList from '@/components/DataList/EmptyDataList'
+import ProfileHeader from '@/components/Header/Profile'
+import {getLastVisibleDocRef} from '@/utils/getLastVisibleDocRef'
+import {IDefaultUserDataState, IPost} from '@/interface'
+import {FEED_LIMIT} from '@/constants'
 
 const ProfileFeed = ({userId}: {userId: string}) => {
   const {queryMoreFilter} = usePagination()

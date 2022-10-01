@@ -4,7 +4,7 @@ import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import Toast from 'react-native-toast-message'
 
-import {DEFAULT_PROFILE_PIC} from '../constants'
+import {DEFAULT_PROFILE_PIC} from '@/constants'
 
 export function useRegister() {
   const [error, setError] = useState({

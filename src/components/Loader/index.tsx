@@ -1,7 +1,7 @@
 import React from 'react'
 import {View, ActivityIndicator, StyleSheet} from 'react-native'
 
-import {COLORS} from '../../constants'
+import {COLORS} from '@/constants'
 
 const Loader = () => {
   return (
