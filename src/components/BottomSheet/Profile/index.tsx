@@ -5,9 +5,9 @@ import {Actionsheet, Box, Text as NText} from 'native-base'
 import auth from '@react-native-firebase/auth'
 import {useResetRecoilState} from 'recoil'
 
-import {bottomSheetState} from '../../../atoms/bottomSheetAtom'
-import useAuthUser from '../../../hooks/useAuthUser'
-import {LogoutIcon} from '../../../SVG'
+import {bottomSheetState} from '@/atoms/bottomSheetAtom'
+import useAuthUser from '@/hooks/useAuthUser'
+import {LogoutIcon} from '@/SVG'
 
 const ProfileBottomSheet = () => {
   const {user} = useAuthUser()

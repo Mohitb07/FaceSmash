@@ -13,9 +13,9 @@ import {View, Text} from 'native-base'
 import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown'
 import firestore from '@react-native-firebase/firestore'
 
-import {COLORS, USERS_LIMIT} from '../../constants'
-import {CloseIcon, SearchIcon} from '../../SVG'
-import {IUserDetail} from '../../interface'
+import {COLORS, USERS_LIMIT} from '@/constants'
+import {CloseIcon, SearchIcon} from '@/SVG'
+import {IUserDetail} from '@/interface'
 
 type AutoCompleteInputProps = {
   marginAnimation: Animated.Value

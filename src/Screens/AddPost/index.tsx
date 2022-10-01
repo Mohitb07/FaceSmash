@@ -20,14 +20,14 @@ import Toast from 'react-native-toast-message'
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import {RouteProp, useNavigation} from '@react-navigation/native'
 
-import Header from '../../components/Header'
-import Label from '../../components/Label'
-import StyledTextInput from '../../components/TextInput'
-import {COLORS} from '../../constants'
-import useSelectImage from '../../hooks/useSelectImage'
-import {CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '../../SVG'
-import {RootStackParamList} from '../../Navigation/Root'
-import useUserData from '../../hooks/useUserData'
+import Header from '@/components/Header'
+import Label from '@/components/Label'
+import StyledTextInput from '@/components/TextInput'
+import {COLORS} from '@/constants'
+import useSelectImage from '@/hooks/useSelectImage'
+import {CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '@/SVG'
+import {RootStackParamList} from '@/Navigation/Root'
+import useUserData from '@/hooks/useUserData'
 
 const AddPost = ({
   route,

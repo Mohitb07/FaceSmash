@@ -5,28 +5,26 @@ import {
   TextInput,
   TextStyle,
   ViewStyle,
-  TouchableOpacity,
 } from 'react-native'
 
 import {Divider, HStack, Image, Text as NText, View, VStack} from 'native-base'
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
-import StyledButton from '../../components/Button'
-import StyledError from '../../components/Error'
-import {COLORS} from '../../constants'
-import {FIREBASE_ERRORS} from '../../firebase/errors'
-import useLogin from '../../hooks/useLogin'
-import {FacebookIcon, GoogleIcon} from '../../SVG'
-import {checkIsEmailValid} from '../../utils'
-import {RootStackParamList} from '../../Navigation/Root'
-import GoogleLogin from '../../components/SocialLogins/Google'
-import FacebookLogin from '../../components/SocialLogins/Facebook'
+import StyledButton from '@/components/Button'
+import StyledError from '@/components/Error'
+import {COLORS} from '@/constants'
+import {FIREBASE_ERRORS} from '@/firebase/errors'
+import useLogin from '@/hooks/useLogin'
+import {checkIsEmailValid} from '@/utils'
+import {RootStackParamList} from '@/Navigation/Root'
+import GoogleLogin from '@/components/SocialLogins/Google'
+import FacebookLogin from '@/components/SocialLogins/Facebook'
 
 type LoginScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
   'Login'
 >
-const LOGIN_SCREEN_ASSET = '../../../assets/login.png'
+const LOGIN_SCREEN_ASSET = '@/../assets/login.png'
 const Login: React.FC<LoginScreenNavigationProp> = ({
   navigation,
 }: LoginScreenNavigationProp) => {

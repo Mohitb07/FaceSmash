@@ -5,7 +5,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import * as ImagePicker from 'react-native-image-picker'
 import Toast from 'react-native-toast-message'
 
-import {RootStackParamList} from '../Navigation/Root'
+import {RootStackParamList} from '@/Navigation/Root'
 
 type HandleChooseGallary = {
   navigate?: boolean

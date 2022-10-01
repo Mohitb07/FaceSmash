@@ -8,8 +8,8 @@ import {
   GestureResponderEvent,
 } from 'react-native'
 
-import {COLORS} from '../../constants'
-import {BackIcon} from '../../SVG'
+import {COLORS} from '@/constants'
+import {BackIcon} from '@/SVG'
 
 interface IHeaderProps {
   label: string

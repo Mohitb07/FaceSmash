@@ -4,8 +4,8 @@ import {StyleSheet, TextStyle, TouchableOpacity} from 'react-native'
 import {Avatar, Text, View} from 'native-base'
 import {ThemeComponentSizeType} from 'native-base/lib/typescript/components/types'
 
-import {COLORS} from '../../constants'
-import {AddIcon} from '../../SVG'
+import {COLORS} from '@/constants'
+import {AddIcon} from '@/SVG'
 
 type Props = {
   uri: string | undefined

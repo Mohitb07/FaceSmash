@@ -2,9 +2,9 @@ import React, {ReactNode, useCallback, useEffect, useState} from 'react'
 
 import firestore from '@react-native-firebase/firestore'
 
-import useAuthUser from '../hooks/useAuthUser'
-import {IUserDetail} from '../interface'
-import {DEFAULT_USER_DETAILS} from '../constants'
+import useAuthUser from '@/hooks/useAuthUser'
+import {IUserDetail} from '@/interface'
+import {DEFAULT_USER_DETAILS} from '@/constants'
 
 interface IUserDataContext {
   contextUser: IUserDetail | null

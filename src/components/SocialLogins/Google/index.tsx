@@ -3,8 +3,8 @@ import {TouchableOpacity} from 'react-native'
 
 import firestore from '@react-native-firebase/firestore'
 
-import {GoogleIcon} from '../../../SVG'
-import useLogin from '../../../hooks/useLogin'
+import {GoogleIcon} from '@/SVG'
+import useLogin from '@/hooks/useLogin'
 
 const GoogleLogin: React.FC = () => {
   const {onGoogleLoginAttempt} = useLogin()

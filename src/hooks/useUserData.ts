@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'
 
-import {UserDataContext} from '../Context/userData'
+import {UserDataContext} from '@/Context/userData'
 
 export default function useUserData() {
   const context = useContext(UserDataContext)

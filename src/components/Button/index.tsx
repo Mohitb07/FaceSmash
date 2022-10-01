@@ -9,7 +9,7 @@ import {
 import {View} from 'native-base'
 
 import {TextStyle} from 'react-native'
-import {COLORS} from '../../constants'
+import {COLORS} from '@/constants'
 
 interface Props {
   onPress: () => void

@@ -14,12 +14,12 @@ import {useNavigation} from '@react-navigation/native'
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import InstaStory from 'react-native-insta-story'
 
-import {COLORS} from '../../../constants'
-import useSelectImage from '../../../hooks/useSelectImage'
-import useUserData from '../../../hooks/useUserData'
-import {RootStackParamList} from '../../../Navigation/Root'
-import {PhotoIcon, SearchIcon} from '../../../SVG'
-import Story from '../../Story'
+import {COLORS} from '@/constants'
+import useSelectImage from '@/hooks/useSelectImage'
+import useUserData from '@/hooks/useUserData'
+import {RootStackParamList} from '@/Navigation/Root'
+import {PhotoIcon, SearchIcon} from '@/SVG'
+import Story from '@/components/Story'
 
 export const dummyStoryData = [
   {

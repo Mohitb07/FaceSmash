@@ -3,7 +3,7 @@ import React, {useEffect, useState} from 'react'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 
-import {IPostLikes} from '../interface'
+import {IPostLikes} from '@/interface'
 
 const useLikedPosts = () => {
   const [userLikedPosts, setUserLikedPosts] = useState<IPostLikes[]>([])

@@ -3,10 +3,10 @@ import React from 'react'
 import {useRecoilState} from 'recoil'
 import {Actionsheet} from 'native-base'
 
-import {bottomSheetState} from '../../atoms/bottomSheetAtom'
+import {bottomSheetState} from '@/atoms/bottomSheetAtom'
 import ProfileBottomSheet from './Profile'
-import {COLORS} from '../../constants'
-import {IBottomSheetState} from '../../interface'
+import {COLORS} from '@/constants'
+import {IBottomSheetState} from '@/interface'
 
 const BottomSheet = () => {
   const [bottomSheetStateValue, setBottomSheetStateValue] =

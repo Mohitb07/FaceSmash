@@ -2,9 +2,9 @@ import firestore, {
   FirebaseFirestoreTypes,
 } from '@react-native-firebase/firestore'
 
-import {FEED_LIMIT} from '../constants'
-import {IPost} from '../interface'
-import {getLastVisibleDocRef} from '../utils/getLastVisibleDocRef'
+import {FEED_LIMIT} from '@/constants'
+import {IPost} from '@/interface'
+import {getLastVisibleDocRef} from '@/utils/getLastVisibleDocRef'
 
 const usePagination = () => {
   const queryMore = async (

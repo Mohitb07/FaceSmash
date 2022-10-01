@@ -4,10 +4,10 @@ import {StyleSheet} from 'react-native'
 import {Box, Button, Image, Text, View, useToast} from 'native-base'
 import auth from '@react-native-firebase/auth'
 
-import {IAuthUser} from '../../Context/auth'
-import {COLORS} from '../../constants'
-import {ReSendIcon, VerifyIcon} from '../../SVG'
-import useAuthUser from '../../hooks/useAuthUser'
+import {IAuthUser} from '@/Context/auth'
+import {COLORS} from '@/constants'
+import {ReSendIcon, VerifyIcon} from '@/SVG'
+import useAuthUser from '@/hooks/useAuthUser'
 
 const Verification = () => {
   const toast = useToast()
@@ -82,7 +82,7 @@ const Verification = () => {
               height: 360,
               width: 360,
             }}
-            source={require('../../../assets/person-sitting.png')}
+            source={require('@/../assets/person-sitting.png')}
             alt="Illustration"
           />
         </View>

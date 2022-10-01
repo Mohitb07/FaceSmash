@@ -24,13 +24,13 @@ import FastImage from 'react-native-fast-image'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
-import {HeartFilledIcon, HeartOutlinIcon, LinkIcon} from '../SVG'
-import {COLORS} from '../constants'
-import useAuthUser from '../hooks/useAuthUser'
-import {FeedProps} from '../interface'
-import {RootStackParamList} from '../Navigation/Root'
+import {HeartFilledIcon, HeartOutlinIcon, LinkIcon} from '@/SVG'
+import {COLORS} from '@/constants'
+import useAuthUser from '@/hooks/useAuthUser'
+import {FeedProps} from '@/interface'
+import {RootStackParamList} from '@/Navigation/Root'
 
-const FeedMore = React.lazy(() => import('./BottomSheet/FeedMore'))
+const FeedMore = React.lazy(() => import('@/components/BottomSheet/FeedMore'))
 
 dayjs.extend(relativeTime)
 
