@@ -13,7 +13,7 @@ type GetStartedScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
   'GetStarted'
 >
-const GET_STARTED_SCREEN_ASSET = '@/../assets/getStarted.png'
+const GET_STARTED_SCREEN_ASSET = '../../../assets/getStarted.png'
 
 const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
   navigation,
