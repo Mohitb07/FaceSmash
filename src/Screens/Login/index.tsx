@@ -24,7 +24,7 @@ type LoginScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
   'Login'
 >
-const LOGIN_SCREEN_ASSET = '@/../assets/login.png'
+const LOGIN_SCREEN_ASSET = '../../../assets/login.png'
 const Login: React.FC<LoginScreenNavigationProp> = ({
   navigation,
 }: LoginScreenNavigationProp) => {
