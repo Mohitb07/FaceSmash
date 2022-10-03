@@ -9,38 +9,40 @@ import {COLORS} from '@/constants'
 import {ReSendIcon, VerifyIcon} from '@/SVG'
 import useAuthUser from '@/hooks/useAuthUser'
 
+const btnText = {
+  color: COLORS.background,
+  fontFamily: 'Lato-Heavy',
+  fontSize: '13px',
+}
+
 const Verification = () => {
   const toast = useToast()
   const [loadingVerify, setLoadingVerify] = useState(false)
   const [loadingResend, setLoadingResend] = useState(false)
   const {user, setAuthUser} = useAuthUser()
 
-  const sendEmailVerifiationLink = () => {
+  const sendEmailVerificationLink = () => {
     setLoadingResend(true)
     auth()
       .currentUser?.sendEmailVerification()
-      .then(() => {
+      .then(() =>
         toast.show({
-          render: () => {
-            return (
-              <Box bg="emerald.500" px="2" py="2" rounded="sm">
-                Verification link sent to the registered email address
-              </Box>
-            )
-          },
-        })
-      })
-      .catch(err => {
+          render: () => (
+            <Box bg="emerald.500" px="2" py="2" rounded="sm">
+              Verification link sent to the registered email address
+            </Box>
+          ),
+        }),
+      )
+      .catch(err =>
         toast.show({
-          render: () => {
-            return (
-              <Box bg="emerald.500" px="2" py="2" rounded="sm">
-                {err}
-              </Box>
-            )
-          },
-        })
-      })
+          render: () => (
+            <Box bg="emerald.500" px="2" py="2" rounded="sm">
+              {err}
+            </Box>
+          ),
+        }),
+      )
       .finally(() => {
         setLoadingResend(false)
       })
@@ -51,23 +53,21 @@ const Verification = () => {
     if (!!user && !user?.emailVerified) {
       console.log('checking verification status interval')
       await auth().currentUser?.reload()
-      const user = auth()?.currentUser
+      const user = auth().currentUser
       if (user?.emailVerified) {
         setLoadingVerify(false)
         setAuthUser((prev: IAuthUser) => ({
           ...prev,
-          user: user,
+          user,
         }))
       } else {
         setLoadingVerify(false)
         toast.show({
-          render: () => {
-            return (
-              <Box bg="red.500" px="2" py="2" rounded="sm">
-                Your Email is not verified.
-              </Box>
-            )
-          },
+          render: () => (
+            <Box bg="red.500" px="2" py="2" rounded="sm">
+              Your Email is not verified.
+            </Box>
+          ),
         })
       }
     }
@@ -78,11 +78,8 @@ const Verification = () => {
       <View>
         <View alignItems="center" justifyContent="center">
           <Image
-            style={{
-              height: 360,
-              width: 360,
-            }}
-            source={require('@/../assets/person-sitting.png')}
+            style={styles.image}
+            source={require('../../../assets/person-sitting.png')}
             alt="Illustration"
           />
         </View>
@@ -102,11 +99,7 @@ const Verification = () => {
           backgroundColor={COLORS.white2}
           borderColor={COLORS.white2}
           onPress={checkUserVerificationStatus}
-          _text={{
-            color: COLORS.background,
-            fontFamily: 'Lato-Heavy',
-            fontSize: '13px',
-          }}>
+          _text={btnText}>
           Verify
         </Button>
 
@@ -123,12 +116,8 @@ const Verification = () => {
           leftIcon={
             <ReSendIcon fill={COLORS.primary} height="12px" width="15px" />
           }
-          onPress={sendEmailVerifiationLink}
-          _text={{
-            color: COLORS.primary,
-            fontFamily: 'Lato-Heavy',
-            fontSize: '13px',
-          }}>
+          onPress={sendEmailVerificationLink}
+          _text={btnText}>
           Re Send
         </Button>
       </View>
@@ -144,5 +133,9 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     backgroundColor: COLORS.mainBackground,
     flex: 1,
+  },
+  image: {
+    height: 360,
+    width: 360,
   },
 })
