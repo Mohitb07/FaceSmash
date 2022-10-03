@@ -21,20 +21,19 @@ const MyProfile = ({
   const setBottomSheetStateValue =
     useSetRecoilState<IBottomSheetState>(bottomSheetState)
 
-  const handleModalState = () => {
-    setBottomSheetStateValue(prev => ({
-      ...prev,
+  const handleModalState = () =>
+    setBottomSheetStateValue(() => ({
       type: 'profile',
       isOpen: true,
     }))
-  }
+
   useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <TouchableOpacity
           onPress={handleModalState}
           style={styles.threeDotsIconContainer}>
-          <ThreeDotsIcon fill="#fff" />
+          <ThreeDotsIcon fill={COLORS.white} />
         </TouchableOpacity>
       ),
     })
@@ -55,7 +54,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.mainBackground,
-    // paddingHorizontal: 15,
   },
   threeDotsIconContainer: {
     transform: [{rotate: '90deg'}],
