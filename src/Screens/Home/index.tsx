@@ -124,7 +124,7 @@ const Home = () => {
     </View>
   )
 }
-export default Home
+export default React.memo(Home)
 
 const styles = StyleSheet.create({
   container: {
