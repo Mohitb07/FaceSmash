@@ -340,4 +340,4 @@ const styles = StyleSheet.create({
   },
 })
 
-export default AddPost
+export default React.memo(AddPost)
