@@ -8,17 +8,12 @@ import {DEFAULT_USER_DETAILS} from '@/constants'
 
 interface IUserDataContext {
   contextUser: IUserDetail | null
-  updateUserData: (
-    url: string,
-    navigation: any,
-    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    userId: string,
-  ) => void
+  updateUserData: (url: string, userId: string) => void
 }
 
 export const UserDataContext = React.createContext<IUserDataContext>({
   contextUser: null,
-  updateUserData(url, navigation, setLoading, userId) {},
+  updateUserData: (url, userId) => {},
 })
 
 const UserDataProvider = ({children}: {children: ReactNode}) => {
@@ -47,60 +42,38 @@ const UserDataProvider = ({children}: {children: ReactNode}) => {
     getData()
   }, [user?.uid, user?.emailVerified])
 
-  const updateUserData = useCallback(
-    async (
-      url: string,
-      navigation: any,
-      setLoading: React.Dispatch<React.SetStateAction<boolean>>,
-      userId: string,
-    ) => {
-      if (userId) {
-        const userRef = firestore().collection('Users').doc(userId)
-
-        await userRef.update({
-          profilePic: url,
+  const updateUserData = useCallback(async (url: string, userId: string) => {
+    if (userId) {
+      const userRef = firestore().collection('Users').doc(userId)
+      await userRef.update({
+        profilePic: url,
+      })
+      const batch = firestore().batch()
+      const allPosts = await firestore()
+        .collection('Posts')
+        .where('user', '==', userId)
+        .orderBy('createdAt', 'desc')
+        .get()
+      allPosts.docs.forEach(doc => {
+        const docRef = firestore().collection('Posts').doc(doc.id)
+        batch.update(docRef, {
+          userProfile: url,
         })
-        const batch = firestore().batch()
-
-        const updatedUser = await firestore()
-          .collection('Users')
-          .doc(userId)
-          .get()
-
-        console.log('updated User', updatedUser)
-
-        const allPosts = await firestore()
-          .collection('Posts')
-          .where('user', '==', userId)
-          .orderBy('createdAt', 'desc')
-          .get()
-
-        allPosts.docs.forEach(doc => {
-          const docRef = firestore().collection('Posts').doc(doc.id)
-          batch.update(docRef, {
-            userProfile: updatedUser.data()?.profilePic,
-          })
+      })
+      batch
+        .commit()
+        .then(() => {
+          setContextUser(prev => ({
+            ...DEFAULT_USER_DETAILS,
+            ...prev,
+            profilePic: url,
+          }))
         })
-
-        batch
-          .commit()
-          .then(() => {
-            setLoading(false)
-            setContextUser({
-              ...DEFAULT_USER_DETAILS,
-              ...updatedUser.data(),
-            })
-            navigation.navigate('Profile', {
-              providedUserId: userId,
-            })
-          })
-          .catch(err => {
-            throw Error(err.message)
-          })
-      }
-    },
-    [],
-  )
+        .catch(err => {
+          console.log('error', err)
+        })
+    }
+  }, [])
 
   const memoizedUser = React.useMemo(
     () => ({

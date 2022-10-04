@@ -58,8 +58,11 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
           storage()
             .ref(USER_PROFILE_PIC_REFERENCE)
             .getDownloadURL()
-            .then(url => {
-              updateUserData(url, navigation, setLoading, contextUser?.uid!)
+            .then(async url => {
+              await updateUserData(url, contextUser?.uid!)
+              navigation.navigate('Profile', {
+                providedUserId: contextUser?.uid!,
+              })
             })
             .catch(err => {
               console.log('image download error', err)
@@ -67,6 +70,9 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
         })
         .catch(err => {
           console.log('IMAGE UPLOAD ERROR', err)
+        })
+        .finally(() => {
+          setLoading(false)
         })
     }
   }
@@ -132,7 +138,7 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
   )
 }
 
-export default UpdateProfile
+export default React.memo(UpdateProfile)
 
 const styles = StyleSheet.create({
   container: {
