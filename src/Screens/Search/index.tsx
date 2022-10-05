@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useRef, useState, FC} from 'react'
 import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
@@ -12,11 +12,11 @@ import {
 } from 'native-base'
 
 import AutoCompleteInput from '@/components/AutoCompleteInput'
-import {dummyStoryData} from '@/components/Header/Home'
+import {DUMMY_STORY_DATA} from '@/constants'
 import Story from '@/components/Story'
 import {BackIcon, SearchIcon1, UserGroup} from '@/SVG'
 import {IUserDetail} from '@/interface'
-import {COLORS} from '@/constants'
+import {COLORS, FONTS} from '@/constants'
 import {RootStackParamList} from '@/Navigation/Root'
 
 type SearchUserScreenNavigationProp = NativeStackScreenProps<
@@ -24,7 +24,7 @@ type SearchUserScreenNavigationProp = NativeStackScreenProps<
   'SearchUser'
 >
 
-const SearchUser: React.FC<SearchUserScreenNavigationProp> = ({navigation}) => {
+const SearchUser: FC<SearchUserScreenNavigationProp> = ({navigation}) => {
   const [marginAnimation] = useState(new Animated.Value(0))
   const [foundUsers, setFoundUsers] = useState<Array<IUserDetail> | null>(null)
   const currentInputValue = useRef('')
@@ -56,7 +56,7 @@ const SearchUser: React.FC<SearchUserScreenNavigationProp> = ({navigation}) => {
         <FlatList
           horizontal
           showsHorizontalScrollIndicator={false}
-          data={dummyStoryData}
+          data={DUMMY_STORY_DATA}
           renderItem={({item}) => (
             <View style={styles.storyContainer}>
               <Story
@@ -183,12 +183,11 @@ const styles = StyleSheet.create({
   },
   recommendedUserText: {
     flex: 1,
-    fontSize: 18,
     color: COLORS.white,
     marginBottom: 10,
-    fontFamily: 'Lato-Bold',
     marginLeft: 10,
     marginVertical: 10,
+    ...FONTS.h3,
   },
   storyContainerStyle: {
     width: 80,

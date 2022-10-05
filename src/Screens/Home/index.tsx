@@ -10,7 +10,7 @@ import Footer from '@/components/DataList/DataListFooter'
 import EmptyList from '@/components/DataList/EmptyDataList'
 import HomeHeader from '@/components/Header/Home'
 import {IDefaultPostState, IPost} from '@/interface'
-import {FEED_LIMIT} from '@/constants'
+import {FEED_LIMIT, POSTS_COLLECTION} from '@/constants'
 import {COLORS} from '@/constants'
 
 const Home = () => {
@@ -24,51 +24,50 @@ const Home = () => {
   const {queryMore} = usePagination()
   const getPosts = useCallback(() => {
     console.log('calling getPosts home feed')
-    try {
-      firestore()
-        .collection('Posts')
-        .orderBy('createdAt', 'desc')
-        .limit(FEED_LIMIT)
-        .onSnapshot(
-          snapshot => {
-            console.log('calling home feed snapshot')
-            const postList: Array<IPost> = snapshot.docs.map(d => ({
-              key: d.id,
-              createdAt: null,
-              description: '',
-              likes: 0,
-              title: '',
-              user: '',
-              userProfile: '',
-              username: '',
-              imageRef: '',
-              ...d.data(),
-            }))
-            const lastVisiblePostRef = getLastVisibleDocRef(snapshot)
-            setPostStateValue(prev => ({
-              ...prev,
-              posts: postList,
-              lastVisible: lastVisiblePostRef,
-              loading: false,
-            }))
-          },
-          error => {
-            console.log('snapshot home post fetching error', error)
-          },
-        )
-    } catch (error) {
-      console.log('getPosts error', error)
-      setPostStateValue(prev => ({
-        ...prev,
-        loading: false,
-      }))
-    } finally {
-      setRefreshing(false)
-    }
+    const subscriber = firestore()
+      .collection(POSTS_COLLECTION)
+      .orderBy('createdAt', 'desc')
+      .limit(FEED_LIMIT)
+      .onSnapshot(
+        snapshot => {
+          console.log('calling home feed snapshot')
+          const postList: Array<IPost> = snapshot.docs.map(d => ({
+            key: d.id,
+            createdAt: null,
+            description: '',
+            likes: 0,
+            title: '',
+            user: '',
+            userProfile: '',
+            username: '',
+            imageRef: '',
+            ...d.data(),
+          }))
+          const lastVisiblePostRef = getLastVisibleDocRef(snapshot)
+          setPostStateValue(prev => ({
+            ...prev,
+            posts: postList,
+            lastVisible: lastVisiblePostRef,
+            loading: false,
+          }))
+          setRefreshing(false)
+        },
+        error => {
+          console.log('snapshot home post fetching error', error)
+          setPostStateValue(prev => ({
+            ...prev,
+            loading: false,
+          }))
+        },
+      )
+    return subscriber
   }, [])
 
   useEffect(() => {
-    getPosts()
+    const unsub = getPosts()
+    return () => {
+      unsub()
+    }
   }, [getPosts])
 
   const onRefresh = () => {

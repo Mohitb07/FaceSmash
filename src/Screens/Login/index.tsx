@@ -25,16 +25,18 @@ type LoginScreenNavigationProp = NativeStackScreenProps<
   'Login'
 >
 const LOGIN_SCREEN_ASSET = '../../../assets/login.png'
-const Login: React.FC<LoginScreenNavigationProp> = ({
-  navigation,
-}: LoginScreenNavigationProp) => {
+
+const Login: React.FC<LoginScreenNavigationProp> = ({navigation}) => {
   const [email, setEmail] = useState<string>('')
   const [password, setPassword] = useState<string>('')
   const {onLoginAttempt, loading, error, setError} = useLogin()
-  const invalidEmail = checkIsEmailValid(email)
+  const invalidEmail = checkIsEmailValid(email.trim())
   const isDisabled =
-    email.length === 0 || password.length === 0 || invalidEmail || loading
-  const invalidEmailError = email.length > 0 && invalidEmail
+    email.trim().length === 0 ||
+    password.trim().length === 0 ||
+    invalidEmail ||
+    loading
+  const invalidEmailError = email.trim().length > 0 && invalidEmail
 
   useEffect(() => {
     error && setError('')
@@ -150,12 +152,12 @@ const styles = StyleSheet.create<Style>({
     backgroundColor: COLORS.cardBackground,
     borderRadius: 10,
     paddingHorizontal: 20,
-    color: 'white',
+    color: COLORS.white,
     borderColor: COLORS.transparent,
     borderWidth: 1,
   },
   textInputError: {
-    borderColor: 'red',
+    borderColor: COLORS.red,
     borderWidth: 1,
   },
 })

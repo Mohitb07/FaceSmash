@@ -1,5 +1,5 @@
-import {Dimensions} from 'react-native';
-const {width, height} = Dimensions.get('window');
+import {Dimensions} from 'react-native'
+const {width, height} = Dimensions.get('window')
 
 export const COLORS = {
   primary: '#6E3DDC',
@@ -21,6 +21,7 @@ export const COLORS = {
   blue: '#4096FE',
   gray: '#777777',
   gray2: '#F8F8F8',
+  gray3: '#1F2124',
   lightGray: '#F5F6FB',
   lightGray2: '#757575',
 
@@ -36,7 +37,8 @@ export const COLORS = {
   transparent: 'transparent',
 
   yellow: '#FECE00',
-};
+  red: '#FF0000',
+}
 export const SIZES = {
   // global sizes
   base: 8,
@@ -59,20 +61,20 @@ export const SIZES = {
   // app dimensions
   width,
   height,
-};
+}
 export const FONTS = {
-  largeTitle: {fontFamily: 'Roboto-Black', fontSize: SIZES.largeTitle},
-  h1: {fontFamily: 'Roboto-Black', fontSize: SIZES.h1, lineHeight: 36},
-  h2: {fontFamily: 'Roboto-Bold', fontSize: SIZES.h2, lineHeight: 30},
-  h3: {fontFamily: 'Roboto-Bold', fontSize: SIZES.h3, lineHeight: 22},
-  h4: {fontFamily: 'Roboto-Bold', fontSize: SIZES.h4, lineHeight: 22},
-  body1: {fontFamily: 'Roboto-Regular', fontSize: SIZES.body1, lineHeight: 36},
-  body2: {fontFamily: 'Roboto-Regular', fontSize: SIZES.body2, lineHeight: 30},
-  body3: {fontFamily: 'Roboto-Regular', fontSize: SIZES.body3, lineHeight: 22},
-  body4: {fontFamily: 'Roboto-Regular', fontSize: SIZES.body4, lineHeight: 22},
-  body5: {fontFamily: 'Roboto-Regular', fontSize: SIZES.body5, lineHeight: 22},
-};
+  largeTitle: {fontFamily: 'Lato-Black', fontSize: SIZES.largeTitle},
+  h1: {fontFamily: 'Lato-Black', fontSize: SIZES.h1, lineHeight: 36},
+  h2: {fontFamily: 'Lato-Bold', fontSize: SIZES.h2, lineHeight: 30},
+  h3: {fontFamily: 'Lato-Bold', fontSize: SIZES.h3, lineHeight: 22},
+  h4: {fontFamily: 'Lato-Bold', fontSize: SIZES.h4, lineHeight: 22},
+  body1: {fontFamily: 'Lato-Regular', fontSize: SIZES.body1, lineHeight: 36},
+  body2: {fontFamily: 'Lato-Regular', fontSize: SIZES.body2, lineHeight: 30},
+  body3: {fontFamily: 'Lato-Regular', fontSize: SIZES.body3, lineHeight: 22},
+  body4: {fontFamily: 'Lato-Regular', fontSize: SIZES.body4, lineHeight: 22},
+  body5: {fontFamily: 'Lato-Regular', fontSize: SIZES.body5, lineHeight: 22},
+}
 
-const appTheme = {COLORS, SIZES, FONTS};
+const appTheme = {COLORS, SIZES, FONTS}
 
-export default appTheme;
+export default appTheme
