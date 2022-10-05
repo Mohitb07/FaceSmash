@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useState, FC} from 'react'
 import {ScrollView, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
 
 import {Divider, HStack, Image, Text, View, VStack} from 'native-base'
@@ -12,12 +12,12 @@ import {useRegister} from '@/hooks/useRegister'
 import {RootStackParamList} from '@/Navigation/Root'
 import {FacebookIcon, GoogleIcon} from '@/SVG'
 
-type LoginScreenNavigationProp = NativeStackScreenProps<
+type RegisterScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
   'SignUp'
 >
 
-const Register = ({navigation}: LoginScreenNavigationProp) => {
+const Register: FC<RegisterScreenNavigationProp> = ({navigation}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -41,11 +41,11 @@ const Register = ({navigation}: LoginScreenNavigationProp) => {
   }, [email])
 
   const isDisabled =
-    email.length === 0 ||
-    password.length === 0 ||
-    confirmPassword.length === 0 ||
-    username.length === 0 ||
-    password !== confirmPassword ||
+    email.trim().length === 0 ||
+    password.trim().length === 0 ||
+    confirmPassword.trim().length === 0 ||
+    username.trim().length === 0 ||
+    password.trim() !== confirmPassword.trim() ||
     loading
 
   const confirmPasswordErrorMsg =
@@ -53,9 +53,7 @@ const Register = ({navigation}: LoginScreenNavigationProp) => {
       ? 'Password must match'
       : ''
 
-  const signUpAttempt = () => {
-    onRegisterAttempt(email, password, username)
-  }
+  const signUpAttempt = () => onRegisterAttempt(email, password, username)
 
   const handleUsername = (text: string) => {
     if (text.length > 30) return
@@ -195,19 +193,18 @@ const styles = StyleSheet.create({
   container: {
     padding: 25,
     paddingTop: 0,
-    // paddingBottom: 20,
     backgroundColor: COLORS.mainBackground,
   },
   textInput: {
     backgroundColor: COLORS.cardBackground,
     borderRadius: 10,
     paddingHorizontal: 20,
-    color: 'white',
+    color: COLORS.white,
     borderColor: COLORS.transparent,
     borderWidth: 1,
   },
   textInputError: {
-    borderColor: 'red',
+    borderColor: COLORS.red,
     borderWidth: 1,
   },
 })
