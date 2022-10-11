@@ -1,5 +1,5 @@
 import React, {memo, useEffect, useRef, useState} from 'react'
-import {TouchableOpacity} from 'react-native'
+import {TouchableOpacity, StyleSheet} from 'react-native'
 
 import {Box, Flex, HStack, Text, View} from 'native-base'
 import auth from '@react-native-firebase/auth'
@@ -103,11 +103,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
     <Box my="2" mb="5" paddingX="2">
       <HStack alignItems="center" justifyContent="space-between">
         <FastImage
-          style={{
-            width: 80,
-            height: 80,
-            borderRadius: 100,
-          }}
+          style={styles.profilePicContainer}
           source={{
             uri: userData.profilePic,
             priority: FastImage.priority.normal,
@@ -209,3 +205,11 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
 }
 
 export default memo(ProfileHeader)
+
+const styles = StyleSheet.create({
+  profilePicContainer: {
+    width: 80,
+    height: 80,
+    borderRadius: 100,
+  },
+})

@@ -1,5 +1,11 @@
 import React, {useState} from 'react'
-import {Image, ScrollView, StyleSheet, TouchableOpacity} from 'react-native'
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  TextInput,
+} from 'react-native'
 
 import firestore from '@react-native-firebase/firestore'
 import storage from '@react-native-firebase/storage'
@@ -23,7 +29,7 @@ import {RouteProp, useNavigation} from '@react-navigation/native'
 import Header from '@/components/Header'
 import Label from '@/components/Label'
 import StyledTextInput from '@/components/TextInput'
-import {COLORS} from '@/constants'
+import {COLORS, FONTS} from '@/constants'
 import useSelectImage from '@/hooks/useSelectImage'
 import {CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '@/SVG'
 import {RootStackParamList} from '@/Navigation/Root'
@@ -164,33 +170,38 @@ const AddPost = ({
               <Text style={styles.email}>{contextUser?.email}</Text>
             </View>
           </TouchableOpacity>
-          <Label label="Title" required labelStyle={{fontSize: 15}} />
-          <StyledTextInput
-            placeholder="Your title"
+          <Label label="Title" required />
+          <TextInput
+            placeholder="Title here..."
+            placeholderTextColor={COLORS.lightGray2}
             value={title}
             maxLength={30}
-            onChangeText={text => setTitle(text)}
+            onChangeText={setTitle}
+            style={styles.textInput}
           />
 
-          <Label label="Description" required labelStyle={{fontSize: 15}} />
-          <StyledTextInput
+          <Label label="Description" required />
+          <TextInput
             numberOfLines={6}
-            placeholder="Your description"
+            placeholder="Description here..."
+            placeholderTextColor={COLORS.lightGray2}
             value={textAreaValue}
-            onChangeText={text => setTextAreaValue(text)}
-            multiline={true}
             maxLength={100}
-            customStyles={{textAlignVertical: 'top'}}
+            onChangeText={setTextAreaValue}
+            style={[styles.textInput, styles.multilineMarginFix]}
+            multiline
           />
 
           {showLink && (
             <>
-              <Label label="Link" labelStyle={{fontSize: 15}} />
-              <StyledTextInput
-                placeholder="Link here"
+              <Label label="Link" />
+              <TextInput
+                placeholder="Link here..."
+                placeholderTextColor={COLORS.lightGray2}
                 value={link}
                 maxLength={100}
-                onChangeText={text => setLink(text)}
+                onChangeText={setLink}
+                style={styles.textInput}
               />
             </>
           )}
@@ -261,7 +272,7 @@ const AddPost = ({
               <TouchableOpacity
                 disabled={!!selectedImage || !!imageFromNav || loading}
                 onPress={() => handleChooseGallary({})}
-                style={{flexDirection: 'row', alignItems: 'center'}}>
+                style={styles.bottomSectionRow}>
                 <PhotoIcon width="24" height="24" />
                 <Text
                   color={
@@ -280,7 +291,7 @@ const AddPost = ({
               <TouchableOpacity
                 disabled={loading}
                 onPress={handleLink}
-                style={{flexDirection: 'row', alignItems: 'center'}}>
+                style={styles.bottomSectionRow}>
                 <LinkIcon />
                 <Text
                   color={loading ? 'gray.700' : 'white'}
@@ -308,11 +319,8 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     marginTop: 10,
-    // justifyContent: 'center',
-    // alignItems: 'center',
   },
   postImage: {
-    // width: 360,
     height: 350,
     borderRadius: 13,
   },
@@ -330,13 +338,28 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
   },
   usernameText: {
-    color: '#F2F2F2',
-    fontSize: 17,
+    color: COLORS.white2,
     fontWeight: 'bold',
+    ...FONTS.h3,
   },
   email: {
-    color: '#747474',
+    color: COLORS.lightGray2,
     fontSize: 14,
+  },
+  textInput: {
+    backgroundColor: COLORS.cardBackground,
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    color: COLORS.white,
+    borderColor: COLORS.transparent,
+    borderWidth: 1,
+  },
+  multilineMarginFix: {
+    textAlignVertical: 'top',
+  },
+  bottomSectionRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })
 
