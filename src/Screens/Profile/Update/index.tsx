@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Image, StyleSheet, Text, View} from 'react-native'
+import {Image, StyleSheet, Text, View, TextInput} from 'react-native'
 
 import {HStack, View as NView} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
@@ -10,8 +10,7 @@ import Button from '@/components/Button'
 import {CheckIcon, CloseIcon} from '@/SVG'
 import Header from '@/components/Header'
 import Label from '@/components/Label'
-import StyledTextInput from '@/components/TextInput'
-import {COLORS} from '@/constants/theme'
+import {COLORS, FONTS} from '@/constants/theme'
 import {RootStackParamList} from '@/Navigation/Root'
 import useSelectImage from '@/hooks/useSelectImage'
 import useUserData from '@/hooks/useUserData'
@@ -22,8 +21,10 @@ type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
   'UpdateProfile'
 >
 
-const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
-  const [userBio, setUserBio] = useState<string>('')
+const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
+  navigation,
+}) => {
+  const [userBio, setUserBio] = useState('')
   const [loading, setLoading] = useState(false)
   const {user} = useAuthUser()
   const {contextUser, updateUserData} = useUserData()
@@ -89,7 +90,6 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
         leftIcon={<CloseIcon />}
         rightIcon={<CheckIcon />}
       />
-
       <View style={styles.container}>
         <View>
           <Image
@@ -103,12 +103,14 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
           </View>
           <Text style={styles.email}>{contextUser?.email}</Text>
           <NView mb="5">
-            <Label label="Bio" labelStyle={{fontSize: 15}} />
-            <StyledTextInput
+            <Label label="Bio" />
+            <TextInput
               value={userBio || contextUser?.bio}
               placeholder="Your bio here..."
-              onChangeText={text => setUserBio(text)}
+              placeholderTextColor={COLORS.lightGray2}
+              onChangeText={setUserBio}
               maxLength={30}
+              style={styles.textInput}
             />
           </NView>
         </View>
@@ -118,19 +120,17 @@ const UpdateProfile = ({navigation}: UpdateProfileScreenNavigationProp) => {
             onPress={() => handleChooseGallary({navigate: false})}
             bgColor={COLORS.white2}
             showRing={false}
-            textStyle={{fontFamily: 'Lato-Heavy'}}
             disabled={loading}
+            style={styles.btnContainer}
           />
           <Button
             text="Take Now"
             onPress={handleTakePhoto}
             bgColor={COLORS.primary}
             showRing={false}
-            textStyle={{
-              fontFamily: 'Lato-Heavy',
-              color: COLORS.white2,
-            }}
+            textStyle={styles.customBtnText}
             disabled={loading}
+            style={styles.btnContainer}
           />
         </HStack>
       </View>
@@ -159,26 +159,25 @@ const styles = StyleSheet.create({
   },
   textFullName: {
     color: '#E5E5E5',
-    fontSize: 23,
+    ...FONTS.h2,
     marginBottom: 5,
   },
   email: {
-    fontSize: 15,
+    ...FONTS.h4,
     color: '#747474',
   },
-  btnContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-  customBtn: {
-    borderRadius: 50,
-    marginVertical: 15,
-    paddingHorizontal: 14,
-    paddingVertical: 8,
-  },
   customBtnText: {
-    fontSize: 12,
     color: COLORS.white2,
+  },
+  textInput: {
+    backgroundColor: COLORS.cardBackground,
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    color: COLORS.white,
+    borderColor: COLORS.transparent,
+    borderWidth: 1,
+  },
+  btnContainer: {
+    paddingVertical: 14,
   },
 })
