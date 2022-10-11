@@ -48,6 +48,7 @@ export const SIZES = {
 
   // font sizes
   largeTitle: 40,
+  normalTitle: 18,
   h1: 30,
   h2: 22,
   h3: 16,
@@ -64,6 +65,7 @@ export const SIZES = {
 }
 export const FONTS = {
   largeTitle: {fontFamily: 'Lato-Black', fontSize: SIZES.largeTitle},
+  normalTitle: {fontFamily: 'Lato-Black', fontSize: SIZES.normalTitle},
   h1: {fontFamily: 'Lato-Black', fontSize: SIZES.h1, lineHeight: 36},
   h2: {fontFamily: 'Lato-Bold', fontSize: SIZES.h2, lineHeight: 30},
   h3: {fontFamily: 'Lato-Bold', fontSize: SIZES.h3, lineHeight: 22},
