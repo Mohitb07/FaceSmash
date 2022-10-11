@@ -1,4 +1,5 @@
-import React, {memo} from 'react'
+import {COLORS, FONTS} from '@/constants'
+import React from 'react'
 import {View, Text, StyleSheet, TextStyle} from 'react-native'
 
 interface IStyledLabelProps {
@@ -7,11 +8,11 @@ interface IStyledLabelProps {
   required?: boolean
 }
 
-function StyledLabel({
+const StyledLabel: React.FC<IStyledLabelProps> = ({
   label,
   labelStyle = {},
   required = false,
-}: IStyledLabelProps) {
+}) => {
   return (
     <View style={styles.container}>
       <Text style={[styles.labelText, labelStyle]}>{label}</Text>
@@ -19,7 +20,7 @@ function StyledLabel({
     </View>
   )
 }
-export default memo(StyledLabel)
+export default StyledLabel
 
 const styles = StyleSheet.create({
   container: {
@@ -29,15 +30,13 @@ const styles = StyleSheet.create({
     marginTop: 12,
     marginBottom: 5,
   },
-
   labelText: {
-    fontSize: 13,
-    color: '#fff',
+    color: COLORS.white,
+    ...FONTS.h4,
   },
-
   sup: {
     color: 'red',
     marginLeft: 4,
-    fontSize: 12,
+    ...FONTS.body5,
   },
 })
