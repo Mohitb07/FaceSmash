@@ -8,7 +8,7 @@ import {
   GestureResponderEvent,
 } from 'react-native'
 
-import {COLORS} from '@/constants'
+import {COLORS, FONTS} from '@/constants'
 import {BackIcon} from '@/SVG'
 
 interface IHeaderProps {
@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
     zIndex: 99,
   },
   headerText: {
-    fontSize: 20,
-    color: '#fff',
+    ...FONTS.normalTitle,
+    color: COLORS.white,
     fontWeight: 'bold',
   },
 })
