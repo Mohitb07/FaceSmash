@@ -9,7 +9,7 @@ import {
 import {View} from 'native-base'
 
 import {TextStyle} from 'react-native'
-import {COLORS} from '@/constants'
+import {COLORS, FONTS} from '@/constants'
 
 interface Props {
   onPress: () => void
@@ -30,7 +30,7 @@ const Button: React.FC<Props> = ({
   bgColor = '',
   icon,
   style: customStyle = {},
-  textStyle,
+  textStyle = {},
   loader = false,
   showRing = true,
 }: Props) => {
@@ -66,10 +66,9 @@ export default Button
 const styles = StyleSheet.create({
   btnText: {
     textAlign: 'center',
-    fontSize: 14,
-    fontFamily: 'Lato-Heavy',
     color: COLORS.transparentBlack7,
     marginHorizontal: 10,
+    ...FONTS.h4,
   },
   btn: {
     flexDirection: 'row',
