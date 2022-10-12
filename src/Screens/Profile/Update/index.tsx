@@ -3,7 +3,6 @@ import {Image, StyleSheet, Text, View, TextInput} from 'react-native'
 
 import {HStack, View as NView} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
-import storage from '@react-native-firebase/storage'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import Button from '@/components/Button'
@@ -15,6 +14,7 @@ import {RootStackParamList} from '@/Navigation/Root'
 import useSelectImage from '@/hooks/useSelectImage'
 import useUserData from '@/hooks/useUserData'
 import useAuthUser from '@/hooks/useAuthUser'
+import useUploadImage from '@/hooks/useUploadImage'
 
 type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -28,6 +28,7 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
   const [loading, setLoading] = useState(false)
   const {user} = useAuthUser()
   const {contextUser, updateUserData} = useUserData()
+  const {firestoreImageUpload} = useUploadImage()
   const {handleChooseGallary, handleTakePhoto, selectedImage} = useSelectImage()
   const USER_PROFILE_PIC_REFERENCE = `${contextUser?.uid}/profilePic/`
 
@@ -52,29 +53,20 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
         })
     }
     if (selectedImage) {
-      storage()
-        .ref(USER_PROFILE_PIC_REFERENCE)
-        .putFile(selectedImage)
-        .then(snapshot => {
-          storage()
-            .ref(USER_PROFILE_PIC_REFERENCE)
-            .getDownloadURL()
-            .then(async url => {
-              await updateUserData(url, contextUser?.uid!)
-              navigation.navigate('Profile', {
-                providedUserId: contextUser?.uid!,
-              })
-            })
-            .catch(err => {
-              console.log('image download error', err)
-            })
+      try {
+        const url = await firestoreImageUpload(
+          USER_PROFILE_PIC_REFERENCE,
+          selectedImage,
+        )
+        updateUserData(url, contextUser?.uid!)
+        navigation.navigate('Profile', {
+          providedUserId: contextUser?.uid!,
         })
-        .catch(err => {
-          console.log('IMAGE UPLOAD ERROR', err)
-        })
-        .finally(() => {
-          setLoading(false)
-        })
+      } catch (err) {
+        console.log('Error', err)
+      } finally {
+        setLoading(false)
+      }
     }
   }
 
