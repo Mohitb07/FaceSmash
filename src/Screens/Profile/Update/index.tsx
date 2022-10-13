@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import {Image, StyleSheet, Text, View, TextInput} from 'react-native'
 
-import {HStack, View as NView} from 'native-base'
+import {Avatar, HStack, View as NView} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -13,8 +13,8 @@ import {COLORS, FONTS} from '@/constants/theme'
 import {RootStackParamList} from '@/Navigation/Root'
 import useSelectImage from '@/hooks/useSelectImage'
 import useUserData from '@/hooks/useUserData'
-import useAuthUser from '@/hooks/useAuthUser'
 import useUploadImage from '@/hooks/useUploadImage'
+import {USERS_COLLECTION} from '@/constants'
 
 type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -26,7 +26,6 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
 }) => {
   const [userBio, setUserBio] = useState('')
   const [loading, setLoading] = useState(false)
-  const {user} = useAuthUser()
   const {contextUser, updateUserData} = useUserData()
   const {firestoreImageUpload} = useUploadImage()
   const {handleChooseGallary, handleTakePhoto, selectedImage} = useSelectImage()
@@ -38,19 +37,16 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
     setLoading(true)
     const filterdUserBio = userBio.trim()
     if (filterdUserBio) {
-      firestore()
-        .collection('Users')
-        .doc(user.uid)
-        .set(
-          {
-            bio: filterdUserBio,
-          },
-          {merge: true}, // so that it don't overwrite the existing document data
-        )
-        .then(() => {
-          console.log('bio updated')
-          !Boolean(selectedImage) && navigation.goBack()
-        })
+      const userDocRef = firestore()
+        .collection(USERS_COLLECTION)
+        .doc(contextUser?.uid)
+      await userDocRef.set(
+        {
+          bio: filterdUserBio,
+        },
+        {merge: true}, // so that it don't overwrite the existing document data
+      )
+      !Boolean(selectedImage) && navigation.goBack()
     }
     if (selectedImage) {
       try {
@@ -59,9 +55,7 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
           selectedImage,
         )
         updateUserData(url, contextUser?.uid!)
-        navigation.navigate('Profile', {
-          providedUserId: contextUser?.uid!,
-        })
+        navigation.goBack()
       } catch (err) {
         console.log('Error', err)
       } finally {
@@ -84,11 +78,12 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
       />
       <View style={styles.container}>
         <View>
-          <Image
+          <Avatar
             style={styles.profilePic}
             source={{
               uri: selectedImage ? selectedImage : contextUser?.profilePic,
             }}
+            size="2xl"
           />
           <View style={styles.fullNameContainer}>
             <Text style={styles.textFullName}>{contextUser?.username}</Text>
@@ -142,7 +137,6 @@ const styles = StyleSheet.create({
   profilePic: {
     width: 100,
     height: 100,
-    borderRadius: 80,
     marginBottom: 10,
   },
   fullNameContainer: {

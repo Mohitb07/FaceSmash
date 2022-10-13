@@ -71,6 +71,7 @@ const UserDataProvider = ({children}: {children: ReactNode}) => {
         })
         .catch(err => {
           console.log('error', err)
+          throw new Error(err)
         })
     }
   }, [])
