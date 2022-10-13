@@ -8,13 +8,11 @@ import {
 } from 'react-native'
 
 import firestore from '@react-native-firebase/firestore'
-import storage from '@react-native-firebase/storage'
 import {
   Avatar,
   Box,
   Center,
   ChevronUpIcon,
-  HStack,
   Icon,
   IconButton,
   PresenceTransition,
@@ -28,12 +26,13 @@ import {RouteProp, useNavigation} from '@react-navigation/native'
 
 import Header from '@/components/Header'
 import Label from '@/components/Label'
-import StyledTextInput from '@/components/TextInput'
-import {COLORS, FONTS} from '@/constants'
+import {COLORS, FONTS, POSTS_COLLECTION} from '@/constants'
 import useSelectImage from '@/hooks/useSelectImage'
 import {CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '@/SVG'
 import {RootStackParamList} from '@/Navigation/Root'
 import useUserData from '@/hooks/useUserData'
+import useUploadImage from '@/hooks/useUploadImage'
+import AddPostBottomRow from '@/components/AddPostBottomRow'
 
 const AddPost = ({
   route,
@@ -43,27 +42,24 @@ const AddPost = ({
     'params'
   >
 }) => {
+  console.log('add post render')
   const routeData = route.params || {}
-
   let getterImage = {...routeData}
-
   const image = getterImage.selectedImageURI
   const imageRef = getterImage.selectedImageRef
-
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
-  const [textAreaValue, setTextAreaValue] = useState<string>('')
-  const [title, setTitle] = useState<string>('')
+  const [description, setDescription] = useState('')
+  const [title, setTitle] = useState('')
   const {contextUser} = useUserData()
   const {selectedImage, selectedImageRef, handleChooseGallary, clearImage} =
     useSelectImage()
-  const [imageFromNav, setImageFromNav] = useState<string>(image)
-  const [loading, setLoading] = useState<boolean>(false)
-  const [showLink, setShowLink] = useState<boolean>(false)
-  const [link, setLink] = useState<string>('')
-
-  console.log('selectedFromnav', imageFromNav)
-  console.log('ref image', selectedImageRef)
+  const [imageFromNav, setImageFromNav] = useState(image)
+  const [loading, setLoading] = useState(false)
+  const [showLink, setShowLink] = useState(false)
+  const [link, setLink] = useState('')
+  const {firestoreImageUpload} = useUploadImage()
+  const REF = `${contextUser?.uid}/posts/${imageRef || selectedImageRef}`
 
   const createPost = async (
     imageURL?: string,
@@ -72,10 +68,10 @@ const AddPost = ({
   ) => {
     try {
       await firestore()
-        .collection('Posts')
+        .collection(POSTS_COLLECTION)
         .add({
-          title: title,
-          description: textAreaValue,
+          title,
+          description,
           image: !!imageURL ? imageURL : null,
           user: contextUser?.uid,
           userProfile: contextUser?.profilePic,
@@ -83,10 +79,7 @@ const AddPost = ({
           likes: 0,
           link,
           createdAt: firestore.FieldValue.serverTimestamp(),
-          imageRef:
-            !!imageRef || !!selectedImageRef
-              ? `${contextUser?.uid}/posts/${imageRef || selectedImageRef}`
-              : null,
+          imageRef: !!imageRef || !!selectedImageRef ? REF : null,
         })
       navigation.navigate('Home')
     } catch (error: any) {
@@ -103,13 +96,10 @@ const AddPost = ({
     setLoading(true)
     if (selectedImage || imageFromNav) {
       try {
-        await storage()
-          .ref(`${contextUser?.uid}/posts/${imageRef || selectedImageRef}`)
-          .putFile(selectedImage || imageFromNav)
-        const imageURL = await storage()
-          .ref(`${contextUser?.uid}/posts/${imageRef || selectedImageRef}`)
-          .getDownloadURL()
-
+        const imageURL = await firestoreImageUpload(
+          REF,
+          selectedImage || imageFromNav,
+        )
         if (!imageURL) {
           throw new Error('Image Upload failed')
         }
@@ -149,7 +139,7 @@ const AddPost = ({
           label="Create post"
           onPress={handlePostCreation}
           hasRightSection
-          isDisabled={!title || !textAreaValue || (showLink && !link)}
+          isDisabled={!title || !description || (showLink && !link)}
           isLoading={loading}
           navigate={() => navigation.goBack()}
           leftIcon={<CloseIcon />}
@@ -185,9 +175,9 @@ const AddPost = ({
             numberOfLines={6}
             placeholder="Description here..."
             placeholderTextColor={COLORS.lightGray2}
-            value={textAreaValue}
+            value={description}
             maxLength={100}
-            onChangeText={setTextAreaValue}
+            onChangeText={setDescription}
             style={[styles.textInput, styles.multilineMarginFix]}
             multiline
           />
@@ -268,40 +258,18 @@ const AddPost = ({
             <Center mb="5">
               <ChevronUpIcon />
             </Center>
-            <HStack borderTopColor="gray.600" borderTopWidth="1" paddingY="3">
-              <TouchableOpacity
-                disabled={!!selectedImage || !!imageFromNav || loading}
-                onPress={() => handleChooseGallary({})}
-                style={styles.bottomSectionRow}>
-                <PhotoIcon width="24" height="24" />
-                <Text
-                  color={
-                    selectedImage || !!imageFromNav || loading
-                      ? 'gray.700'
-                      : 'white'
-                  }
-                  ml="5"
-                  fontFamily="Lato-Regular"
-                  fontSize="md">
-                  Photo/video
-                </Text>
-              </TouchableOpacity>
-            </HStack>
-            <HStack borderTopColor="gray.600" borderTopWidth="1" paddingY="3">
-              <TouchableOpacity
-                disabled={loading}
-                onPress={handleLink}
-                style={styles.bottomSectionRow}>
-                <LinkIcon />
-                <Text
-                  color={loading ? 'gray.700' : 'white'}
-                  ml="5"
-                  fontFamily="Lato-Regular"
-                  fontSize="md">
-                  {linkText}
-                </Text>
-              </TouchableOpacity>
-            </HStack>
+            <AddPostBottomRow
+              disabled={!!selectedImage || !!imageFromNav || loading}
+              onPress={() => handleChooseGallary({})}
+              text="Photo/video">
+              <PhotoIcon width="24" height="24" />
+            </AddPostBottomRow>
+            <AddPostBottomRow
+              disabled={loading}
+              onPress={() => handleLink()}
+              text={linkText}>
+              <LinkIcon />
+            </AddPostBottomRow>
           </VStack>
         </View>
       </View>
@@ -356,10 +324,6 @@ const styles = StyleSheet.create({
   },
   multilineMarginFix: {
     textAlignVertical: 'top',
-  },
-  bottomSectionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
 })
 
