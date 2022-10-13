@@ -10,7 +10,7 @@ import EmptyDataList from '@/components/DataList/EmptyDataList'
 import ProfileHeader from '@/components/Header/Profile'
 import {getLastVisibleDocRef} from '@/utils/getLastVisibleDocRef'
 import {IDefaultUserDataState, IPost} from '@/interface'
-import {FEED_LIMIT} from '@/constants'
+import {FEED_LIMIT, POSTS_COLLECTION} from '@/constants'
 
 const ProfileFeed = ({userId}: {userId: string}) => {
   const {queryMoreFilter} = usePagination()
@@ -24,7 +24,7 @@ const ProfileFeed = ({userId}: {userId: string}) => {
 
   const getPosts = useCallback(() => {
     const query = firestore()
-      .collection('Posts')
+      .collection(POSTS_COLLECTION)
       .where('user', '==', userId)
       .orderBy('createdAt', 'desc')
       .limit(FEED_LIMIT)
@@ -136,4 +136,4 @@ const ProfileFeed = ({userId}: {userId: string}) => {
   )
 }
 
-export default ProfileFeed
+export default React.memo(ProfileFeed)
