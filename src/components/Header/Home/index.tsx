@@ -28,7 +28,7 @@ function HomeHeader() {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
   const handleGetImageThenNavigate = () => {
-    handleChooseGallary({navigate: true, screen: 'AddPost'}) // true to navigate
+    handleChooseGallary(true, 'AddPost') // true to navigate
   }
 
   const user = auth().currentUser?.uid

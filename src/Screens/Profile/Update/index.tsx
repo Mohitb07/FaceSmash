@@ -104,7 +104,7 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
         <HStack space="10">
           <Button
             text="Open Gallary"
-            onPress={() => handleChooseGallary({navigate: false})}
+            onPress={() => handleChooseGallary()}
             bgColor={COLORS.white2}
             showRing={false}
             disabled={loading}

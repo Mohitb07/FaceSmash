@@ -260,7 +260,7 @@ const AddPost = ({
             </Center>
             <AddPostBottomRow
               disabled={!!selectedImage || !!imageFromNav || loading}
-              onPress={() => handleChooseGallary({})}
+              onPress={() => handleChooseGallary()}
               text="Photo/video">
               <PhotoIcon width="24" height="24" />
             </AddPostBottomRow>
