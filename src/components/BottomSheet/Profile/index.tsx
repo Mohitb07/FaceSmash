@@ -8,9 +8,11 @@ import {useResetRecoilState} from 'recoil'
 import {bottomSheetState} from '@/atoms/bottomSheetAtom'
 import useAuthUser from '@/hooks/useAuthUser'
 import {LogoutIcon} from '@/SVG'
+import useUserData from '@/hooks/useUserData'
 
 const ProfileBottomSheet = () => {
   const {user} = useAuthUser()
+  const {dispatchContextUser} = useUserData()
   const setBottom = useResetRecoilState(bottomSheetState)
 
   const onLogoutAttempt = () => {
@@ -19,6 +21,7 @@ const ProfileBottomSheet = () => {
       .then(() => {
         console.log('user logged out')
         setBottom()
+        dispatchContextUser(null)
       })
       .catch(err => console.log('SIGN OUT ERROR', err))
   }
