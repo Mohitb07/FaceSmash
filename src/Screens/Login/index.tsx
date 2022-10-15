@@ -27,8 +27,8 @@ type LoginScreenNavigationProp = NativeStackScreenProps<
 const LOGIN_SCREEN_ASSET = '../../../assets/login.png'
 
 const Login: React.FC<LoginScreenNavigationProp> = ({navigation}) => {
-  const [email, setEmail] = useState<string>('')
-  const [password, setPassword] = useState<string>('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
   const {onLoginAttempt, loading, error, setError} = useLogin()
   const invalidEmail = checkIsEmailValid(email.trim())
   const isDisabled =
