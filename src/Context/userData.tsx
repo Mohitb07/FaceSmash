@@ -9,21 +9,29 @@ import {DEFAULT_USER_DETAILS} from '@/constants'
 interface IUserDataContext {
   contextUser: IUserDetail | null
   updateUserData: (url: string, userId: string) => void
+  dispatchContextUser: (value: any) => void
 }
 
 export const UserDataContext = React.createContext<IUserDataContext>({
   contextUser: null,
   updateUserData: (url, userId) => {},
+  dispatchContextUser: value => {},
 })
 
 const UserDataProvider = ({children}: {children: ReactNode}) => {
   const [contextUser, setContextUser] = useState<IUserDetail | null>(null)
   const {user} = useAuthUser()
+
+  const dispatchContextUser = (value: any) => {
+    setContextUser(null)
+  }
+
   console.log('auth User inside user data context 🎯', contextUser)
   useEffect(() => {
+    let subscriber
     function getData() {
       if (user) {
-        firestore()
+        subscriber = firestore()
           .collection('Users')
           .doc(user?.uid)
           .onSnapshot(
@@ -40,6 +48,7 @@ const UserDataProvider = ({children}: {children: ReactNode}) => {
       }
     }
     getData()
+    return subscriber
   }, [user?.uid, user?.emailVerified])
 
   const updateUserData = useCallback(async (url: string, userId: string) => {
@@ -76,15 +85,19 @@ const UserDataProvider = ({children}: {children: ReactNode}) => {
     }
   }, [])
 
-  const memoizedUser = React.useMemo(
-    () => ({
-      contextUser,
-    }),
-    [contextUser],
-  )
+  // const memoizedUser = React.useMemo(
+  //   () => ({
+  //     contextUser,
+  //   }),
+  //   [contextUser],
+  // )
 
-  const value = {...memoizedUser, updateUserData}
-
+  // const value = {...memoizedUser, updateUserData}
+  const value = {
+    contextUser,
+    updateUserData,
+    dispatchContextUser,
+  }
   return (
     <UserDataContext.Provider value={value}>
       {children}

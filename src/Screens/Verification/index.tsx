@@ -15,6 +15,8 @@ const btnText = {
   fontSize: '13px',
 }
 
+const VERIFICATION_SCREEN_ASSET = '../../../assets/verification.png'
+
 const Verification = () => {
   const toast = useToast()
   const [loadingVerify, setLoadingVerify] = useState(false)
@@ -56,10 +58,7 @@ const Verification = () => {
       const user = auth().currentUser
       if (user?.emailVerified) {
         setLoadingVerify(false)
-        setAuthUser((prev: IAuthUser) => ({
-          ...prev,
-          user,
-        }))
+        setAuthUser(user)
       } else {
         setLoadingVerify(false)
         toast.show({
@@ -79,7 +78,7 @@ const Verification = () => {
         <View alignItems="center" justifyContent="center">
           <Image
             style={styles.image}
-            source={require('../../../assets/person-sitting.png')}
+            source={require(VERIFICATION_SCREEN_ASSET)}
             alt="Illustration"
           />
         </View>

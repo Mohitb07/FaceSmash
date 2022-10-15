@@ -18,8 +18,8 @@ const GET_STARTED_SCREEN_ASSET = '../../../assets/getStarted.png'
 const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
   navigation,
 }: GetStartedScreenNavigationProp) => {
-  function renderHeader() {
-    return (
+  return (
+    <NView style={styles.container}>
       <NView style={styles.headerContainer}>
         <ImageBackground
           style={styles.imageBackground}
@@ -55,11 +55,7 @@ const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
           </LinearGradient>
         </ImageBackground>
       </NView>
-    )
-  }
 
-  function renderDetail() {
-    return (
       <NView style={styles.footerContainer}>
         <NView>
           <NText style={styles.footerText}>
@@ -78,12 +74,6 @@ const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
           />
         </NView>
       </NView>
-    )
-  }
-  return (
-    <NView style={styles.container}>
-      {renderHeader()}
-      {renderDetail()}
     </NView>
   )
 }

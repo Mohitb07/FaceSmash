@@ -44,11 +44,10 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const [userData, setUserData] = useState<IUserData>(DEFAULT_USER_DETAILS)
   const authUser = auth().currentUser?.uid
-  const isMounted = useRef(false)
   console.log('userdata', userData)
   useEffect(() => {
-    isMounted.current = true
-    async function fetchUserData() {
+    let subscriber
+    function fetchUserData() {
       // const userCache = await redis.get(userId)
       // console.log('user cache', userCache)
       // if (userCache) {
@@ -56,22 +55,20 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
       //   return
       // }
       console.log('fetching firebase')
-      firestore()
+      subscriber = firestore()
         .collection('Users')
         .doc(userId)
         .onSnapshot(
-          async snapshot => {
-            if (isMounted.current) {
-              // await redis.set(
-              //   userId,
-              //   JSON.stringify({...snapshot.data(), key: snapshot.id}),
-              // )
-              setUserData(prev => ({
-                ...prev,
-                ...snapshot.data(),
-                key: snapshot.id,
-              }))
-            }
+          snapshot => {
+            // await redis.set(
+            //   userId,
+            //   JSON.stringify({...snapshot.data(), key: snapshot.id}),
+            // )
+            setUserData(prev => ({
+              ...prev,
+              ...snapshot.data(),
+              key: snapshot.id,
+            }))
           },
           error => {
             console.log('user info fetching error', error)
@@ -79,9 +76,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
         )
     }
     fetchUserData()
-    return () => {
-      isMounted.current = false
-    }
+    return subscriber
   }, [userId])
 
   useEffect(() => {

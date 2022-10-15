@@ -7,11 +7,6 @@ import Toast from 'react-native-toast-message'
 
 import {RootStackParamList} from '@/Navigation/Root'
 
-type HandleChooseGallary = {
-  navigate?: boolean
-  screen?: keyof RootStackParamList
-}
-
 const useSelectImage = () => {
   const [selectedImage, setSelectedImage] = useState<string | undefined>('')
   const [selectedImageRef, setSelectedImageRef] = useState('')
@@ -27,10 +22,10 @@ const useSelectImage = () => {
 
   console.log('selected image uri inside useSelectImage', selectedImage)
 
-  const handleChooseGallary = ({
-    navigate = false,
-    screen,
-  }: HandleChooseGallary) => {
+  const handleChooseGallary = (
+    navigate?: boolean,
+    screen?: keyof RootStackParamList,
+  ) => {
     ImagePicker.launchImageLibrary(
       {mediaType: 'photo', quality: 0.8},
       response => {
