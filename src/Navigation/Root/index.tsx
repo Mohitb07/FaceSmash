@@ -65,7 +65,7 @@ const Root = () => {
                   headerShown: true,
                   title: '',
                   headerTitleAlign: 'center',
-                  headerTintColor: '#fff',
+                  headerTintColor: COLORS.white,
                   headerStyle: {
                     backgroundColor: COLORS.mainBackground,
                   },
@@ -76,6 +76,13 @@ const Root = () => {
                 component={UpdateProfile}
                 options={{
                   animation: 'slide_from_bottom',
+                  headerShown: true,
+                  title: 'Update Profile',
+                  headerTitleAlign: 'center',
+                  headerTintColor: COLORS.white,
+                  headerStyle: {
+                    backgroundColor: COLORS.mainBackground,
+                  },
                 }}
               />
               <RootStack.Screen

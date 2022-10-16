@@ -1,5 +1,12 @@
-import React, {useState} from 'react'
-import {Image, StyleSheet, Text, View, TextInput} from 'react-native'
+import React, {useState, useEffect} from 'react'
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  ActivityIndicator,
+} from 'react-native'
 
 import {Avatar, HStack, View as NView} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
@@ -64,18 +71,29 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
     }
   }
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity
+          disabled={loading}
+          onPress={() => navigation.goBack()}>
+          <CloseIcon />
+        </TouchableOpacity>
+      ),
+      headerRight: () => (
+        <TouchableOpacity disabled={disabled} onPress={handleUploadImage}>
+          {loading ? (
+            <ActivityIndicator color={COLORS.secondary} />
+          ) : (
+            <CheckIcon />
+          )}
+        </TouchableOpacity>
+      ),
+    })
+  })
+
   return (
     <>
-      <Header
-        label="Update Profile"
-        onPress={handleUploadImage}
-        hasRightSection
-        isDisabled={disabled}
-        isLoading={loading}
-        navigate={() => navigation.goBack()}
-        leftIcon={<CloseIcon />}
-        rightIcon={<CheckIcon />}
-      />
       <View style={styles.container}>
         <View>
           <Avatar

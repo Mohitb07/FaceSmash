@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useRef, useState} from 'react'
+import React, {memo, useEffect, useLayoutEffect, useRef, useState} from 'react'
 import {TouchableOpacity, StyleSheet} from 'react-native'
 
 import {Box, Flex, HStack, Text, View} from 'native-base'
@@ -10,9 +10,12 @@ import {Redis} from '@upstash/redis'
 import FastImage from 'react-native-fast-image'
 
 import {COLORS, DEFAULT_USER_DETAILS} from '@/constants'
-import {EditIcon, FilterIcon, GridIcon, UserIcon} from '@/SVG'
+import {EditIcon, FilterIcon, GridIcon, ThreeDotsIcon, UserIcon} from '@/SVG'
 import StyledButton from '@/components/Button'
 import {RootStackParamList} from '@/Navigation/Root'
+import {useSetRecoilState} from 'recoil'
+import {IBottomSheetState} from '@/interface'
+import {bottomSheetState} from '@/atoms/bottomSheetAtom'
 // import {REDIS_REST_TOKEN, REDIS_REST_URL} from '@/../config'
 
 // const redis = new Redis({
@@ -44,9 +47,42 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const [userData, setUserData] = useState<IUserData>(DEFAULT_USER_DETAILS)
   const authUser = auth().currentUser?.uid
+  const setBottomSheetStateValue =
+    useSetRecoilState<IBottomSheetState>(bottomSheetState)
   console.log('userdata', userData)
+
+  const handleModalState = () =>
+    setBottomSheetStateValue(() => ({
+      type: 'profile',
+      isOpen: true,
+    }))
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <TouchableOpacity
+          onPress={handleModalState}
+          style={styles.threeDotsIconContainer}>
+          <ThreeDotsIcon fill={COLORS.white} />
+        </TouchableOpacity>
+      ),
+    })
+  }, [])
+
   useEffect(() => {
     let subscriber
+    navigation.setOptions({
+      headerTitle: () => (
+        <Text
+          fontFamily="Lato-Semibold"
+          maxW={300}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          fontSize="lg">
+          {userData.username}
+        </Text>
+      ),
+    })
     function fetchUserData() {
       // const userCache = await redis.get(userId)
       // console.log('user cache', userCache)
@@ -206,5 +242,8 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 100,
+  },
+  threeDotsIconContainer: {
+    transform: [{rotate: '90deg'}],
   },
 })
