@@ -1,10 +1,11 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {
   Image,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  ActivityIndicator,
 } from 'react-native'
 
 import firestore from '@react-native-firebase/firestore'
@@ -28,7 +29,7 @@ import Header from '@/components/Header'
 import Label from '@/components/Label'
 import {COLORS, FONTS, POSTS_COLLECTION} from '@/constants'
 import useSelectImage from '@/hooks/useSelectImage'
-import {CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '@/SVG'
+import {BackIcon, CheckIcon, CloseIcon, LinkIcon, PhotoIcon} from '@/SVG'
 import {RootStackParamList} from '@/Navigation/Root'
 import useUserData from '@/hooks/useUserData'
 import useUploadImage from '@/hooks/useUploadImage'
@@ -132,19 +133,32 @@ const AddPost = ({
     setImageFromNav('')
   }
 
+  useEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <TouchableOpacity
+          disabled={loading}
+          onPress={() => navigation.goBack()}>
+          <BackIcon />
+        </TouchableOpacity>
+      ),
+      headerRight: () => (
+        <TouchableOpacity
+          disabled={!title || !description || (showLink && !link)}
+          onPress={handlePostCreation}>
+          {loading ? (
+            <ActivityIndicator color={COLORS.secondary} />
+          ) : (
+            <CheckIcon />
+          )}
+        </TouchableOpacity>
+      ),
+    })
+  })
+
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View>
-        <Header
-          label="Create post"
-          onPress={handlePostCreation}
-          hasRightSection
-          isDisabled={!title || !description || (showLink && !link)}
-          isLoading={loading}
-          navigate={() => navigation.goBack()}
-          leftIcon={<CloseIcon />}
-          rightIcon={<CheckIcon />}
-        />
         <View style={styles.innerContainer}>
           <TouchableOpacity style={styles.leftHeader}>
             <Avatar
