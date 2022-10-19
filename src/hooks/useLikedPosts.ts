@@ -20,9 +20,7 @@ const useLikedPosts = () => {
         .onSnapshot(
           querySnapshot => {
             const dataList: IPostLikes[] = querySnapshot.docs.map(d => ({
-              likes: false,
-              postId: '',
-              ...d.data(),
+              ...(d.data() as IPostLikes),
             }))
             console.log('user likes refetching')
             setUserLikedPosts(dataList)

@@ -4,7 +4,7 @@ import firestore from '@react-native-firebase/firestore'
 
 import useAuthUser from '@/hooks/useAuthUser'
 import {IUserDetail} from '@/interface'
-import {DEFAULT_USER_DETAILS} from '@/constants'
+import {POSTS_COLLECTION, USERS_COLLECTION} from '@/constants'
 
 interface IUserDataContext {
   contextUser: IUserDetail | null
@@ -37,8 +37,7 @@ const UserDataProvider = ({children}: {children: ReactNode}) => {
           .onSnapshot(
             snapshot => {
               setContextUser({
-                ...DEFAULT_USER_DETAILS,
-                ...snapshot.data(),
+                ...(snapshot.data() as IUserDetail),
               })
             },
             error => {
@@ -53,18 +52,18 @@ const UserDataProvider = ({children}: {children: ReactNode}) => {
 
   const updateUserData = useCallback(async (url: string, userId: string) => {
     if (userId) {
-      const userRef = firestore().collection('Users').doc(userId)
+      const userRef = firestore().collection(USERS_COLLECTION).doc(userId)
       await userRef.update({
         profilePic: url,
       })
       const batch = firestore().batch()
       const allPosts = await firestore()
-        .collection('Posts')
+        .collection(POSTS_COLLECTION)
         .where('user', '==', userId)
         .orderBy('createdAt', 'desc')
         .get()
       allPosts.docs.forEach(doc => {
-        const docRef = firestore().collection('Posts').doc(doc.id)
+        const docRef = firestore().collection(POSTS_COLLECTION).doc(doc.id)
         batch.update(docRef, {
           userProfile: url,
         })
@@ -73,8 +72,7 @@ const UserDataProvider = ({children}: {children: ReactNode}) => {
         .commit()
         .then(() => {
           setContextUser(prev => ({
-            ...DEFAULT_USER_DETAILS,
-            ...prev,
+            ...(prev as IUserDetail),
             profilePic: url,
           }))
         })
@@ -85,14 +83,6 @@ const UserDataProvider = ({children}: {children: ReactNode}) => {
     }
   }, [])
 
-  // const memoizedUser = React.useMemo(
-  //   () => ({
-  //     contextUser,
-  //   }),
-  //   [contextUser],
-  // )
-
-  // const value = {...memoizedUser, updateUserData}
   const value = {
     contextUser,
     updateUserData,

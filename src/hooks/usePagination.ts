@@ -17,23 +17,14 @@ const usePagination = () => {
     if (!lastVisibleDoc) {
       return {paginatedResult: [], lastVisibleDocRef: null}
     }
-
     const queryResult = await firestore()
       .collection(collection)
       .orderBy('createdAt', 'desc')
       .startAfter(lastVisibleDoc)
       .limit(FEED_LIMIT)
       .get()
-    const paginatedResult = queryResult.docs.map(doc => ({
-      createdAt: null,
-      description: '',
-      likes: 0,
-      title: '',
-      user: '',
-      userProfile: '',
-      username: '',
-      imageRef: '',
-      ...doc.data(),
+    const paginatedResult: Array<IPost> = queryResult.docs.map(doc => ({
+      ...(doc.data() as IPost),
       key: doc.id,
     }))
     const lastVisibleDocRef = getLastVisibleDocRef(queryResult)
@@ -54,7 +45,6 @@ const usePagination = () => {
     if (!lastVisibleDoc) {
       return {paginatedResult: [], lastVisibleDocRef: null}
     }
-
     const queryResult = await firestore()
       .collection(collection)
       .where(arg1, arg2, arg3)
@@ -62,16 +52,8 @@ const usePagination = () => {
       .startAfter(lastVisibleDoc)
       .limit(FEED_LIMIT)
       .get()
-    const paginatedResult = queryResult.docs.map(doc => ({
-      createdAt: null,
-      description: '',
-      likes: 0,
-      title: '',
-      user: '',
-      userProfile: '',
-      username: '',
-      imageRef: '',
-      ...doc.data(),
+    const paginatedResult: Array<IPost> = queryResult.docs.map(doc => ({
+      ...(doc.data() as IPost),
       key: doc.id,
     }))
     const lastVisibleDocRef = getLastVisibleDocRef(queryResult)
