@@ -25,7 +25,6 @@ import Toast from 'react-native-toast-message'
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import {RouteProp, useNavigation} from '@react-navigation/native'
 
-import Header from '@/components/Header'
 import Label from '@/components/Label'
 import {COLORS, FONTS, POSTS_COLLECTION} from '@/constants'
 import useSelectImage from '@/hooks/useSelectImage'
