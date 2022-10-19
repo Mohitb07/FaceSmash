@@ -14,7 +14,6 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import Button from '@/components/Button'
 import {CheckIcon, CloseIcon} from '@/SVG'
-import Header from '@/components/Header'
 import Label from '@/components/Label'
 import {COLORS, FONTS} from '@/constants/theme'
 import {RootStackParamList} from '@/Navigation/Root'
