@@ -90,6 +90,13 @@ const Root = () => {
                 component={AddPost}
                 options={{
                   animation: 'slide_from_bottom',
+                  headerShown: true,
+                  title: 'Add Post',
+                  headerTitleAlign: 'center',
+                  headerTintColor: COLORS.white,
+                  headerStyle: {
+                    backgroundColor: COLORS.mainBackground,
+                  },
                 }}
               />
               <RootStack.Screen

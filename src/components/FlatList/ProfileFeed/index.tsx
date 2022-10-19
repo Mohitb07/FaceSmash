@@ -7,7 +7,7 @@ import usePagination from '@/hooks/usePagination'
 import DataList from '@/components/DataList'
 import DataListFooter from '@/components/DataList/DataListFooter'
 import EmptyDataList from '@/components/DataList/EmptyDataList'
-import ProfileHeader from '@/components/Header/Profile'
+import ProfileHeader from '@/components/ScreenHeaders/Profile'
 import {getLastVisibleDocRef} from '@/utils/getLastVisibleDocRef'
 import {IDefaultUserDataState, IPost} from '@/interface'
 import {FEED_LIMIT, POSTS_COLLECTION} from '@/constants'
@@ -32,15 +32,8 @@ const ProfileFeed = ({userId}: {userId: string}) => {
     const subscriber = query.onSnapshot(
       snapshot => {
         const postList: Array<IPost> = snapshot.docs.map(d => ({
+          ...(d.data() as IPost),
           key: d.id,
-          createdAt: null,
-          description: '',
-          likes: 0,
-          title: '',
-          user: '',
-          userProfile: '',
-          username: '',
-          ...d.data(),
         }))
         const lastVisiblePostRef = getLastVisibleDocRef(snapshot)
         setAllUserPosts(prev => ({
@@ -73,7 +66,7 @@ const ProfileFeed = ({userId}: {userId: string}) => {
 
   useEffect(() => {
     const unsubscribe = firestore()
-      .collection('Posts')
+      .collection(POSTS_COLLECTION)
       .where('user', '==', userId)
       .onSnapshot(snapshot => {
         setTotalUserPosts(snapshot.docs.length)

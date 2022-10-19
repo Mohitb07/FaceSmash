@@ -47,14 +47,6 @@ const AuthUserProvider = ({children}: {children: React.ReactNode}) => {
     return subscriber
   }, [])
 
-  // const value = React.useMemo(
-  //   () => ({
-  //     user: authUser.user,
-  //     setAuthUser,
-  //     initializing: authUser.initializing,
-  //   }),
-  //   [authUser.user, authUser.initializing],
-  // )
   const value = {
     user: authUser.user,
     setAuthUser,

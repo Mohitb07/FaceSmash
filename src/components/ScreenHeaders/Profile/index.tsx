@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useLayoutEffect, useRef, useState} from 'react'
+import React, {memo, useEffect, useLayoutEffect, useState} from 'react'
 import {TouchableOpacity, StyleSheet} from 'react-native'
 
 import {Box, Flex, HStack, Text, View} from 'native-base'

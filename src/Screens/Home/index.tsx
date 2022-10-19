@@ -8,13 +8,12 @@ import {getLastVisibleDocRef} from '@/utils/getLastVisibleDocRef'
 import DataList from '@/components/DataList'
 import Footer from '@/components/DataList/DataListFooter'
 import EmptyList from '@/components/DataList/EmptyDataList'
-import HomeHeader from '@/components/Header/Home'
+import HomeHeader from '@/components/ScreenHeaders/Home'
 import {IDefaultPostState, IPost} from '@/interface'
 import {FEED_LIMIT, POSTS_COLLECTION} from '@/constants'
 import {COLORS} from '@/constants'
 
 const Home = () => {
-  console.log('calling HomeFeed')
   const [postStateValue, setPostStateValue] = useState<IDefaultPostState>({
     loading: true,
     lastVisible: null,
@@ -23,7 +22,6 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false)
   const {queryMore} = usePagination()
   const getPosts = useCallback(() => {
-    console.log('calling getPosts home feed')
     const subscriber = firestore()
       .collection(POSTS_COLLECTION)
       .orderBy('createdAt', 'desc')
@@ -32,16 +30,8 @@ const Home = () => {
         snapshot => {
           console.log('calling home feed snapshot')
           const postList: Array<IPost> = snapshot.docs.map(d => ({
+            ...(d.data() as IPost),
             key: d.id,
-            createdAt: null,
-            description: '',
-            likes: 0,
-            title: '',
-            user: '',
-            userProfile: '',
-            username: '',
-            imageRef: '',
-            ...d.data(),
           }))
           const lastVisiblePostRef = getLastVisibleDocRef(snapshot)
           setPostStateValue(prev => ({
