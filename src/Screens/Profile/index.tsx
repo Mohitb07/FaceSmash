@@ -3,7 +3,7 @@ import {StyleSheet, View} from 'react-native'
 
 import {RouteProp} from '@react-navigation/native'
 
-import ProfileFeed from '@/components/FlatList/ProfileFeed'
+import ProfileFeed from './Body'
 import {COLORS} from '@/constants'
 import BottomSheetProvider from '@/Context/BottomSheet'
 
