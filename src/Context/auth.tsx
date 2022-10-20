@@ -1,9 +1,9 @@
 import React, {useEffect, useState, useCallback} from 'react'
 
-import auth from '@react-native-firebase/auth'
+import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
 
 export interface IAuthUser {
-  user: any
+  user: FirebaseAuthTypes.User | null
   initializing: boolean
   setAuthUser: (user: any) => void
 }
@@ -19,31 +19,31 @@ const initialState = {
   user: null,
 }
 
+type UserState = Omit<IAuthUser, 'setAuthUser'>
+
 const AuthUserProvider = ({children}: {children: React.ReactNode}) => {
-  const [authUser, setAuth] = useState(initialState)
+  const [authUser, setAuth] = useState<UserState>(initialState)
   console.log('authUser is a', authUser)
 
-  const setAuthUser = useCallback((user: any) => {
+  const setAuthUser = useCallback((user: FirebaseAuthTypes.User) => {
     setAuth(prev => ({
       ...prev,
       user,
     }))
   }, [])
 
-  const onAuthStateChanged = function onAuthStateChanged(user: any) {
-    setAuth(prev => ({
-      ...prev,
-      user: user,
-    }))
-    if (authUser.initializing)
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(user => {
       setAuth(prev => ({
         ...prev,
-        initializing: false,
+        user,
       }))
-  }
-
-  useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged)
+      if (authUser.initializing)
+        setAuth(prev => ({
+          ...prev,
+          initializing: false,
+        }))
+    })
     return subscriber
   }, [])
 

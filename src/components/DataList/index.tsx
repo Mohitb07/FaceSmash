@@ -35,8 +35,7 @@ const DataList = ({
       postTitle={item.title}
       image={item?.image}
       description={item.description}
-      // @ts-ignore
-      likes={dataList.find((post: IPost) => post.key === item.key)?.likes}
+      likes={dataList.find((post: IPost) => post.key === item.key)?.likes ?? 0}
       userId={item.user}
       hasUserLikedPost={Boolean(
         userLikedPosts.find((post: IPostLikes) => post.postId === item.key),

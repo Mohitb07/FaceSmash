@@ -6,10 +6,12 @@ import useAuthUser from '@/hooks/useAuthUser'
 import {IUserDetail} from '@/interface'
 import {POSTS_COLLECTION, USERS_COLLECTION} from '@/constants'
 
+type UserState = IUserDetail | null
+
 interface IUserDataContext {
-  contextUser: IUserDetail | null
+  contextUser: UserState
   updateUserData: (url: string, userId: string) => void
-  dispatchContextUser: (value: any) => void
+  dispatchContextUser: (value: UserState) => void
 }
 
 export const UserDataContext = React.createContext<IUserDataContext>({
@@ -19,34 +21,29 @@ export const UserDataContext = React.createContext<IUserDataContext>({
 })
 
 const UserDataProvider = ({children}: {children: ReactNode}) => {
-  const [contextUser, setContextUser] = useState<IUserDetail | null>(null)
+  const [contextUser, setContextUser] = useState<UserState>(null)
   const {user} = useAuthUser()
 
-  const dispatchContextUser = (value: any) => {
-    setContextUser(null)
-  }
+  const dispatchContextUser = (value: UserState) => setContextUser(null)
 
   console.log('auth User inside user data context 🎯', contextUser)
   useEffect(() => {
     let subscriber
-    function getData() {
-      if (user) {
-        subscriber = firestore()
-          .collection('Users')
-          .doc(user?.uid)
-          .onSnapshot(
-            snapshot => {
-              setContextUser({
-                ...(snapshot.data() as IUserDetail),
-              })
-            },
-            error => {
-              console.log('fetching user context error', error)
-            },
-          )
-      }
+    if (user) {
+      subscriber = firestore()
+        .collection('Users')
+        .doc(user?.uid)
+        .onSnapshot(
+          snapshot => {
+            setContextUser({
+              ...(snapshot.data() as IUserDetail),
+            })
+          },
+          error => {
+            console.log('fetching user context error', error)
+          },
+        )
     }
-    getData()
     return subscriber
   }, [user?.uid, user?.emailVerified])
 
