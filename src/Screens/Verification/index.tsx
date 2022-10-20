@@ -4,7 +4,6 @@ import {StyleSheet} from 'react-native'
 import {Box, Button, Image, Text, View, useToast} from 'native-base'
 import auth from '@react-native-firebase/auth'
 
-import {IAuthUser} from '@/Context/auth'
 import {COLORS} from '@/constants'
 import {ReSendIcon, VerifyIcon} from '@/SVG'
 import useAuthUser from '@/hooks/useAuthUser'
