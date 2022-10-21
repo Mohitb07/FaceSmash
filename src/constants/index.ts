@@ -8,20 +8,6 @@ export const DEFAULT_PROFILE_PIC =
 export const FEED_LIMIT = 5
 export const USERS_LIMIT = 5
 
-export const DEFAULT_USER_DETAILS = {
-  bio: '',
-  createdAt: '',
-  email: '',
-  followers: [],
-  followings: [],
-  key: '',
-  lastSignIn: '',
-  profilePic: '',
-  qusername: '',
-  uid: '',
-  username: '',
-}
-
 export const USERS_COLLECTION = 'Users'
 export const POSTS_COLLECTION = 'Posts'
 
