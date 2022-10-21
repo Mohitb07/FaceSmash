@@ -37,7 +37,7 @@ export function useRegister() {
         Toast.show({
           type: 'success',
           text1: 'Account Created',
-          text2: 'Your account created successfully  👋',
+          text2: 'Verification link sent to the registered email address 👋',
         })
       })
       .catch(err => {
