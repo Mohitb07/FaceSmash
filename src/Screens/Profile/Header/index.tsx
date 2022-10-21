@@ -9,13 +9,13 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import {Redis} from '@upstash/redis'
 import FastImage from 'react-native-fast-image'
 
-import {COLORS, DEFAULT_USER_DETAILS} from '@/constants'
 import {EditIcon, FilterIcon, GridIcon, ThreeDotsIcon, UserIcon} from '@/SVG'
 import StyledButton from '@/components/Button'
 import {RootStackParamList} from '@/Navigation/Root'
 import {useSetRecoilState} from 'recoil'
 import {IBottomSheetState} from '@/interface'
 import {bottomSheetState} from '@/atoms/bottomSheetAtom'
+import {COLORS} from '@/constants'
 // import {REDIS_REST_TOKEN, REDIS_REST_URL} from '@/../config'
 
 // const redis = new Redis({
@@ -40,6 +40,20 @@ interface IUserData {
   qusername: string
   uid: string
   username: string
+}
+
+const DEFAULT_USER_DETAILS = {
+  bio: '',
+  createdAt: '',
+  email: '',
+  followers: [],
+  followings: [],
+  key: '',
+  lastSignIn: '',
+  profilePic: '',
+  qusername: '',
+  uid: '',
+  username: '',
 }
 
 const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
