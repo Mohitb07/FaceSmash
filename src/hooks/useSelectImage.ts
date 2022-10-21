@@ -14,13 +14,11 @@ const useSelectImage = () => {
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
   useEffect(() => {
-    console.log('mounted ')
+    console.log('mounted useSelectImage', selectedImage)
     return () => {
       console.log('unmount useSelectImage')
     }
   }, [])
-
-  console.log('selected image uri inside useSelectImage', selectedImage)
 
   const handleChooseGallary = (
     navigate?: boolean,
