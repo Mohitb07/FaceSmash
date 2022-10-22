@@ -47,7 +47,7 @@ const AddPost = ({
   let getterImage = {...routeData}
   const image = getterImage.selectedImageURI
   const imageRef = getterImage.selectedImageRef
-  const navigation =
+  const {navigate, setOptions, goBack} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const [description, setDescription] = useState('')
   const [title, setTitle] = useState('')
@@ -81,7 +81,7 @@ const AddPost = ({
           createdAt: firestore.FieldValue.serverTimestamp(),
           imageRef: !!imageRef || !!selectedImageRef ? REF : null,
         })
-      navigation.navigate('Home')
+      navigate('Home')
     } catch (error: any) {
       setLoading(false)
       Toast.show({
@@ -133,11 +133,9 @@ const AddPost = ({
   }
 
   useEffect(() => {
-    navigation.setOptions({
+    setOptions({
       headerLeft: () => (
-        <TouchableOpacity
-          disabled={loading}
-          onPress={() => navigation.goBack()}>
+        <TouchableOpacity disabled={loading} onPress={goBack}>
           <BackIcon />
         </TouchableOpacity>
       ),
