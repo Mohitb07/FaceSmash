@@ -24,12 +24,10 @@ import Story from '@/components/Story'
 function HomeHeader() {
   const {contextUser} = useUserData()
   const {handleChooseGallary} = useSelectImage()
-  const navigation =
+  const {navigate} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
 
-  const handleGetImageThenNavigate = () => {
-    handleChooseGallary(true, 'AddPost') // true to navigate
-  }
+  const handleGetImageThenNavigate = () => handleChooseGallary(true, 'AddPost') // true to navigate
 
   const user = auth().currentUser?.uid
 
@@ -54,9 +52,9 @@ function HomeHeader() {
         </NView>
 
         <TouchableOpacity
-          onPress={() => navigation.navigate('SearchUser')}
+          onPress={() => navigate('SearchUser')}
           style={styles.rightHeader}
-          hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
+          hitSlop={styles.searchIcon}>
           <SearchIcon />
         </TouchableOpacity>
       </View>
@@ -75,9 +73,7 @@ function HomeHeader() {
             unPressedBorderColor={COLORS.primary}
             data={STORY_DATA}
             duration={10}
-            avatarTextStyle={{color: 'white', fontSize: 12}}
-            // onStart={item => console.log(item)}
-            // onClose={item => console.log('close: ', item)}
+            avatarTextStyle={styles.storyTextStyle}
             customSwipeUpComponent={
               <View>
                 <Text>Swipe</Text>
@@ -93,7 +89,7 @@ function HomeHeader() {
         alignItems="center">
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate('Profile', {
+            navigate('Profile', {
               providedUserId: user ?? '',
             })
           }>
@@ -105,9 +101,9 @@ function HomeHeader() {
           />
         </TouchableOpacity>
         <TouchableOpacity
-          style={{width: '70%', height: '100%'}}
+          style={styles.inputFieldContainer}
           activeOpacity={0.6}
-          onPress={() => navigation.navigate('AddPost', {})}>
+          onPress={() => navigate('AddPost')}>
           <Input
             isReadOnly
             borderRadius="full"
@@ -140,5 +136,19 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.gray3,
     borderRadius: 25,
     padding: 10,
+  },
+  inputFieldContainer: {
+    width: '70%',
+    height: '100%',
+  },
+  storyTextStyle: {
+    color: 'white',
+    fontSize: 12,
+  },
+  searchIcon: {
+    top: 20,
+    bottom: 20,
+    left: 50,
+    right: 50,
   },
 })

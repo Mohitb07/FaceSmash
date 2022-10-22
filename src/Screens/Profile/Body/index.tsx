@@ -84,7 +84,7 @@ const ProfileFeed = ({userId}: {userId: string}) => {
     try {
       const {paginatedResult, lastVisibleDocRef} = await queryMoreFilter(
         allUserPosts.lastVisible,
-        'Posts',
+        POSTS_COLLECTION,
         'user',
         '==',
         userId,

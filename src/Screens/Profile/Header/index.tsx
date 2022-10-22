@@ -6,7 +6,7 @@ import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
-import {Redis} from '@upstash/redis'
+// import {Redis} from '@upstash/redis'
 import FastImage from 'react-native-fast-image'
 
 import {EditIcon, FilterIcon, GridIcon, ThreeDotsIcon, UserIcon} from '@/SVG'
@@ -15,7 +15,7 @@ import {RootStackParamList} from '@/Navigation/Root'
 import {useSetRecoilState} from 'recoil'
 import {IBottomSheetState} from '@/interface'
 import {bottomSheetState} from '@/atoms/bottomSheetAtom'
-import {COLORS} from '@/constants'
+import {COLORS, USERS_COLLECTION} from '@/constants'
 // import {REDIS_REST_TOKEN, REDIS_REST_URL} from '@/../config'
 
 // const redis = new Redis({
@@ -42,7 +42,7 @@ interface IUserData {
   username: string
 }
 
-const DEFAULT_USER_DETAILS = {
+const DEFAULT_USER_DETAILS: IUserData = {
   bio: '',
   createdAt: '',
   email: '',
@@ -57,13 +57,12 @@ const DEFAULT_USER_DETAILS = {
 }
 
 const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
-  const navigation =
+  const {navigate, setOptions} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const [userData, setUserData] = useState<IUserData>(DEFAULT_USER_DETAILS)
   const authUser = auth().currentUser?.uid
   const setBottomSheetStateValue =
     useSetRecoilState<IBottomSheetState>(bottomSheetState)
-  console.log('userdata', userData)
 
   const handleModalState = () =>
     setBottomSheetStateValue(() => ({
@@ -72,7 +71,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
     }))
 
   useLayoutEffect(() => {
-    navigation.setOptions({
+    setOptions({
       headerRight: () => (
         <TouchableOpacity
           onPress={handleModalState}
@@ -84,8 +83,8 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
   }, [])
 
   useEffect(() => {
-    let subscriber
-    navigation.setOptions({
+    // updating header title to username
+    setOptions({
       headerTitle: () => (
         <Text
           fontFamily="Lato-Semibold"
@@ -97,40 +96,36 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
         </Text>
       ),
     })
-    function fetchUserData() {
-      // const userCache = await redis.get(userId)
-      // console.log('user cache', userCache)
-      // if (userCache) {
-      //   isMounted.current && setUserData(userCache)
-      //   return
-      // }
-      console.log('fetching firebase')
-      subscriber = firestore()
-        .collection('Users')
-        .doc(userId)
-        .onSnapshot(
-          snapshot => {
-            // await redis.set(
-            //   userId,
-            //   JSON.stringify({...snapshot.data(), key: snapshot.id}),
-            // )
-            setUserData(prev => ({
-              ...prev,
-              ...snapshot.data(),
-              key: snapshot.id,
-            }))
-          },
-          error => {
-            console.log('user info fetching error', error)
-          },
-        )
-    }
-    fetchUserData()
+    // const userCache = await redis.get(userId)
+    // console.log('user cache', userCache)
+    // if (userCache) {
+    //   isMounted.current && setUserData(userCache)
+    //   return
+    // }
+    const subscriber = firestore()
+      .collection(USERS_COLLECTION)
+      .doc(userId)
+      .onSnapshot(
+        snapshot => {
+          // await redis.set(
+          //   userId,
+          //   JSON.stringify({...snapshot.data(), key: snapshot.id}),
+          // )
+          setUserData(prev => ({
+            ...prev,
+            ...snapshot.data(),
+            key: snapshot.id,
+          }))
+        },
+        error => {
+          console.log('user info fetching error', error)
+        },
+      )
     return subscriber
   }, [userId])
 
   useEffect(() => {
-    navigation.setOptions({
+    setOptions({
       headerTitle: () => (
         <Text
           fontFamily="Lato-Semibold"
@@ -211,8 +206,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
           bgColor={COLORS.white2}
         />
         {authUser === userId && (
-          <TouchableOpacity
-            onPress={() => navigation.navigate('UpdateProfile')}>
+          <TouchableOpacity onPress={() => navigate('UpdateProfile')}>
             <EditIcon />
           </TouchableOpacity>
         )}
