@@ -7,6 +7,7 @@ import storage from '@react-native-firebase/storage'
 
 import useAuthUser from '@/hooks/useAuthUser'
 import {DeleteIcon} from '@/SVG'
+import {POSTS_COLLECTION, USERS_COLLECTION} from '@/constants'
 
 interface IFeedMoreProps {
   postId: string
@@ -27,7 +28,7 @@ const FeedMore = ({
   console.log('has imageRef', imageRef)
   const handleDeletePost = async () => {
     firestore()
-      .collection('Posts')
+      .collection(POSTS_COLLECTION)
       .doc(postId)
       .delete()
       .then(async () => {
@@ -42,7 +43,7 @@ const FeedMore = ({
         }
         if (hasLiked) {
           const postlikesRef = firestore()
-            .collection('Users')
+            .collection(USERS_COLLECTION)
             .doc(user?.uid)
             .collection('postlikes')
             .doc(postId)

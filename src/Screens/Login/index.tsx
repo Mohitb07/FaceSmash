@@ -26,7 +26,9 @@ type LoginScreenNavigationProp = NativeStackScreenProps<
 >
 const LOGIN_SCREEN_ASSET = '../../../assets/login.png'
 
-const Login: React.FC<LoginScreenNavigationProp> = ({navigation}) => {
+const Login: React.FC<LoginScreenNavigationProp> = ({
+  navigation: {navigate},
+}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const {onLoginAttempt, loading, error, setError} = useLogin()
@@ -59,7 +61,7 @@ const Login: React.FC<LoginScreenNavigationProp> = ({navigation}) => {
             placeholder="Email ID"
             placeholderTextColor={COLORS.white2}
             value={email}
-            onChangeText={text => setEmail(text)}
+            onChangeText={setEmail}
             style={[
               styles.textInput,
               error.length > 0 && styles.textInputError,
@@ -86,7 +88,7 @@ const Login: React.FC<LoginScreenNavigationProp> = ({navigation}) => {
               error.length > 0 && styles.textInputError,
             ]}
             value={password}
-            onChangeText={text => setPassword(text)}
+            onChangeText={setPassword}
           />
           <StyledError
             message={FIREBASE_ERRORS[error as keyof typeof FIREBASE_ERRORS]}
@@ -123,7 +125,7 @@ const Login: React.FC<LoginScreenNavigationProp> = ({navigation}) => {
         alignItems="center">
         New to FaceSmash?{' '}
         <NText
-          onPress={() => navigation.navigate('SignUp')}
+          onPress={() => navigate('SignUp')}
           mt="10"
           fontFamily="Lato-Bold"
           color="primary.400">

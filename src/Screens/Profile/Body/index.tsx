@@ -12,7 +12,11 @@ import {getLastVisibleDocRef} from '@/utils/getLastVisibleDocRef'
 import {IDefaultUserDataState, IPost} from '@/interface'
 import {FEED_LIMIT, POSTS_COLLECTION} from '@/constants'
 
-const ProfileFeed = ({userId}: {userId: string}) => {
+type ProfileFeedProps = {
+  userId: string
+}
+
+const ProfileFeed = ({userId}: ProfileFeedProps) => {
   const {queryMoreFilter} = usePagination()
   const [totalUserPosts, setTotalUserPosts] = useState(0)
   const [allUserPosts, setAllUserPosts] = useState<IDefaultUserDataState>({
@@ -45,11 +49,11 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       },
       error => {
         console.log('fetchUserPosts error: ', error)
-        setAllUserPosts({
-          posts: [],
+        setAllUserPosts(prev => ({
+          ...prev,
           loading: false,
           lastVisible: null,
-        })
+        }))
       },
     )
     return subscriber
@@ -68,12 +72,8 @@ const ProfileFeed = ({userId}: {userId: string}) => {
     const unsubscribe = firestore()
       .collection(POSTS_COLLECTION)
       .where('user', '==', userId)
-      .onSnapshot(snapshot => {
-        setTotalUserPosts(snapshot.docs.length)
-      })
-    return () => {
-      unsubscribe()
-    }
+      .onSnapshot(snapshot => setTotalUserPosts(snapshot.docs.length))
+    return () => unsubscribe()
   }, [userId])
 
   const getMoreData = async () => {
@@ -92,7 +92,6 @@ const ProfileFeed = ({userId}: {userId: string}) => {
       setAllUserPosts(prev => ({
         ...prev,
         posts: [...allUserPosts.posts, ...paginatedResult],
-        loading: false,
         lastVisible: lastVisibleDocRef,
       }))
     } catch (error) {

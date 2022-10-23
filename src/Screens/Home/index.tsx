@@ -82,7 +82,6 @@ const Home = () => {
       setPostStateValue(prev => ({
         ...prev,
         posts: [...postStateValue.posts, ...paginatedResult],
-        loading: false,
         lastVisible: lastVisibleDocRef,
       }))
     } catch (error) {
