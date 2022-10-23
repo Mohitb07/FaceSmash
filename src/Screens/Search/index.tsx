@@ -24,7 +24,9 @@ type SearchUserScreenNavigationProp = NativeStackScreenProps<
   'SearchUser'
 >
 
-const SearchUser: FC<SearchUserScreenNavigationProp> = ({navigation}) => {
+const SearchUser: FC<SearchUserScreenNavigationProp> = ({
+  navigation: {navigate, goBack},
+}) => {
   const [marginAnimation] = useState(new Animated.Value(0))
   const [foundUsers, setFoundUsers] = useState<Array<IUserDetail> | null>(null)
   const currentInputValue = useRef('')
@@ -32,7 +34,7 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.headerContainer}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity onPress={goBack}>
           <BackIcon />
         </TouchableOpacity>
         <AutoCompleteInput
@@ -68,10 +70,7 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({navigation}) => {
                 containerStyle={styles.storyContainerStyle}
               />
               <Button
-                _text={{
-                  color: '#fff',
-                  fontSize: 12,
-                }}
+                _text={styles.btnText}
                 borderWidth="1"
                 size="md"
                 mt="2"
@@ -107,7 +106,7 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({navigation}) => {
             renderItem={({item}) => (
               <TouchableOpacity
                 onPress={() =>
-                  navigation.navigate('Profile', {
+                  navigate('Profile', {
                     providedUserId: item.uid,
                   })
                 }>
@@ -201,5 +200,9 @@ const styles = StyleSheet.create({
   foundUserContainer: {
     marginVertical: 8,
     padding: 1,
+  },
+  btnText: {
+    color: '#fff',
+    fontSize: 12,
   },
 })

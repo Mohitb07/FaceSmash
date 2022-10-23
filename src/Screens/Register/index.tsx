@@ -17,12 +17,17 @@ type RegisterScreenNavigationProp = NativeStackScreenProps<
   'SignUp'
 >
 
-const Register: FC<RegisterScreenNavigationProp> = ({navigation}) => {
+const Register: FC<RegisterScreenNavigationProp> = ({
+  navigation: {navigate},
+}) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
-  const [username, setUsername] = useState('')
-  const [charactersLeft, setCharactersLeft] = useState(30)
+  const [usernameData, setUsernameData] = useState({
+    username: '',
+    charactersLeft: 30,
+  })
+  // const [charactersLeft, setCharactersLeft] = useState(30)
 
   const {onRegisterAttempt, error, setError, loading} = useRegister()
 
@@ -44,7 +49,7 @@ const Register: FC<RegisterScreenNavigationProp> = ({navigation}) => {
     email.trim().length === 0 ||
     password.trim().length === 0 ||
     confirmPassword.trim().length === 0 ||
-    username.trim().length === 0 ||
+    usernameData.username.trim().length === 0 ||
     password.trim() !== confirmPassword.trim() ||
     loading
 
@@ -53,12 +58,17 @@ const Register: FC<RegisterScreenNavigationProp> = ({navigation}) => {
       ? 'Password must match'
       : ''
 
-  const signUpAttempt = () => onRegisterAttempt(email, password, username)
+  const signUpAttempt = () =>
+    onRegisterAttempt(email, password, usernameData.username)
 
   const handleUsername = (text: string) => {
     if (text.length > 30) return
-    setUsername(text)
-    setCharactersLeft(30 - text.length)
+    setUsernameData({
+      charactersLeft: 30 - text.length,
+      username: text,
+    })
+    // setUsername(text)
+    // setCharactersLeft(30 - text.length)
   }
 
   return (
@@ -80,21 +90,21 @@ const Register: FC<RegisterScreenNavigationProp> = ({navigation}) => {
           <TextInput
             placeholder="Username"
             placeholderTextColor={COLORS.white2}
-            value={username}
+            value={usernameData.username}
             onChangeText={handleUsername}
             style={[
               styles.textInput,
-              charactersLeft === 0 && styles.textInputError,
+              usernameData.charactersLeft === 0 && styles.textInputError,
             ]}
             maxLength={30}
           />
           <StyledError
             errorStyle={{
-              color: charactersLeft > 0 ? 'white' : 'red',
+              color: usernameData.charactersLeft > 0 ? 'white' : 'red',
               fontSize: 10,
               marginLeft: 15,
             }}
-            message={`${charactersLeft} characters remaining`}
+            message={`${usernameData.charactersLeft} characters remaining`}
           />
         </View>
         <View>
@@ -102,7 +112,7 @@ const Register: FC<RegisterScreenNavigationProp> = ({navigation}) => {
             placeholder="Email ID"
             placeholderTextColor={COLORS.white2}
             value={email}
-            onChangeText={text => setEmail(text)}
+            onChangeText={setEmail}
             style={[
               styles.textInput,
               Boolean(error.email) && styles.textInputError,
@@ -127,7 +137,7 @@ const Register: FC<RegisterScreenNavigationProp> = ({navigation}) => {
               Boolean(error.password) && styles.textInputError,
             ]}
             value={password}
-            onChangeText={text => setPassword(text)}
+            onChangeText={setPassword}
           />
           <StyledError
             message={
@@ -145,7 +155,7 @@ const Register: FC<RegisterScreenNavigationProp> = ({navigation}) => {
               Boolean(confirmPasswordErrorMsg) && styles.textInputError,
             ]}
             value={confirmPassword}
-            onChangeText={text => setConfirmPassword(text)}
+            onChangeText={setConfirmPassword}
           />
           <StyledError message={confirmPasswordErrorMsg} />
         </View>
@@ -176,7 +186,7 @@ const Register: FC<RegisterScreenNavigationProp> = ({navigation}) => {
         alignItems="center">
         Already a member?{' '}
         <Text
-          onPress={() => navigation.navigate('Login')}
+          onPress={() => navigate('Login')}
           mt="10"
           fontFamily="Lato-Bold"
           color="primary.400">

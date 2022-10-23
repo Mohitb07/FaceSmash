@@ -28,7 +28,7 @@ type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
 >
 
 const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
-  navigation,
+  navigation: {goBack, setOptions},
 }) => {
   const [userBio, setUserBio] = useState('')
   const [loading, setLoading] = useState(false)
@@ -52,7 +52,7 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
         },
         {merge: true}, // so that it don't overwrite the existing document data
       )
-      !Boolean(selectedImage) && navigation.goBack()
+      !Boolean(selectedImage) && goBack()
     }
     if (selectedImage) {
       try {
@@ -61,7 +61,7 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
           selectedImage,
         )
         updateUserData(url, contextUser?.uid!)
-        navigation.goBack()
+        goBack()
       } catch (err) {
         console.log('Error', err)
       } finally {
@@ -71,11 +71,9 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
   }
 
   useEffect(() => {
-    navigation.setOptions({
+    setOptions({
       headerLeft: () => (
-        <TouchableOpacity
-          disabled={loading}
-          onPress={() => navigation.goBack()}>
+        <TouchableOpacity disabled={loading} onPress={goBack}>
           <CloseIcon />
         </TouchableOpacity>
       ),
@@ -121,7 +119,7 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
         <HStack space="10">
           <Button
             text="Open Gallary"
-            onPress={() => handleChooseGallary()}
+            onPress={handleChooseGallary}
             bgColor={COLORS.white2}
             showRing={false}
             disabled={loading}
