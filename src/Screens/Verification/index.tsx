@@ -44,9 +44,7 @@ const Verification = () => {
           ),
         }),
       )
-      .finally(() => {
-        setLoadingResend(false)
-      })
+      .finally(() => setLoadingResend(false))
   }
 
   const checkUserVerificationStatus = async () => {
