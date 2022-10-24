@@ -1,12 +1,13 @@
 import React from 'react'
+import {StyleSheet, ActivityIndicator} from 'react-native'
 
 import {useRecoilState} from 'recoil'
 import {Actionsheet} from 'native-base'
 
 import {bottomSheetState} from '@/atoms/bottomSheetAtom'
-import ProfileBottomSheet from './Profile'
 import {COLORS} from '@/constants'
 import {IBottomSheetState} from '@/interface'
+const ProfileBottomSheet = React.lazy(() => import('./Profile'))
 
 const BottomSheet = () => {
   const [bottomSheetStateValue, setBottomSheetStateValue] =
@@ -22,11 +23,19 @@ const BottomSheet = () => {
           type: null,
         }))
       }}>
-      <Actionsheet.Content style={{backgroundColor: COLORS.mainBackground}}>
-        {bottomSheetStateValue.type === 'profile' && <ProfileBottomSheet />}
+      <Actionsheet.Content style={styles.actionSheetContainer}>
+        <React.Suspense fallback={<ActivityIndicator />}>
+          {bottomSheetStateValue.type === 'profile' && <ProfileBottomSheet />}
+        </React.Suspense>
       </Actionsheet.Content>
     </Actionsheet>
   )
 }
 
-export default React.memo(BottomSheet)
+export default BottomSheet
+
+const styles = StyleSheet.create({
+  actionSheetContainer: {
+    backgroundColor: COLORS.mainBackground,
+  },
+})

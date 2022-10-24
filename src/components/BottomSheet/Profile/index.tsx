@@ -42,7 +42,7 @@ const ProfileBottomSheet = () => {
       {!!user && (
         <Actionsheet.Item style={styles.defaultStyle}>
           <TouchableOpacity style={styles.btn} onPress={onLogoutAttempt}>
-            <LogoutIcon style={{marginRight: 5}} />
+            <LogoutIcon style={styles.logoutIcon} />
             <NText color="red.500" fontFamily="Font-Semibold">
               Log Out
             </NText>
@@ -62,5 +62,8 @@ const styles = StyleSheet.create({
   },
   defaultStyle: {
     backgroundColor: 'none',
+  },
+  logoutIcon: {
+    marginRight: 5,
   },
 })

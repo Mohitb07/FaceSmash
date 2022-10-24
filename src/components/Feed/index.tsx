@@ -25,7 +25,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 import {HeartFilledIcon, HeartOutlinIcon, LinkIcon} from '@/SVG'
-import {COLORS} from '@/constants'
+import {COLORS, FONTS} from '@/constants'
 import useAuthUser from '@/hooks/useAuthUser'
 import {FeedProps} from '@/interface'
 import {RootStackParamList} from '@/Navigation/Root'
@@ -50,7 +50,7 @@ const Feed = ({
 }: FeedProps) => {
   console.log('feed', postTitle)
   const updateUIBasedOnImage = Boolean(image) ? 'column-reverse' : 'column'
-  const navigation =
+  const {navigate} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const {user} = useAuthUser()
   const {onOpen, onClose, isOpen} = useDisclose()
@@ -93,7 +93,7 @@ const Feed = ({
       <NView style={styles.userInfo}>
         <TouchableOpacity
           onPress={() =>
-            navigation.navigate('Profile', {
+            navigate('Profile', {
               providedUserId: userId,
             })
           }
@@ -141,7 +141,7 @@ const Feed = ({
             <TouchableOpacity
               style={styles.linkTitle}
               onPress={() =>
-                navigation.navigate('Browser', {
+                navigate('Browser', {
                   uri: link,
                 })
               }>
@@ -187,7 +187,7 @@ const Feed = ({
       </NView>
 
       <Actionsheet disableOverlay isOpen={isOpen} onClose={onClose}>
-        <Actionsheet.Content style={{backgroundColor: COLORS.mainBackground}}>
+        <Actionsheet.Content style={styles.actionSheetContent}>
           <React.Suspense
             fallback={
               <View>
@@ -230,10 +230,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   feedTitle: {
-    fontSize: 16,
     color: COLORS.white2,
-    fontFamily: 'Lato-Heavy',
     lineHeight: 23,
+    ...FONTS.normalTitle,
   },
   usernameText: {
     color: COLORS.white2,
@@ -251,9 +250,8 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   timePosted: {
-    color: '#747474',
-    fontSize: 10,
-    fontFamily: 'Lato-Regular',
+    ...FONTS.body5,
+    color: COLORS.lightGray2,
   },
   userProfile: {
     width: 38,
@@ -269,11 +267,9 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   description: {
-    // color: '#747474',
     color: COLORS.white2,
-    fontFamily: 'Lato-Semibold',
-    fontSize: 13,
     marginVertical: 5,
+    ...FONTS.h4,
   },
   titleNuser: {
     flexDirection: 'column-reverse',
@@ -291,5 +287,8 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: 'white',
     fontWeight: '600',
+  },
+  actionSheetContent: {
+    backgroundColor: COLORS.mainBackground,
   },
 })

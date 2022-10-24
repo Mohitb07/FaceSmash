@@ -13,7 +13,7 @@ import {View, Text} from 'native-base'
 import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown'
 import firestore from '@react-native-firebase/firestore'
 
-import {COLORS, USERS_LIMIT} from '@/constants'
+import {COLORS, USERS_COLLECTION, USERS_LIMIT} from '@/constants'
 import {CloseIcon, SearchIcon} from '@/SVG'
 import {IUserDetail} from '@/interface'
 
@@ -38,30 +38,25 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
   const [isFocus, setIsFocus] = useState(false)
   const currentText = useRef('')
 
+  const userRef = (query: string) => {
+    return firestore()
+      .collection(USERS_COLLECTION)
+      .where('qusername', '>=', query)
+      .where('qusername', '<=', query + '\uf8ff')
+      .limit(USERS_LIMIT)
+  }
+
   const getUsersDetails = (query: string) => {
     if (query) {
       query = query.trim().toLowerCase()
       currentInputValue.current = query
       try {
-        firestore()
-          .collection('Users')
-          .where('qusername', '>=', query)
-          .where('qusername', '<=', query + '\uf8ff')
-          .limit(USERS_LIMIT)
+        userRef(query)
           .get()
           .then(
             snapshot => {
               const usersList: Array<IUserDetail> = snapshot.docs.map(d => ({
-                createdAt: '',
-                email: '',
-                followers: [],
-                followings: [],
-                lastSignIn: '',
-                profilePic: '',
-                qusername: '',
-                uid: '',
-                username: '',
-                ...d.data(),
+                ...(d.data() as IUserDetail),
               }))
               setFoundUsers(usersList)
             },
@@ -85,11 +80,7 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
         useNativeDriver: true,
       }).start()
       try {
-        firestore()
-          .collection('Users')
-          .where('qusername', '>=', query)
-          .where('qusername', '<=', query + '\uf8ff')
-          .limit(USERS_LIMIT)
+        userRef(query)
           .get()
           .then(
             snapshot => {
@@ -129,7 +120,6 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
   }, [])
 
   const onSelectClear = useCallback((text?: string) => {
-    console.log('onSelectClear called', text)
     Animated.timing(marginAnimation, {
       toValue: 0,
       duration: 300,
@@ -165,18 +155,22 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
   }, [])
 
   const ItemSeparatorComponent = useMemo(() => {
-    return () => (
-      <View
-        style={{height: 1, width: '100%', backgroundColor: 'transparent'}}
-      />
-    )
+    return () => <View height="0" width="0" />
   }, [])
+
+  const renderItems = (item: SuggestionList) => (
+    <View flexDirection="row" alignItems="center" px={15} py={2}>
+      <SearchIcon />
+      <Text color="white" ml={2}>
+        {item.title}
+      </Text>
+    </View>
+  )
 
   return (
     <AutocompleteDropdown
       inputHeight={40}
-      // @ts-ignore
-      dataSet={suggestionsList}
+      dataSet={suggestionsList!}
       onChangeText={getSuggestions}
       onSelectItem={(item: SuggestionList) => item && onSelectItem(item)}
       closeOnSubmit={true}
@@ -192,7 +186,7 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
         autoCapitalize: 'none',
         style: {
           borderRadius: 25,
-          backgroundColor: '#383b42',
+          backgroundColor: COLORS.gray3,
           color: COLORS.white2,
           paddingLeft: 18,
           fontSize: 14,
@@ -204,7 +198,7 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
         alignSelf: 'center',
       }}
       inputContainerStyle={{
-        backgroundColor: '#383b42',
+        backgroundColor: COLORS.gray3,
         borderRadius: 25,
       }}
       suggestionsListContainerStyle={{
@@ -218,24 +212,7 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
         marginLeft: 5,
       }}
       onFocus={inputFocus}
-      renderItem={(item, text) => (
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            paddingHorizontal: 15,
-            paddingVertical: 5,
-          }}>
-          <SearchIcon />
-          <Text
-            style={{
-              color: '#fff',
-              marginLeft: 10,
-            }}>
-            {item.title}
-          </Text>
-        </View>
-      )}
+      renderItem={renderItems}
       ClearIconComponent={<CloseIcon />}
       showChevron={false}
       showClear={(isFocus || Boolean(selectedItem)) && true}
@@ -243,7 +220,7 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
       ItemSeparatorComponent={<ItemSeparatorComponent />}
       EmptyResultComponent={
         <View alignSelf="center" mt="10">
-          <Text color="white" fontSize="md">
+          <Text color={COLORS.gray2} fontSize="md">
             No result for {currentText.current}
           </Text>
         </View>
