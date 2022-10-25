@@ -27,8 +27,6 @@ const Register: FC<RegisterScreenNavigationProp> = ({
     username: '',
     charactersLeft: 30,
   })
-  // const [charactersLeft, setCharactersLeft] = useState(30)
-
   const {onRegisterAttempt, error, setError, loading} = useRegister()
 
   useEffect(() => {
@@ -67,8 +65,6 @@ const Register: FC<RegisterScreenNavigationProp> = ({
       charactersLeft: 30 - text.length,
       username: text,
     })
-    // setUsername(text)
-    // setCharactersLeft(30 - text.length)
   }
 
   return (
