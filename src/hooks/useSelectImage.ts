@@ -8,7 +8,7 @@ import Toast from 'react-native-toast-message'
 import {RootStackParamList} from '@/Navigation/Root'
 
 const useSelectImage = () => {
-  const [selectedImage, setSelectedImage] = useState<string | undefined>('')
+  const [selectedImage, setSelectedImage] = useState('')
   const [selectedImageRef, setSelectedImageRef] = useState('')
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
@@ -47,7 +47,7 @@ const useSelectImage = () => {
               response.assets[0].height! + response.assets[0].width!
             }${response.assets[0].fileSize}`
 
-            setSelectedImage(response.assets[0].uri)
+            setSelectedImage(response.assets[0].uri!)
             setSelectedImageRef(imageRef)
             navigate &&
               !!screen &&
@@ -82,7 +82,7 @@ const useSelectImage = () => {
         } else {
           if (response.assets) {
             const value = response.assets[0].uri
-            setSelectedImage(value)
+            setSelectedImage(value!)
           }
         }
       },
