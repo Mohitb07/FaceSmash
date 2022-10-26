@@ -1,24 +1,18 @@
 import React, {useEffect, useState} from 'react'
-import {
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  TextStyle,
-  ViewStyle,
-} from 'react-native'
+import {ScrollView, StyleSheet, TextStyle, ViewStyle} from 'react-native'
 
 import {Divider, HStack, Image, Text as NText, View, VStack} from 'native-base'
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 
 import StyledButton from '@/components/Button'
-import StyledError from '@/components/Error'
 import {COLORS} from '@/constants'
-import {FIREBASE_ERRORS} from '@/firebase/errors'
 import useLogin from '@/hooks/useLogin'
 import {checkIsEmailValid} from '@/utils'
 import {RootStackParamList} from '@/Navigation/Root'
 import GoogleLogin from '@/components/SocialLogins/Google'
 import FacebookLogin from '@/components/SocialLogins/Facebook'
+import Input from '@/components/Input'
+import {FIREBASE_ERRORS} from '@/firebase/errors'
 
 type LoginScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -32,13 +26,12 @@ const Login: React.FC<LoginScreenNavigationProp> = ({
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const {onLoginAttempt, loading, error, setError} = useLogin()
-  const invalidEmail = checkIsEmailValid(email.trim())
+  const isEmailInvalid = email.trim().length > 0 && checkIsEmailValid(email)
   const isDisabled =
     email.trim().length === 0 ||
     password.trim().length === 0 ||
-    invalidEmail ||
+    isEmailInvalid ||
     loading
-  const invalidEmailError = email.trim().length > 0 && invalidEmail
 
   useEffect(() => {
     error && setError('')
@@ -54,46 +47,24 @@ const Login: React.FC<LoginScreenNavigationProp> = ({
       <NText fontSize="4xl" fontFamily="Lato-Medium">
         Login
       </NText>
-
       <VStack space="5" mt="6">
-        <View>
-          <TextInput
-            placeholder="Email ID"
-            placeholderTextColor={COLORS.white2}
-            value={email}
-            onChangeText={setEmail}
-            style={[
-              styles.textInput,
-              error.length > 0 && styles.textInputError,
-            ]}
-            maxLength={30}
-            keyboardType="email-address"
-            textContentType="emailAddress"
-            clearButtonMode="always"
-          />
-          <StyledError
-            message={
-              (invalidEmailError && 'Invalid Email') ||
-              FIREBASE_ERRORS[error as keyof typeof FIREBASE_ERRORS]
-            }
-          />
-        </View>
-        <View>
-          <TextInput
-            secureTextEntry
-            placeholder="Password"
-            placeholderTextColor={COLORS.white2}
-            style={[
-              styles.textInput,
-              error.length > 0 && styles.textInputError,
-            ]}
-            value={password}
-            onChangeText={setPassword}
-          />
-          <StyledError
-            message={FIREBASE_ERRORS[error as keyof typeof FIREBASE_ERRORS]}
-          />
-        </View>
+        <Input
+          value={email}
+          onChangeText={text => setEmail(text)}
+          placeholder="Email ID"
+          isInvalid={isEmailInvalid}
+          error={FIREBASE_ERRORS[error as keyof typeof FIREBASE_ERRORS]}
+          errorMessage="Invalid Email"
+          keyboardType="email-address"
+          maxLength={30}
+        />
+        <Input
+          secureTextEntry
+          value={password}
+          onChangeText={text => setPassword(text)}
+          placeholder="Password"
+          error={FIREBASE_ERRORS[error as keyof typeof FIREBASE_ERRORS]}
+        />
       </VStack>
       <NText
         fontFamily="Lato-Regular"
