@@ -1,25 +1,19 @@
 import React, {useEffect, useState, FC} from 'react'
-import {ScrollView, StyleSheet, TextInput, TouchableOpacity} from 'react-native'
+import {ScrollView, StyleSheet} from 'react-native'
 
-import {Divider, HStack, Image, Text, View, VStack} from 'native-base'
-import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {Image, Text, View, VStack} from 'native-base'
 
 import StyledButton from '@/components/Button'
-import StyledError from '@/components/Error'
 import {COLORS} from '@/constants'
 import {FIREBASE_ERRORS} from '@/firebase/errors'
 import {useRegister} from '@/hooks/useRegister'
-import {RootStackParamList} from '@/Navigation/Root'
-import {FacebookIcon, GoogleIcon} from '@/SVG'
+import Input from '@/components/Input'
+import AuthScreenNavigationLink from '@/components/AuthFooter'
+import SocialLogins from '@/components/SocialLogins'
 
-type RegisterScreenNavigationProp = NativeStackScreenProps<
-  RootStackParamList,
-  'SignUp'
->
+const REGISTER_SCREEN_ASSET = '../../../assets/register.png'
 
-const Register: FC<RegisterScreenNavigationProp> = ({
-  navigation: {navigate},
-}) => {
+const Register: FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -73,7 +67,7 @@ const Register: FC<RegisterScreenNavigationProp> = ({
       contentContainerStyle={styles.container}>
       <View p="2" alignItems="center">
         <Image
-          source={require('@/../assets/register.png')}
+          source={require(REGISTER_SCREEN_ASSET)}
           alt="Register Illustration"
         />
       </View>
@@ -82,79 +76,48 @@ const Register: FC<RegisterScreenNavigationProp> = ({
       </Text>
 
       <VStack space="5" mt="6">
-        <View>
-          <TextInput
-            placeholder="Username"
-            placeholderTextColor={COLORS.white2}
-            value={usernameData.username}
-            onChangeText={handleUsername}
-            style={[
-              styles.textInput,
-              usernameData.charactersLeft === 0 && styles.textInputError,
-            ]}
-            maxLength={30}
-          />
-          <StyledError
-            errorStyle={{
-              color: usernameData.charactersLeft > 0 ? 'white' : 'red',
-              fontSize: 10,
-              marginLeft: 15,
-            }}
-            message={`${usernameData.charactersLeft} characters remaining`}
-          />
-        </View>
-        <View>
-          <TextInput
-            placeholder="Email ID"
-            placeholderTextColor={COLORS.white2}
-            value={email}
-            onChangeText={setEmail}
-            style={[
-              styles.textInput,
-              Boolean(error.email) && styles.textInputError,
-            ]}
-            maxLength={30}
-            keyboardType="email-address"
-            textContentType="emailAddress"
-          />
-          <StyledError
-            message={
-              FIREBASE_ERRORS[error.email as keyof typeof FIREBASE_ERRORS]
-            }
-          />
-        </View>
-        <View>
-          <TextInput
-            secureTextEntry
-            placeholder="Password"
-            placeholderTextColor={COLORS.white2}
-            style={[
-              styles.textInput,
-              Boolean(error.password) && styles.textInputError,
-            ]}
-            value={password}
-            onChangeText={setPassword}
-          />
-          <StyledError
-            message={
-              FIREBASE_ERRORS[error.password as keyof typeof FIREBASE_ERRORS]
-            }
-          />
-        </View>
-        <View>
-          <TextInput
-            secureTextEntry
-            placeholder="Confirm Password"
-            placeholderTextColor={COLORS.white2}
-            style={[
-              styles.textInput,
-              Boolean(confirmPasswordErrorMsg) && styles.textInputError,
-            ]}
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-          />
-          <StyledError message={confirmPasswordErrorMsg} />
-        </View>
+        <Input
+          value={usernameData.username}
+          placeholder="Username"
+          onChangeText={handleUsername}
+          maxLength={30}
+          error={`${usernameData.charactersLeft} characters remaining`}
+          errorLabelStyle={{
+            color:
+              usernameData.charactersLeft > 0 ? COLORS.lightGray2 : COLORS.red,
+            fontSize: 10,
+            marginLeft: 15,
+          }}
+          inputStyle={{
+            borderColor:
+              usernameData.charactersLeft === 0 ? COLORS.red : 'transparent',
+          }}
+        />
+        <Input
+          placeholder="Email ID"
+          value={email}
+          onChangeText={setEmail}
+          error={FIREBASE_ERRORS[error.email as keyof typeof FIREBASE_ERRORS]}
+          maxLength={30}
+          keyboardType="email-address"
+          textContentType="emailAddress"
+        />
+        <Input
+          secureTextEntry
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          error={
+            FIREBASE_ERRORS[error.password as keyof typeof FIREBASE_ERRORS]
+          }
+        />
+        <Input
+          secureTextEntry
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          error={confirmPasswordErrorMsg}
+        />
       </VStack>
       <StyledButton
         onPress={signUpAttempt}
@@ -166,29 +129,12 @@ const Register: FC<RegisterScreenNavigationProp> = ({
       <Text my="6" textAlign="center" fontFamily="Lato-Regular">
         Or, login with...
       </Text>
-      <HStack justifyContent="center" space="10" alignItems="center">
-        <TouchableOpacity>
-          <GoogleIcon />
-        </TouchableOpacity>
-        <Divider thickness="1" mx="2" orientation="vertical" />
-        <TouchableOpacity>
-          <FacebookIcon />
-        </TouchableOpacity>
-      </HStack>
-      <Text
-        fontFamily="Lato-Regular"
-        mt="8"
-        textAlign="center"
-        alignItems="center">
-        Already a member?{' '}
-        <Text
-          onPress={() => navigate('Login')}
-          mt="10"
-          fontFamily="Lato-Bold"
-          color="primary.400">
-          Login
-        </Text>
-      </Text>
+      <SocialLogins />
+      <AuthScreenNavigationLink
+        screen="Login"
+        subtitle="Already a member?"
+        screenLabel="Login"
+      />
     </ScrollView>
   )
 }
