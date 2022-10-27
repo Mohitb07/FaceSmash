@@ -3,6 +3,7 @@ import {
   TextInput as Input,
   StyleSheet,
   TextInputProps as BaseProps,
+  TextStyle,
 } from 'react-native'
 
 import {View} from 'native-base'
@@ -12,18 +13,18 @@ import StyledError from '../Error'
 type TextInputProps = BaseProps & {
   value: string
   placeholder: string
+  inputStyle?: TextStyle
   error?: string
-  errorMessage?: string
-  isInvalid?: boolean
+  errorLabelStyle?: TextStyle
 }
 
 const TextInput: React.FC<TextInputProps> = ({
   value,
   placeholder,
-  error = '',
-  isInvalid,
-  errorMessage,
   onChangeText,
+  inputStyle,
+  error = '',
+  errorLabelStyle,
   ...rest
 }) => {
   return (
@@ -33,10 +34,10 @@ const TextInput: React.FC<TextInputProps> = ({
         placeholderTextColor={COLORS.gray}
         value={value}
         onChangeText={onChangeText}
-        style={[styles.textInput, error.length > 0 && styles.error]}
+        style={[styles.textInput, error.length > 0 && styles.error, inputStyle]}
         {...rest}
       />
-      <StyledError message={(isInvalid && errorMessage) || error} />
+      <StyledError errorStyle={errorLabelStyle} message={error} />
     </View>
   )
 }
