@@ -1,41 +1,47 @@
 import React, {useEffect, useState} from 'react'
-import {ScrollView, StyleSheet, TextStyle, ViewStyle} from 'react-native'
+import {
+  NativeSyntheticEvent,
+  ScrollView,
+  StyleSheet,
+  TextInputEndEditingEventData,
+  TextStyle,
+  ViewStyle,
+} from 'react-native'
 
-import {Divider, HStack, Image, Text as NText, View, VStack} from 'native-base'
-import type {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {Image, Text as NText, View, VStack} from 'native-base'
 
 import StyledButton from '@/components/Button'
 import {COLORS} from '@/constants'
 import useLogin from '@/hooks/useLogin'
 import {checkIsEmailValid} from '@/utils'
-import {RootStackParamList} from '@/Navigation/Root'
-import GoogleLogin from '@/components/SocialLogins/Google'
-import FacebookLogin from '@/components/SocialLogins/Facebook'
 import Input from '@/components/Input'
 import {FIREBASE_ERRORS} from '@/firebase/errors'
+import AuthScreenNavigationLink from '@/components/AuthFooter'
+import SocialLogins from '@/components/SocialLogins'
 
-type LoginScreenNavigationProp = NativeStackScreenProps<
-  RootStackParamList,
-  'Login'
->
 const LOGIN_SCREEN_ASSET = '../../../assets/login.png'
 
-const Login: React.FC<LoginScreenNavigationProp> = ({
-  navigation: {navigate},
-}) => {
-  const [email, setEmail] = useState('')
+const Login: React.FC = () => {
+  const [email, setEmail] = useState({
+    value: '',
+    isInvalid: false,
+  })
   const [password, setPassword] = useState('')
   const {onLoginAttempt, loading, error, setError} = useLogin()
-  const isEmailInvalid = email.trim().length > 0 && checkIsEmailValid(email)
+
   const isDisabled =
-    email.trim().length === 0 ||
+    email.value.trim().length === 0 ||
     password.trim().length === 0 ||
-    isEmailInvalid ||
+    email.isInvalid ||
     loading
 
   useEffect(() => {
     error && setError('')
   }, [email, password])
+
+  const errorMsg = FIREBASE_ERRORS[error as keyof typeof FIREBASE_ERRORS]
+
+  const loginAttempt = () => onLoginAttempt(email.value, password)
 
   return (
     <ScrollView
@@ -49,33 +55,36 @@ const Login: React.FC<LoginScreenNavigationProp> = ({
       </NText>
       <VStack space="5" mt="6">
         <Input
-          value={email}
-          onChangeText={text => setEmail(text)}
+          value={email.value}
+          onChangeText={text => setEmail(prev => ({...prev, value: text}))}
           placeholder="Email ID"
-          isInvalid={isEmailInvalid}
-          error={FIREBASE_ERRORS[error as keyof typeof FIREBASE_ERRORS]}
-          errorMessage="Invalid Email"
+          error={(email.isInvalid && 'Invalid Email') || errorMsg}
           keyboardType="email-address"
           maxLength={30}
+          onEndEditing={e =>
+            setEmail(prev => ({
+              ...prev,
+              isInvalid: checkIsEmailValid(e.nativeEvent.text),
+            }))
+          }
         />
         <Input
           secureTextEntry
           value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={setPassword}
           placeholder="Password"
-          error={FIREBASE_ERRORS[error as keyof typeof FIREBASE_ERRORS]}
+          error={errorMsg}
         />
       </VStack>
       <NText
         fontFamily="Lato-Regular"
         textAlign="right"
         my="3"
-        color="primary.400">
+        color="primary.600">
         Forgot Password ?
       </NText>
-
       <StyledButton
-        onPress={() => onLoginAttempt(email, password)}
+        onPress={loginAttempt}
         text="Login"
         bgColor={isDisabled ? COLORS.gray : COLORS.white2}
         loader={loading}
@@ -84,25 +93,12 @@ const Login: React.FC<LoginScreenNavigationProp> = ({
       <NText my="6" textAlign="center" fontFamily="Lato-Regular">
         Or, login with...
       </NText>
-      <HStack justifyContent="center" space="10" alignItems="center">
-        <GoogleLogin />
-        <Divider thickness="1" mx="2" orientation="vertical" />
-        <FacebookLogin />
-      </HStack>
-      <NText
-        fontFamily="Lato-Regular"
-        mt="8"
-        textAlign="center"
-        alignItems="center">
-        New to FaceSmash?{' '}
-        <NText
-          onPress={() => navigate('SignUp')}
-          mt="10"
-          fontFamily="Lato-Bold"
-          color="primary.400">
-          Register
-        </NText>
-      </NText>
+      <SocialLogins />
+      <AuthScreenNavigationLink
+        screen="SignUp"
+        subtitle="New to FaceSmash?"
+        screenLabel="Register"
+      />
     </ScrollView>
   )
 }
