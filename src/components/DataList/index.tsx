@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ReactElement} from 'react'
 import {FlatList, RefreshControl, StyleSheet} from 'react-native'
 
 import {COLORS} from '@/constants'
@@ -8,9 +8,9 @@ import Feed from '@/components/Feed'
 
 interface IDataListProps {
   dataList: IPost[]
-  Header: JSX.Element
-  Footer: JSX.Element
-  EmptyList: JSX.Element
+  Header: ReactElement
+  Footer: ReactElement
+  EmptyList: ReactElement
   retrieveMore: () => void
   onRefresh?: () => void
   refreshing?: boolean
