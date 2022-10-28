@@ -7,7 +7,7 @@ import React, {
   SetStateAction,
   MutableRefObject,
 } from 'react'
-import {Animated, Dimensions} from 'react-native'
+import {Animated, Dimensions, StyleSheet} from 'react-native'
 
 import {View, Text} from 'native-base'
 import {AutocompleteDropdown} from 'react-native-autocomplete-dropdown'
@@ -46,29 +46,32 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
       .limit(USERS_LIMIT)
   }
 
-  const getUsersDetails = (query: string) => {
-    if (query) {
-      query = query.trim().toLowerCase()
-      currentInputValue.current = query
-      try {
-        userRef(query)
-          .get()
-          .then(
-            snapshot => {
-              const usersList: Array<IUserDetail> = snapshot.docs.map(d => ({
-                ...(d.data() as IUserDetail),
-              }))
-              setFoundUsers(usersList)
-            },
-            error => {
-              console.log('Error getSuggestions', error)
-            },
-          )
-      } catch (e) {
-        console.log('errorStyle', e)
+  const getUsersDetails = useCallback(
+    (query: string) => {
+      if (query) {
+        query = query.trim().toLowerCase()
+        currentInputValue.current = query
+        try {
+          userRef(query)
+            .get()
+            .then(
+              snapshot => {
+                const usersList: Array<IUserDetail> = snapshot.docs.map(d => ({
+                  ...(d.data() as IUserDetail),
+                }))
+                setFoundUsers(usersList)
+              },
+              error => {
+                console.log('Error getSuggestions', error)
+              },
+            )
+        } catch (e) {
+          console.log('errorStyle', e)
+        }
       }
-    }
-  }
+    },
+    [currentInputValue, setFoundUsers],
+  )
 
   const getSuggestions = (query: string) => {
     currentText.current = query
@@ -117,9 +120,9 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
     setSelectedItem(null)
     setSuggestionsList(null)
     setIsFocus(false)
-  }, [])
+  }, [marginAnimation])
 
-  const onSelectClear = useCallback((text?: string) => {
+  const onSelectClear = useCallback(() => {
     Animated.timing(marginAnimation, {
       toValue: 0,
       duration: 300,
@@ -127,7 +130,7 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
     }).start()
     setSuggestionsList(null)
     setIsFocus(false)
-  }, [])
+  }, [marginAnimation])
 
   const inputFocus = () => {
     setIsFocus(true)
@@ -140,19 +143,22 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
       getUsersDetails(item.title)
     }
   }
-  const onSubmitHandler = useCallback((text: string) => {
-    if (text) {
-      Animated.timing(marginAnimation, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-      }).start()
-      getUsersDetails(text)
-      setSuggestionsList(null)
-      setIsFocus(false)
-      setSelectedItem(text)
-    }
-  }, [])
+  const onSubmitHandler = useCallback(
+    (text: string) => {
+      if (text) {
+        Animated.timing(marginAnimation, {
+          toValue: 0,
+          duration: 300,
+          useNativeDriver: true,
+        }).start()
+        getUsersDetails(text)
+        setSuggestionsList(null)
+        setIsFocus(false)
+        setSelectedItem(text)
+      }
+    },
+    [marginAnimation, getUsersDetails],
+  )
 
   const ItemSeparatorComponent = useMemo(() => {
     return () => <View height="0" width="0" />
@@ -192,25 +198,10 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
           fontSize: 14,
         },
       }}
-      rightButtonsContainerStyle={{
-        right: 8,
-        height: 30,
-        alignSelf: 'center',
-      }}
-      inputContainerStyle={{
-        backgroundColor: COLORS.gray3,
-        borderRadius: 25,
-      }}
-      suggestionsListContainerStyle={{
-        backgroundColor: COLORS.mainBackground,
-        marginVertical: 10,
-      }}
-      containerStyle={{
-        flexGrow: 1,
-        flexShrink: 1,
-        padding: 10,
-        marginLeft: 5,
-      }}
+      rightButtonsContainerStyle={styles.rightButtonsContainerStyle}
+      inputContainerStyle={styles.inputContainerStyle}
+      suggestionsListContainerStyle={styles.suggestionsListContainerStyle}
+      containerStyle={styles.containerStyle}
       onFocus={inputFocus}
       renderItem={renderItems}
       ClearIconComponent={<CloseIcon />}
@@ -229,3 +220,26 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
   )
 }
 export default AutoCompleteInput
+
+const styles = StyleSheet.create({
+  rightButtonsContainerStyle: {
+    right: 8,
+    height: 30,
+    alignSelf: 'center',
+  },
+  inputContainerStyle: {
+    backgroundColor: COLORS.gray3,
+    borderRadius: 25,
+  },
+
+  suggestionsListContainerStyle: {
+    backgroundColor: COLORS.mainBackground,
+    marginVertical: 10,
+  },
+  containerStyle: {
+    flexGrow: 1,
+    flexShrink: 1,
+    padding: 10,
+    marginLeft: 5,
+  },
+})
