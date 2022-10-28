@@ -16,15 +16,15 @@ interface IUserDataContext {
 
 export const UserDataContext = React.createContext<IUserDataContext>({
   contextUser: null,
-  updateUserData: (url, userId) => {},
-  dispatchContextUser: value => {},
+  updateUserData: () => {},
+  dispatchContextUser: () => {},
 })
 
 const UserDataProvider = ({children}: {children: ReactNode}) => {
   const [contextUser, setContextUser] = useState<UserState>(null)
   const {user} = useAuthUser()
 
-  const dispatchContextUser = (value: UserState) => setContextUser(null)
+  const dispatchContextUser = (value: UserState) => setContextUser(value)
 
   console.log('auth User inside user data context 🎯', contextUser)
   useEffect(() => {
@@ -45,6 +45,7 @@ const UserDataProvider = ({children}: {children: ReactNode}) => {
         )
     }
     return subscriber
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.uid, user?.emailVerified])
 
   const updateUserData = useCallback(async (url: string, userId: string) => {
