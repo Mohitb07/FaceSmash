@@ -38,13 +38,15 @@ const AuthUserProvider = ({children}: {children: React.ReactNode}) => {
         ...prev,
         user,
       }))
-      if (authUser.initializing)
+      if (authUser.initializing) {
         setAuth(prev => ({
           ...prev,
           initializing: false,
         }))
+      }
     })
     return subscriber
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const value = {

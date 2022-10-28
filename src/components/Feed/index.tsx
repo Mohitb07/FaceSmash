@@ -49,7 +49,7 @@ const Feed = ({
   imageRef,
 }: FeedProps) => {
   console.log('feed', postTitle)
-  const updateUIBasedOnImage = Boolean(image) ? 'column-reverse' : 'column'
+  const updateUIBasedOnImage = image ? 'column-reverse' : 'column'
   const {navigate} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const {user} = useAuthUser()
@@ -97,7 +97,7 @@ const Feed = ({
               providedUserId: userId,
             })
           }
-          style={{flexDirection: 'row', alignItems: 'center'}}>
+          style={styles.userContainer}>
           <Image
             style={styles.userProfile}
             source={{uri: userProfilePic}}
@@ -146,9 +146,7 @@ const Feed = ({
                 })
               }>
               <LinkIcon height="14" width="14" />
-              <Text style={[styles.feedTitle, {marginLeft: 5}]}>
-                {postTitle}
-              </Text>
+              <Text style={styles.feedTitle}>{postTitle}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableWithoutFeedback>
@@ -232,6 +230,7 @@ const styles = StyleSheet.create({
   feedTitle: {
     color: COLORS.white2,
     lineHeight: 23,
+    marginLeft: 5,
     ...FONTS.normalTitle,
   },
   usernameText: {
@@ -290,5 +289,9 @@ const styles = StyleSheet.create({
   },
   actionSheetContent: {
     backgroundColor: COLORS.mainBackground,
+  },
+  userContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 })

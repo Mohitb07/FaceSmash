@@ -52,7 +52,7 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
         },
         {merge: true}, // so that it don't overwrite the existing document data
       )
-      !Boolean(selectedImage) && goBack()
+      !selectedImage && goBack()
     }
     if (selectedImage) {
       try {

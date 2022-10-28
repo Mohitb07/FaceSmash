@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {
-  NativeSyntheticEvent,
-  ScrollView,
-  StyleSheet,
-  TextInputEndEditingEventData,
-  TextStyle,
-  ViewStyle,
-} from 'react-native'
+import {ScrollView, StyleSheet, TextStyle, ViewStyle} from 'react-native'
 
 import {Image, Text as NText, View, VStack} from 'native-base'
 
@@ -37,7 +30,8 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     error && setError('')
-  }, [email, password])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [email, password, setError])
 
   const errorMsg = FIREBASE_ERRORS[error as keyof typeof FIREBASE_ERRORS]
 

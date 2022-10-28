@@ -28,14 +28,14 @@ const Register: FC = () => {
       ...prev,
       password: '',
     }))
-  }, [password])
+  }, [password, setError])
 
   useEffect(() => {
     setError(prev => ({
       ...prev,
       email: '',
     }))
-  }, [email])
+  }, [email, setError])
 
   const isDisabled =
     email.trim().length === 0 ||
@@ -54,11 +54,17 @@ const Register: FC = () => {
     onRegisterAttempt(email, password, usernameData.username)
 
   const handleUsername = (text: string) => {
-    if (text.length > 30) return
+    if (text.length > 30) {
+      return
+    }
     setUsernameData({
       charactersLeft: 30 - text.length,
       username: text,
     })
+  }
+
+  const borderColor = {
+    borderColor: usernameData.charactersLeft === 0 ? COLORS.red : 'transparent',
   }
 
   return (
@@ -85,13 +91,9 @@ const Register: FC = () => {
           errorLabelStyle={{
             color:
               usernameData.charactersLeft > 0 ? COLORS.lightGray2 : COLORS.red,
-            fontSize: 10,
-            marginLeft: 15,
+            ...styles.errorLableText,
           }}
-          inputStyle={{
-            borderColor:
-              usernameData.charactersLeft === 0 ? COLORS.red : 'transparent',
-          }}
+          inputStyle={borderColor}
         />
         <Input
           placeholder="Email ID"
@@ -158,5 +160,9 @@ const styles = StyleSheet.create({
   textInputError: {
     borderColor: COLORS.red,
     borderWidth: 1,
+  },
+  errorLableText: {
+    fontSize: 10,
+    marginLeft: 15,
   },
 })

@@ -65,7 +65,7 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
                 key={item.id}
                 uri={item.uri}
                 username={item.username}
-                textStyle={{maxWidth: 50}}
+                textStyle={styles.storyTextStyle}
                 size="lg"
                 containerStyle={styles.storyContainerStyle}
               />
@@ -204,5 +204,8 @@ const styles = StyleSheet.create({
   btnText: {
     color: '#fff',
     fontSize: 12,
+  },
+  storyTextStyle: {
+    maxWidth: 50,
   },
 })

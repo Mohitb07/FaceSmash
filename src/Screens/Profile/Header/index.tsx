@@ -1,4 +1,10 @@
-import React, {memo, useEffect, useLayoutEffect, useState} from 'react'
+import React, {
+  memo,
+  useEffect,
+  useLayoutEffect,
+  useState,
+  useCallback,
+} from 'react'
 import {TouchableOpacity, StyleSheet} from 'react-native'
 
 import {Box, Flex, HStack, Text, View} from 'native-base'
@@ -64,11 +70,14 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
   const setBottomSheetStateValue =
     useSetRecoilState<IBottomSheetState>(bottomSheetState)
 
-  const handleModalState = () =>
-    setBottomSheetStateValue(() => ({
-      type: 'profile',
-      isOpen: true,
-    }))
+  const handleModalState = useCallback(
+    () =>
+      setBottomSheetStateValue(() => ({
+        type: 'profile',
+        isOpen: true,
+      })),
+    [setBottomSheetStateValue],
+  )
 
   useLayoutEffect(() => {
     setOptions({
@@ -80,7 +89,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
         </TouchableOpacity>
       ),
     })
-  }, [])
+  }, [handleModalState, setOptions])
 
   useEffect(() => {
     // updating header title to username
@@ -122,7 +131,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
         },
       )
     return subscriber
-  }, [userId])
+  }, [userId, userData.username, setOptions])
 
   useEffect(() => {
     setOptions({
@@ -137,7 +146,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
         </Text>
       ),
     })
-  }, [userData.username])
+  }, [userData.username, setOptions])
 
   return (
     <Box my="2" mb="5" paddingX="2">
