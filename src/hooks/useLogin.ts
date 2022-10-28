@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 
 import auth from '@react-native-firebase/auth'
 import {GoogleSignin} from '@react-native-google-signin/google-signin'

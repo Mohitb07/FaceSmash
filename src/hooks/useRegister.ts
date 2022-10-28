@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import {useState} from 'react'
 
 import auth, {FirebaseAuthTypes} from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'

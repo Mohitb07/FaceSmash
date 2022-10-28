@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import {useState} from 'react'
 
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
@@ -12,13 +12,6 @@ const useSelectImage = () => {
   const [selectedImageRef, setSelectedImageRef] = useState('')
   const navigation =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
-
-  useEffect(() => {
-    console.log('mounted useSelectImage', selectedImage)
-    return () => {
-      console.log('unmount useSelectImage')
-    }
-  }, [])
 
   const handleChooseGallary = (
     navigate?: boolean,
