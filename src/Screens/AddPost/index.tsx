@@ -50,9 +50,9 @@ const AddPost = ({
   const REF = `${contextUser?.uid}/posts/${imageRef || selectedImageRef}`
 
   const createPost = async (
-    imageURL?: string,
-    imageRef?: string,
-    selectedImageRef?: string,
+    imgURL?: string,
+    imgRef?: string,
+    selectedImgRef?: string,
   ) => {
     try {
       await firestore()
@@ -60,14 +60,14 @@ const AddPost = ({
         .add({
           title,
           description,
-          image: !!imageURL ? imageURL : null,
+          image: imgURL ? imgURL : null,
           user: contextUser?.uid,
           userProfile: contextUser?.profilePic,
           username: contextUser?.username,
           likes: 0,
           link,
           createdAt: firestore.FieldValue.serverTimestamp(),
-          imageRef: !!imageRef || !!selectedImageRef ? REF : null,
+          imageRef: !!imgRef || !!selectedImgRef ? REF : null,
         })
       navigate('Home')
     } catch (error: any) {

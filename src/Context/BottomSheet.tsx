@@ -26,6 +26,7 @@ function BottomSheetProvider({children}: {children: React.ReactNode}) {
       onOpen,
       onClose,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [],
   )
   return (

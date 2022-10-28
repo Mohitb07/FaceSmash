@@ -52,8 +52,8 @@ const Verification = () => {
     if (!!user && !user?.emailVerified) {
       console.log('checking verification status interval')
       await auth().currentUser?.reload()
-      const user = auth().currentUser
-      if (user?.emailVerified) {
+      const currentUser = auth().currentUser
+      if (currentUser?.emailVerified) {
         setLoadingVerify(false)
         setAuthUser(user)
       } else {

@@ -51,7 +51,7 @@ const Root = () => {
   return (
     <RootStack.Navigator
       screenOptions={{headerShown: false, animation: 'slide_from_right'}}>
-      {!!user ? (
+      {user ? (
         <>
           {!user?.emailVerified ? (
             <RootStack.Screen name="Verification" component={Verification} />
@@ -104,7 +104,7 @@ const Root = () => {
                 component={SearchUser}
                 options={{
                   headerShown: false,
-                  headerTintColor: '#fff',
+                  headerTintColor: COLORS.white,
                   headerStyle: {
                     backgroundColor: COLORS.mainBackground,
                   },
