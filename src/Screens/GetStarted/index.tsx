@@ -44,13 +44,14 @@ const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
                   Smash
                 </NText>
               </NText>
-              {/* <NView
+              <NView
                 ml="4"
                 bgColor={COLORS.primary}
                 height="3"
                 width="3"
                 fontFamily="Lato-Bold"
-                rounded="full"></NView> */}
+                rounded="full"
+              />
             </NView>
           </LinearGradient>
         </ImageBackground>
