@@ -48,8 +48,9 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
 
   const getUsersDetails = useCallback(
     (query: string) => {
-      if (query) {
-        query = query.trim().toLowerCase()
+      const filterdQuery = query.trim()
+      if (filterdQuery) {
+        query = filterdQuery.toLowerCase()
         currentInputValue.current = query
         try {
           userRef(query)
@@ -75,8 +76,9 @@ const AutoCompleteInput: React.FC<AutoCompleteInputProps> = ({
 
   const getSuggestions = (query: string) => {
     currentText.current = query
-    if (query) {
-      query = query.trim().toLowerCase()
+    const filterdQuery = query.trim()
+    if (filterdQuery) {
+      query = filterdQuery.toLowerCase()
       Animated.timing(marginAnimation, {
         toValue: (Dimensions.get('window').height * 0.4) / 2,
         duration: 300,

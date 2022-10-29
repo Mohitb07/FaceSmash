@@ -50,7 +50,8 @@ const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
                 height="3"
                 width="3"
                 fontFamily="Lato-Bold"
-                rounded="full"></NView>
+                rounded="full"
+              />
             </NView>
           </LinearGradient>
         </ImageBackground>

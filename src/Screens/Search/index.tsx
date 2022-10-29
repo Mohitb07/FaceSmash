@@ -43,119 +43,108 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
           currentInputValue={currentInputValue}
         />
       </View>
-
-      <Animated.View
-        style={[
-          styles.recommendedUser,
-          {
-            translateY: marginAnimation,
-          },
-        ]}>
-        <View style={styles.headingContainer}>
-          <UserGroup />
-          <Text style={styles.recommendedUserText}>Recommended User</Text>
-        </View>
-        <FlatList
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          data={DUMMY_STORY_DATA}
-          renderItem={({item}) => (
-            <View style={styles.storyContainer}>
-              <Story
-                key={item.id}
-                uri={item.uri}
-                username={item.username}
-                textStyle={styles.storyTextStyle}
-                size="lg"
-                containerStyle={styles.storyContainerStyle}
-              />
-              <Button
-                _text={styles.btnText}
-                borderWidth="1"
-                size="md"
-                mt="2"
-                borderRadius="full"
-                variant="solid">
-                Follow
-              </Button>
-            </View>
-          )}
-        />
-      </Animated.View>
-
-      {foundUsers && (
-        <Animated.View
-          style={[
-            styles.foundUserContainer,
-            {
-              translateY: marginAnimation,
-            },
-          ]}>
-          <NView style={styles.headingContainer}>
-            <SearchIcon1 height="16px" width="16px" />
-            <Text
-              numberOfLines={1}
-              ellipsizeMode="tail"
-              style={styles.recommendedUserText}>
-              Result for {currentInputValue.current}
-            </Text>
-          </NView>
-
+      <Animated.View style={[{translateY: marginAnimation}]}>
+        <NView style={[styles.recommendedUser]}>
+          <View style={styles.headingContainer}>
+            <UserGroup />
+            <Text style={styles.recommendedUserText}>Recommended User</Text>
+          </View>
           <FlatList
-            data={foundUsers}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            data={DUMMY_STORY_DATA}
             renderItem={({item}) => (
-              <TouchableOpacity
-                onPress={() =>
-                  navigate('Profile', {
-                    providedUserId: item.uid,
-                  })
-                }>
-                <HStack
-                  marginY="3"
-                  alignItems="center"
-                  justifyContent="space-between">
-                  <NView flexDirection="row" alignItems="center" flex={1}>
-                    <Avatar
-                      size="lg"
-                      borderColor={COLORS.primary}
-                      mr="3"
-                      padding="0.5"
-                      bgColor={COLORS.mainBackground}
-                      source={{
-                        uri: item.profilePic,
-                      }}
-                    />
-                    <NView flex={1}>
-                      <NText
-                        color="white"
-                        fontWeight={600}
-                        numberOfLines={1}
-                        ellipsizeMode="tail">
-                        {item.username}
-                      </NText>
-                      <NText
-                        numberOfLines={1}
-                        ellipsizeMode="tail"
-                        color="gray.500"
-                        fontWeight={600}>
-                        {item.email}
-                      </NText>
-                    </NView>
-                  </NView>
-                  <Button
-                    onPress={() => console.log('follow', item.uid)}
-                    size="md"
-                    borderRadius="full"
-                    variant="outline"
-                    fontFamily="Lato-Heavy">
-                    Follow
-                  </Button>
-                </HStack>
-              </TouchableOpacity>
+              <View style={styles.storyContainer}>
+                <Story
+                  key={item.id}
+                  uri={item.uri}
+                  username={item.username}
+                  textStyle={styles.storyTextStyle}
+                  size="lg"
+                  containerStyle={styles.storyContainerStyle}
+                />
+                <Button
+                  _text={styles.btnText}
+                  borderWidth="1"
+                  size="md"
+                  mt="2"
+                  borderRadius="full"
+                  variant="solid">
+                  Follow
+                </Button>
+              </View>
             )}
           />
-        </Animated.View>
-      )}
+        </NView>
+
+        {foundUsers && (
+          <NView style={[styles.foundUserContainer]}>
+            <NView style={styles.headingContainer}>
+              <SearchIcon1 height="16px" width="16px" />
+              <Text
+                numberOfLines={1}
+                ellipsizeMode="tail"
+                style={styles.recommendedUserText}>
+                Result for {currentInputValue.current}
+              </Text>
+            </NView>
+
+            <FlatList
+              data={foundUsers}
+              renderItem={({item}) => (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigate('Profile', {
+                      providedUserId: item.uid,
+                    })
+                  }>
+                  <HStack
+                    marginY="3"
+                    alignItems="center"
+                    justifyContent="space-between">
+                    <NView flexDirection="row" alignItems="center" flex={1}>
+                      <Avatar
+                        size="lg"
+                        borderColor={COLORS.primary}
+                        mr="3"
+                        padding="0.5"
+                        bgColor={COLORS.mainBackground}
+                        source={{
+                          uri: item.profilePic,
+                        }}
+                      />
+                      <NView flex={1}>
+                        <NText
+                          color="white"
+                          fontWeight={600}
+                          numberOfLines={1}
+                          ellipsizeMode="tail">
+                          {item.username}
+                        </NText>
+                        <NText
+                          numberOfLines={1}
+                          ellipsizeMode="tail"
+                          color="gray.500"
+                          fontWeight={600}>
+                          {item.email}
+                        </NText>
+                      </NView>
+                    </NView>
+                    <Button
+                      onPress={() => console.log('follow', item.uid)}
+                      size="md"
+                      borderRadius="full"
+                      variant="outline"
+                      fontFamily="Lato-Heavy">
+                      Follow
+                    </Button>
+                  </HStack>
+                </TouchableOpacity>
+              )}
+            />
+          </NView>
+        )}
+      </Animated.View>
     </View>
   )
 }
