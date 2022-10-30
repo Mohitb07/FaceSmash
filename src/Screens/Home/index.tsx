@@ -117,6 +117,6 @@ export default React.memo(Home)
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.mainBackground,
+    backgroundColor: COLORS.black,
   },
 })

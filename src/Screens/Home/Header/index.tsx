@@ -1,25 +1,19 @@
 import React from 'react'
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {TouchableOpacity, StyleSheet} from 'react-native'
 
-import {
-  Avatar,
-  HStack,
-  Input,
-  ScrollView,
-  Text as NText,
-  View as NView,
-} from 'native-base'
+import {Avatar, HStack, Input, ScrollView, Text, View} from 'native-base'
 import auth from '@react-native-firebase/auth'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 import InstaStory from 'react-native-insta-story'
 
-import {COLORS, STORY_DATA} from '@/constants'
+import {COLORS, FONTS, STORY_DATA} from '@/constants'
 import useSelectImage from '@/hooks/useSelectImage'
 import useUserData from '@/hooks/useUserData'
 import {RootStackParamList} from '@/Navigation/Root'
 import {PhotoIcon, SearchIcon} from '@/SVG'
 import Story from '@/components/Story'
+import Brand from '@/components/BrandText'
 
 function HomeHeader() {
   const {contextUser} = useUserData()
@@ -32,25 +26,13 @@ function HomeHeader() {
   const user = auth().currentUser?.uid
 
   return (
-    <NView mb="5" paddingX="2">
-      <View style={styles.headerContainer}>
-        <NView alignItems="center" flexDirection="row">
-          <NText fontFamily="Lato-Bold" color={COLORS.primary} fontSize="2xl">
-            Face
-            <NText fontFamily="Lato-Bold" color={COLORS.white2} fontSize="2xl">
-              Smash
-            </NText>
-          </NText>
-          <NView
-            ml="4"
-            bgColor="primary.800"
-            height="3"
-            width="3"
-            fontFamily="Lato-Bold"
-            rounded="full"
-          />
-        </NView>
-
+    <View mb="5" paddingX="2">
+      <View
+        height="12"
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center">
+        <Brand size="2xl" />
         <TouchableOpacity
           onPress={() => navigate('SearchUser')}
           style={styles.rightHeader}
@@ -58,7 +40,6 @@ function HomeHeader() {
           <SearchIcon />
         </TouchableOpacity>
       </View>
-
       <ScrollView
         showsHorizontalScrollIndicator={false}
         horizontal
@@ -82,8 +63,7 @@ function HomeHeader() {
           />
         </HStack>
       </ScrollView>
-
-      <NView
+      <View
         justifyContent="space-around"
         flexDirection="row"
         alignItems="center">
@@ -118,20 +98,14 @@ function HomeHeader() {
         <TouchableOpacity onPress={handleGetImageThenNavigate}>
           <PhotoIcon width="30" height="30" />
         </TouchableOpacity>
-      </NView>
-    </NView>
+      </View>
+    </View>
   )
 }
 
 export default React.memo(HomeHeader)
 
 const styles = StyleSheet.create({
-  headerContainer: {
-    height: 40,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
   rightHeader: {
     backgroundColor: COLORS.gray3,
     borderRadius: 25,
@@ -142,8 +116,8 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   storyTextStyle: {
-    color: 'white',
-    fontSize: 12,
+    color: COLORS.white,
+    ...FONTS.body5,
   },
   searchIcon: {
     top: 20,
