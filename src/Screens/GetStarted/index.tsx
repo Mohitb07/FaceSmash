@@ -8,6 +8,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import StyledButton from '@/components/Button'
 import {COLORS, FONTS, SIZES} from '@/constants'
 import {RootStackParamList} from '@/Navigation/Root'
+import Brand from '@/components/BrandText'
 
 type GetStartedScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -31,28 +32,7 @@ const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
             colors={[COLORS.transparent, COLORS.black]}
             style={styles.linearGradient}>
             <NText style={styles.text}>Connect with</NText>
-            <NView alignItems="center" flexDirection="row">
-              <NText
-                fontFamily="Lato-Bold"
-                color={COLORS.primary}
-                fontSize="4xl">
-                Face
-                <NText
-                  fontFamily="Lato-Bold"
-                  color={COLORS.white2}
-                  fontSize="4xl">
-                  Smash
-                </NText>
-              </NText>
-              <NView
-                ml="4"
-                bgColor={COLORS.primary}
-                height="3"
-                width="3"
-                fontFamily="Lato-Bold"
-                rounded="full"
-              />
-            </NView>
+            <Brand size="4xl" />
           </LinearGradient>
         </ImageBackground>
       </NView>
