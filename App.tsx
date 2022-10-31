@@ -45,15 +45,15 @@ const App = () => {
     } else {
       console.log('Not authorized')
     }
-    messaging()
-      .getInitialNotification()
-      .then(async remoteMessage => {
-        if (remoteMessage) {
-          console.log('get Initial Notification')
-        }
-        console.log('remote res', remoteMessage)
-        Alert.alert('Initial')
-      })
+    // messaging()
+    //   .getInitialNotification()
+    //   .then(async remoteMessage => {
+    //     if (remoteMessage) {
+    //       console.log('get Initial Notification')
+    //     }
+    //     console.log('remote res', remoteMessage)
+    //     Alert.alert('Initial')
+    //   })
 
     const unsubscribe = messaging().onMessage(async remoteMessage => {
       Alert.alert('A new FCM message arrived!', JSON.stringify(remoteMessage))
