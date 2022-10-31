@@ -67,7 +67,7 @@ const Root = () => {
                   headerTitleAlign: 'center',
                   headerTintColor: COLORS.white,
                   headerStyle: {
-                    backgroundColor: COLORS.mainBackground,
+                    backgroundColor: COLORS.black,
                   },
                 }}
               />

@@ -22,7 +22,7 @@ import useUploadImage from '@/hooks/useUploadImage'
 import AddPostBottomRow from '@/components/AddPostBottomRow'
 import ImageContainer from '@/components/ImageContainer'
 
-type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
+type AddPostScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
   'AddPost'
 >
@@ -30,7 +30,7 @@ type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
 const AddPost = ({
   route,
   navigation: {navigate, goBack, setOptions},
-}: UpdateProfileScreenNavigationProp) => {
+}: AddPostScreenNavigationProp) => {
   console.log('add post render')
   const routeData = route.params || {}
 
