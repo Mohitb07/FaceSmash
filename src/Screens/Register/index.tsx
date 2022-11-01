@@ -149,18 +149,6 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     backgroundColor: COLORS.mainBackground,
   },
-  textInput: {
-    backgroundColor: COLORS.cardBackground,
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    color: COLORS.white,
-    borderColor: COLORS.transparent,
-    borderWidth: 1,
-  },
-  textInputError: {
-    borderColor: COLORS.red,
-    borderWidth: 1,
-  },
   errorLableText: {
     fontSize: 10,
     marginLeft: 15,

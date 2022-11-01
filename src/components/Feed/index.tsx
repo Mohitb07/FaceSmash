@@ -1,10 +1,8 @@
 import React, {useState} from 'react'
 import {
   StyleSheet,
-  Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
-  View,
 } from 'react-native'
 
 import {
@@ -14,8 +12,9 @@ import {
   Spinner,
   ThreeDotsIcon,
   useDisclose,
-  View as NView,
+  View,
   VStack,
+  Text,
 } from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 import {useNavigation} from '@react-navigation/native'
@@ -89,8 +88,8 @@ const Feed = ({
     }
   }
   return (
-    <NView style={styles.container}>
-      <NView style={styles.userInfo}>
+    <View style={styles.container}>
+      <View style={styles.userInfo}>
         <TouchableOpacity
           onPress={() =>
             navigate('Profile', {
@@ -109,20 +108,20 @@ const Feed = ({
         </TouchableOpacity>
         {user?.uid === userId && (
           <TouchableOpacity onPress={onOpen}>
-            <NView
+            <View
               backgroundColor={COLORS.transparentBlack1}
               padding="3"
               rounded="full"
               style={{transform: [{rotate: '90deg'}]}}
               hitSlop={{top: 20, bottom: 20, left: 50, right: 50}}>
               <ThreeDotsIcon />
-            </NView>
+            </View>
           </TouchableOpacity>
         )}
-      </NView>
+      </View>
       {/* POST IMAGE */}
       {Boolean(image) && (
-        <NView style={styles.imageContainer}>
+        <View style={styles.imageContainer}>
           <FastImage
             style={styles.image}
             source={{
@@ -131,12 +130,12 @@ const Feed = ({
             }}
             resizeMode={FastImage.resizeMode.cover}
           />
-        </NView>
+        </View>
       )}
 
       {/* TITLE & DESCRIPTION */}
-      <NView flexDirection={updateUIBasedOnImage}>
-        <NView ml="2">
+      <View flexDirection={updateUIBasedOnImage}>
+        <View ml="2">
           {link.length > 0 ? (
             <TouchableOpacity
               style={styles.linkTitle}
@@ -162,7 +161,7 @@ const Feed = ({
               {show ? 'See Less' : 'See More'}
             </Text>
           )}
-        </NView>
+        </View>
 
         {/* USER INTERACTIONS */}
         <VStack space="2" mb="1" ml="1">
@@ -175,14 +174,16 @@ const Feed = ({
               )}
             </TouchableOpacity>
           </HStack>
-          <Text style={styles.likes}>{likes} likes</Text>
+          <Text color={COLORS.white} ml={2} fontFamily="Lato-Bold">
+            {likes} likes
+          </Text>
         </VStack>
-      </NView>
-      <NView ml="2%">
+      </View>
+      <View ml="2%">
         <Text style={styles.timePosted}>
           {dayjs(createdAt?.toDate()).fromNow()}
         </Text>
-      </NView>
+      </View>
 
       <Actionsheet disableOverlay isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content style={styles.actionSheetContent}>
@@ -202,7 +203,7 @@ const Feed = ({
           </React.Suspense>
         </Actionsheet.Content>
       </Actionsheet>
-    </NView>
+    </View>
   )
 }
 
@@ -221,12 +222,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     // paddingHorizontal: 15, -> this needs to be rolledback just in case
   },
-  outerContainer: {
-    paddingTop: 0,
-  },
-  feedInfo: {
-    paddingVertical: 10,
-  },
   feedTitle: {
     color: COLORS.white2,
     lineHeight: 23,
@@ -244,9 +239,6 @@ const styles = StyleSheet.create({
   },
   image: {
     aspectRatio: 1,
-  },
-  text: {
-    color: 'white',
   },
   timePosted: {
     ...FONTS.body5,
@@ -269,14 +261,6 @@ const styles = StyleSheet.create({
     color: COLORS.white2,
     marginVertical: 5,
     ...FONTS.h4,
-  },
-  titleNuser: {
-    flexDirection: 'column-reverse',
-  },
-  likes: {
-    color: COLORS.white,
-    marginLeft: 5,
-    fontFamily: 'Lato-Bold',
   },
   linkTitle: {
     flexDirection: 'row',
