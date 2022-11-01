@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
-import {ScrollView, StyleSheet, TextStyle, ViewStyle} from 'react-native'
+import {ScrollView, StyleSheet} from 'react-native'
 
-import {Image, Text as NText, View, VStack} from 'native-base'
+import {Image, Text, View, VStack} from 'native-base'
 
 import StyledButton from '@/components/Button'
 import {COLORS} from '@/constants'
@@ -44,9 +44,9 @@ const Login: React.FC = () => {
       <View p="2" alignItems="center">
         <Image source={require(LOGIN_SCREEN_ASSET)} alt="Login Illustration" />
       </View>
-      <NText fontSize="4xl" fontFamily="Lato-Medium">
+      <Text fontSize="4xl" fontFamily="Lato-Medium">
         Login
-      </NText>
+      </Text>
       <VStack space="5" mt="6">
         <Input
           value={email.value}
@@ -70,13 +70,13 @@ const Login: React.FC = () => {
           error={errorMsg}
         />
       </VStack>
-      <NText
+      <Text
         fontFamily="Lato-Regular"
         textAlign="right"
         my="3"
         color="primary.600">
         Forgot Password ?
-      </NText>
+      </Text>
       <StyledButton
         onPress={loginAttempt}
         text="Login"
@@ -84,9 +84,9 @@ const Login: React.FC = () => {
         loader={loading}
         disabled={isDisabled}
       />
-      <NText my="6" textAlign="center" fontFamily="Lato-Regular">
+      <Text my="6" textAlign="center" fontFamily="Lato-Regular">
         Or, login with...
-      </NText>
+      </Text>
       <SocialLogins />
       <AuthScreenNavigationLink
         screen="SignUp"
@@ -97,30 +97,12 @@ const Login: React.FC = () => {
   )
 }
 
-type Style = {
-  container: ViewStyle
-  textInput: TextStyle
-  textInputError: TextStyle
-}
-
 export default Login
 
-const styles = StyleSheet.create<Style>({
+const styles = StyleSheet.create({
   container: {
     padding: 25,
     paddingTop: 10,
     backgroundColor: COLORS.mainBackground,
-  },
-  textInput: {
-    backgroundColor: COLORS.cardBackground,
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    color: COLORS.white,
-    borderColor: COLORS.transparent,
-    borderWidth: 1,
-  },
-  textInputError: {
-    borderColor: COLORS.red,
-    borderWidth: 1,
   },
 })
