@@ -225,7 +225,7 @@ const AddPost = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.mainBackground,
+    backgroundColor: COLORS.black,
   },
   innerContainer: {
     padding: 20,

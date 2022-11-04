@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-end',
     padding: 15,
-    backgroundColor: COLORS.mainBackground,
+    backgroundColor: COLORS.black,
   },
   profilePic: {
     width: 100,
