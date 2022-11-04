@@ -88,8 +88,17 @@ const Feed = ({
     }
   }
   return (
-    <View style={styles.container}>
-      <View style={styles.userInfo}>
+    <View
+      backgroundColor={COLORS.transparentBlack9}
+      paddingTop={1}
+      paddingBottom={2}
+      overflow="hidden">
+      <View
+        flexDirection="row"
+        justifyContent="space-between"
+        alignItems="center"
+        paddingLeft={2}
+        paddingY={11}>
         <TouchableOpacity
           onPress={() =>
             navigate('Profile', {
@@ -102,9 +111,9 @@ const Feed = ({
             source={{uri: userProfilePic}}
             alt={username}
           />
-          <View>
-            <Text style={styles.usernameText}>{username}</Text>
-          </View>
+          <Text color={COLORS.white2} fontSize={14} fontFamily="Lato-Semibold">
+            {username}
+          </Text>
         </TouchableOpacity>
         {user?.uid === userId && (
           <TouchableOpacity onPress={onOpen}>
@@ -121,7 +130,7 @@ const Feed = ({
       </View>
       {/* POST IMAGE */}
       {Boolean(image) && (
-        <View style={styles.imageContainer}>
+        <View overflow="hidden" mb={3}>
           <FastImage
             style={styles.image}
             source={{
@@ -189,9 +198,9 @@ const Feed = ({
         <Actionsheet.Content style={styles.actionSheetContent}>
           <React.Suspense
             fallback={
-              <View>
+              <>
                 <Spinner color="indigo.500" />
-              </View>
+              </>
             }>
             <FeedMore
               imageRef={imageRef}
@@ -210,32 +219,10 @@ const Feed = ({
 export default React.memo(Feed)
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: COLORS.transparentBlack9,
-    // maxHeight: 530,
-    // borderRadius: 25,
-    // marginTop: 10,
-    // padding: 20,
-    paddingTop: 1,
-    paddingBottom: 10,
-    marginVertical: 5,
-    overflow: 'hidden',
-    // paddingHorizontal: 15, -> this needs to be rolledback just in case
-  },
   feedTitle: {
     color: COLORS.white2,
     lineHeight: 23,
-    marginLeft: 5,
     ...FONTS.normalTitle,
-  },
-  usernameText: {
-    color: COLORS.white2,
-    fontSize: 15,
-    fontFamily: 'Lato-Semibold',
-  },
-  imageContainer: {
-    overflow: 'hidden',
-    marginBottom: 5,
   },
   image: {
     aspectRatio: 1,
@@ -249,13 +236,6 @@ const styles = StyleSheet.create({
     height: 38,
     borderRadius: 25,
     marginRight: 10,
-  },
-  userInfo: {
-    flexDirection: 'row',
-    paddingVertical: 11,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingLeft: 10,
   },
   description: {
     color: COLORS.white2,
