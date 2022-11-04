@@ -81,7 +81,7 @@ const Root = () => {
                   headerTitleAlign: 'center',
                   headerTintColor: COLORS.white,
                   headerStyle: {
-                    backgroundColor: COLORS.mainBackground,
+                    backgroundColor: COLORS.black,
                   },
                 }}
               />
@@ -95,7 +95,7 @@ const Root = () => {
                   headerTitleAlign: 'center',
                   headerTintColor: COLORS.white,
                   headerStyle: {
-                    backgroundColor: COLORS.mainBackground,
+                    backgroundColor: COLORS.black,
                   },
                 }}
               />
@@ -106,7 +106,7 @@ const Root = () => {
                   headerShown: false,
                   headerTintColor: COLORS.white,
                   headerStyle: {
-                    backgroundColor: COLORS.mainBackground,
+                    backgroundColor: COLORS.black,
                   },
                   animation: 'fade_from_bottom',
                 }}

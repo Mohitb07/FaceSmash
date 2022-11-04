@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   },
 
   suggestionsListContainerStyle: {
-    backgroundColor: COLORS.mainBackground,
+    backgroundColor: COLORS.black,
     marginVertical: 10,
   },
   containerStyle: {

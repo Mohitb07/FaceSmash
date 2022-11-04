@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react'
-import {StyleSheet, View} from 'react-native'
 
+import {View} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 
 import usePagination from '@/hooks/usePagination'
@@ -94,7 +94,7 @@ const Home = () => {
     }
   }
   return (
-    <View style={styles.container}>
+    <View flex={1} backgroundColor={COLORS.black}>
       <DataList
         dataList={postStateValue.posts}
         EmptyList={<EmptyList loading={postStateValue.loading} />}
@@ -113,10 +113,3 @@ const Home = () => {
   )
 }
 export default React.memo(Home)
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.black,
-  },
-})
