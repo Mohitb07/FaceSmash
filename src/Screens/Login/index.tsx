@@ -103,6 +103,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 25,
     paddingTop: 10,
-    backgroundColor: COLORS.mainBackground,
+    backgroundColor: COLORS.black,
   },
 })
