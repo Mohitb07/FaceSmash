@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
   container: {
     padding: 25,
     paddingTop: 0,
-    backgroundColor: COLORS.mainBackground,
+    backgroundColor: COLORS.black,
   },
   errorLableText: {
     fontSize: 10,
