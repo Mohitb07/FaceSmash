@@ -144,7 +144,7 @@ const AddPost = ({
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       <View>
-        <View style={styles.innerContainer}>
+        <View padding={3}>
           <TouchableOpacity style={styles.leftHeader}>
             <Avatar
               source={{
@@ -154,7 +154,7 @@ const AddPost = ({
               mr="3">
               <Avatar.Badge bg="green.500" />
             </Avatar>
-            <View style={styles.userInfo}>
+            <View>
               <Text style={styles.usernameText}>{contextUser?.username}</Text>
               <Text style={styles.email}>{contextUser?.email}</Text>
             </View>
@@ -227,16 +227,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: COLORS.black,
   },
-  innerContainer: {
-    padding: 20,
-  },
   leftHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
-  },
-  userInfo: {
-    flexDirection: 'column',
   },
   usernameText: {
     color: COLORS.white2,
@@ -245,7 +239,7 @@ const styles = StyleSheet.create({
   },
   email: {
     color: COLORS.lightGray2,
-    fontSize: 14,
+    ...FONTS.h4,
   },
   textInput: {
     backgroundColor: COLORS.cardBackground,
