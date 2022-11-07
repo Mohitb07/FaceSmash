@@ -1,15 +1,8 @@
 import React, {useRef, useState, FC} from 'react'
-import {Animated, StyleSheet, Text, TouchableOpacity, View} from 'react-native'
+import {Animated, StyleSheet, TouchableOpacity} from 'react-native'
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {
-  Avatar,
-  Button,
-  FlatList,
-  HStack,
-  Text as NText,
-  View as NView,
-} from 'native-base'
+import {Avatar, Button, FlatList, HStack, Text, View} from 'native-base'
 
 import AutoCompleteInput from '@/components/AutoCompleteInput'
 import {DUMMY_STORY_DATA} from '@/constants'
@@ -32,8 +25,8 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
   const currentInputValue = useRef('')
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerContainer}>
+    <View flex={1} backgroundColor={COLORS.black} paddingX={3}>
+      <View position="relative" flexDirection="row" alignItems="center">
         <TouchableOpacity onPress={goBack}>
           <BackIcon />
         </TouchableOpacity>
@@ -44,8 +37,8 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
         />
       </View>
       <Animated.View style={[{translateY: marginAnimation}]}>
-        <NView style={[styles.recommendedUser]}>
-          <View style={styles.headingContainer}>
+        <View padding={1}>
+          <View flexDirection="row" alignItems="center" mb={1}>
             <UserGroup />
             <Text style={styles.recommendedUserText}>Recommended User</Text>
           </View>
@@ -54,7 +47,7 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
             showsHorizontalScrollIndicator={false}
             data={DUMMY_STORY_DATA}
             renderItem={({item}) => (
-              <View style={styles.storyContainer}>
+              <View marginRight={3} justifyContent="center" alignItems="center">
                 <Story
                   key={item.id}
                   uri={item.uri}
@@ -75,11 +68,11 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
               </View>
             )}
           />
-        </NView>
+        </View>
 
         {foundUsers && (
-          <NView style={[styles.foundUserContainer]}>
-            <NView style={styles.headingContainer}>
+          <View my={3} padding={1}>
+            <View flexDirection="row" alignItems="center" mb={1}>
               <SearchIcon1 height="16px" width="16px" />
               <Text
                 numberOfLines={1}
@@ -87,7 +80,7 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
                 style={styles.recommendedUserText}>
                 Result for {currentInputValue.current}
               </Text>
-            </NView>
+            </View>
 
             <FlatList
               data={foundUsers}
@@ -102,7 +95,7 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
                     marginY="3"
                     alignItems="center"
                     justifyContent="space-between">
-                    <NView flexDirection="row" alignItems="center" flex={1}>
+                    <View flexDirection="row" alignItems="center" flex={1}>
                       <Avatar
                         size="lg"
                         borderColor={COLORS.primary}
@@ -113,23 +106,23 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
                           uri: item.profilePic,
                         }}
                       />
-                      <NView flex={1}>
-                        <NText
+                      <View flex={1}>
+                        <Text
                           color="white"
                           fontWeight={600}
                           numberOfLines={1}
                           ellipsizeMode="tail">
                           {item.username}
-                        </NText>
-                        <NText
+                        </Text>
+                        <Text
                           numberOfLines={1}
                           ellipsizeMode="tail"
                           color="gray.500"
                           fontWeight={600}>
                           {item.email}
-                        </NText>
-                      </NView>
-                    </NView>
+                        </Text>
+                      </View>
+                    </View>
                     <Button
                       onPress={() => console.log('follow', item.uid)}
                       size="md"
@@ -142,7 +135,7 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
                 </TouchableOpacity>
               )}
             />
-          </NView>
+          </View>
         )}
       </Animated.View>
     </View>
@@ -151,24 +144,6 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
 export default SearchUser
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.black,
-    paddingHorizontal: 10,
-  },
-  headerContainer: {
-    position: 'relative',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  recommendedUser: {
-    padding: 1,
-  },
-  headingContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 3,
-  },
   recommendedUserText: {
     flex: 1,
     color: COLORS.white,
@@ -180,19 +155,9 @@ const styles = StyleSheet.create({
   storyContainerStyle: {
     width: 80,
   },
-  storyContainer: {
-    flexDirection: 'column',
-    marginRight: 15,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  foundUserContainer: {
-    marginVertical: 8,
-    padding: 1,
-  },
   btnText: {
-    color: '#fff',
-    fontSize: 12,
+    color: COLORS.white,
+    ...FONTS.body5,
   },
   storyTextStyle: {
     maxWidth: 50,

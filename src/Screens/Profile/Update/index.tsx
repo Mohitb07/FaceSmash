@@ -1,14 +1,12 @@
 import React, {useState, useEffect} from 'react'
 import {
   StyleSheet,
-  Text,
-  View,
   TextInput,
   TouchableOpacity,
   ActivityIndicator,
 } from 'react-native'
 
-import {Avatar, HStack, View as NView} from 'native-base'
+import {Avatar, HStack, View, Text} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 
@@ -90,73 +88,65 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
   })
 
   return (
-    <>
-      <View style={styles.container}>
-        <View>
-          <Avatar
-            style={styles.profilePic}
-            source={{
-              uri: selectedImage ? selectedImage : contextUser?.profilePic,
-            }}
-            size="2xl"
-          />
-          <View style={styles.fullNameContainer}>
-            <Text style={styles.textFullName}>{contextUser?.username}</Text>
-          </View>
-          <Text style={styles.email}>{contextUser?.email}</Text>
-          <NView mb="5">
-            <Label label="Bio" />
-            <TextInput
-              value={userBio || contextUser?.bio}
-              placeholder="Your bio here..."
-              placeholderTextColor={COLORS.lightGray2}
-              onChangeText={setUserBio}
-              maxLength={30}
-              style={styles.textInput}
-            />
-          </NView>
+    <View
+      flex={1}
+      justifyContent="flex-end"
+      padding={3}
+      backgroundColor={COLORS.black}>
+      <View>
+        <Avatar
+          style={styles.profilePic}
+          source={{
+            uri: selectedImage ? selectedImage : contextUser?.profilePic,
+          }}
+          size="2xl"
+        />
+        <View flexDirection="row" alignItems="center">
+          <Text style={styles.textFullName}>{contextUser?.username}</Text>
         </View>
-        <HStack space="10">
-          <Button
-            text="Open Gallary"
-            onPress={handleChooseGallary}
-            bgColor={COLORS.white2}
-            showRing={false}
-            disabled={loading}
-            style={styles.btnContainer}
+        <Text style={styles.email}>{contextUser?.email}</Text>
+        <View mb="5">
+          <Label label="Bio" />
+          <TextInput
+            value={userBio || contextUser?.bio}
+            placeholder="Your bio here..."
+            placeholderTextColor={COLORS.lightGray2}
+            onChangeText={setUserBio}
+            maxLength={30}
+            style={styles.textInput}
           />
-          <Button
-            text="Take Now"
-            onPress={handleTakePhoto}
-            bgColor={COLORS.primary}
-            showRing={false}
-            textStyle={styles.customBtnText}
-            disabled={loading}
-            style={styles.btnContainer}
-          />
-        </HStack>
+        </View>
       </View>
-    </>
+      <HStack space="10">
+        <Button
+          text="Open Gallary"
+          onPress={handleChooseGallary}
+          bgColor={COLORS.white2}
+          showRing={false}
+          disabled={loading}
+          style={styles.btnContainer}
+        />
+        <Button
+          text="Take Now"
+          onPress={handleTakePhoto}
+          bgColor={COLORS.primary}
+          showRing={false}
+          textStyle={styles.customBtnText}
+          disabled={loading}
+          style={styles.btnContainer}
+        />
+      </HStack>
+    </View>
   )
 }
 
 export default React.memo(UpdateProfile)
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'flex-end',
-    padding: 15,
-    backgroundColor: COLORS.black,
-  },
   profilePic: {
     width: 100,
     height: 100,
     marginBottom: 10,
-  },
-  fullNameContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   textFullName: {
     color: '#E5E5E5',
