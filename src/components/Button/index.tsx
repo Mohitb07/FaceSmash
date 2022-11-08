@@ -2,13 +2,12 @@ import React, {ReactElement} from 'react'
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
+  TextStyle,
 } from 'react-native'
 
-import {View} from 'native-base'
+import {View, Text} from 'native-base'
 
-import {TextStyle} from 'react-native'
 import {COLORS, FONTS} from '@/constants'
 
 interface Props {
@@ -54,7 +53,12 @@ const Button: React.FC<Props> = ({
         {loader ? (
           <ActivityIndicator color={COLORS.primary} />
         ) : (
-          <Text style={[styles.btnText, textStyle]}>{text}</Text>
+          <Text
+            textAlign="center"
+            color={COLORS.transparentBlack7}
+            style={[styles.btnText, textStyle]}>
+            {text}
+          </Text>
         )}
       </TouchableOpacity>
     </View>
@@ -65,8 +69,6 @@ export default Button
 
 const styles = StyleSheet.create({
   btnText: {
-    textAlign: 'center',
-    color: COLORS.transparentBlack7,
     marginHorizontal: 10,
     ...FONTS.h4,
   },

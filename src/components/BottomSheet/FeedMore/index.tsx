@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
 
-import {Actionsheet, Box, Icon, Text as NText} from 'native-base'
+import {Actionsheet, Box, Icon, Text} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 import storage from '@react-native-firebase/storage'
 
@@ -55,7 +55,7 @@ const FeedMore = ({
   return (
     <>
       <Box w="100%" h={60} px={4} justifyContent="center">
-        <NText
+        <Text
           fontFamily="Lato-Semibold"
           fontSize="20"
           color="gray.500"
@@ -63,16 +63,16 @@ const FeedMore = ({
             color: 'gray.300',
           }}>
           Post Detail
-        </NText>
+        </Text>
       </Box>
       {!!user && (
         <Actionsheet.Item
           startIcon={<Icon as={DeleteIcon} mr="1" size="5" />}
           style={styles.defaultStyle}>
           <TouchableOpacity onPress={handleDeletePost}>
-            <NText color="red.700" fontFamily="Lato-Semibold">
+            <Text color="red.700" fontFamily="Lato-Semibold">
               Delete Post
-            </NText>
+            </Text>
           </TouchableOpacity>
         </Actionsheet.Item>
       )}
