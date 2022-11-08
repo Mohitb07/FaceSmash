@@ -1,7 +1,9 @@
-import {COLORS} from '@/constants'
+import React from 'react'
+
 import {Text, View} from 'native-base'
 import {ResponsiveValue} from 'native-base/lib/typescript/components/types'
-import React from 'react'
+
+import {COLORS} from '@/constants'
 
 type BrandProps = {
   size: ResponsiveValue<

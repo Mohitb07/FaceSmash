@@ -1,8 +1,10 @@
-import {RootStackParamList} from '@/Navigation/Root'
+import React from 'react'
+
+import {Text} from 'native-base'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
-import {Text} from 'native-base'
-import React from 'react'
+
+import {RootStackParamList} from '@/Navigation/Root'
 
 type AuthScreenNavigationLinkProps = {
   screen: keyof RootStackParamList

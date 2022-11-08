@@ -1,7 +1,7 @@
 import React from 'react'
 import {StyleSheet, TouchableOpacity} from 'react-native'
 
-import {Actionsheet, Box, Text as NText} from 'native-base'
+import {Actionsheet, Box, Text} from 'native-base'
 import auth from '@react-native-firebase/auth'
 import {useResetRecoilState} from 'recoil'
 
@@ -29,7 +29,7 @@ const ProfileBottomSheet = () => {
   return (
     <>
       <Box w="100%" h={60} px={4} justifyContent="center">
-        <NText
+        <Text
           fontFamily="Lato-Semibold"
           fontSize="20"
           color="gray.500"
@@ -37,15 +37,15 @@ const ProfileBottomSheet = () => {
             color: 'gray.300',
           }}>
           Personal Settings
-        </NText>
+        </Text>
       </Box>
       {!!user && (
         <Actionsheet.Item style={styles.defaultStyle}>
           <TouchableOpacity style={styles.btn} onPress={onLogoutAttempt}>
             <LogoutIcon style={styles.logoutIcon} />
-            <NText color="red.500" fontFamily="Font-Semibold">
+            <Text color="red.500" fontFamily="Font-Semibold">
               Log Out
-            </NText>
+            </Text>
           </TouchableOpacity>
         </Actionsheet.Item>
       )}
