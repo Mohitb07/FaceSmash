@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react'
 
-import {View} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 
 import usePagination from '@/hooks/usePagination'
@@ -11,7 +10,7 @@ import EmptyList from '@/components/DataList/EmptyDataList'
 import HomeHeader from './Header'
 import {IDefaultPostState, IPost} from '@/interface'
 import {FEED_LIMIT, POSTS_COLLECTION} from '@/constants'
-import {COLORS} from '@/constants'
+import Screen from '@/components/Screen'
 
 const Home = () => {
   const [postStateValue, setPostStateValue] = useState<IDefaultPostState>({
@@ -94,7 +93,7 @@ const Home = () => {
     }
   }
   return (
-    <View flex={1} backgroundColor={COLORS.black}>
+    <Screen>
       <DataList
         dataList={postStateValue.posts}
         EmptyList={<EmptyList loading={postStateValue.loading} />}
@@ -109,7 +108,7 @@ const Home = () => {
         refreshing={refreshing}
         retrieveMore={getMoreData}
       />
-    </View>
+    </Screen>
   )
 }
 export default React.memo(Home)

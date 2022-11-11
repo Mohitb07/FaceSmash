@@ -70,7 +70,7 @@ const Verification = () => {
   }
 
   return (
-    <View style={styles.container}>
+    <View flex={1} backgroundColor={COLORS.black} style={styles.container}>
       <View>
         <View alignItems="center" justifyContent="center">
           <Image
@@ -127,8 +127,6 @@ const styles = StyleSheet.create({
   container: {
     padding: 25,
     paddingTop: 10,
-    backgroundColor: COLORS.black,
-    flex: 1,
   },
   image: {
     height: 360,
