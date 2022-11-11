@@ -1,12 +1,11 @@
 import React from 'react'
 
-import {View} from 'native-base'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {RootStackParamList} from '@/Navigation/Root'
 
 import ProfileFeed from './Body'
-import {COLORS} from '@/constants'
 import BottomSheetProvider from '@/Context/BottomSheet'
+import Screen from '@/components/Screen'
 
 type ProfileScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -18,9 +17,9 @@ const MyProfile = ({route}: ProfileScreenNavigationProp) => {
 
   return (
     <BottomSheetProvider>
-      <View flex={1} backgroundColor={COLORS.black}>
+      <Screen>
         <ProfileFeed userId={providedUserId} />
-      </View>
+      </Screen>
     </BottomSheetProvider>
   )
 }

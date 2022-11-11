@@ -1,7 +1,7 @@
 import React from 'react'
 import {ImageBackground, StyleSheet} from 'react-native'
 
-import {ArrowForwardIcon, Text as NText, View as NView} from 'native-base'
+import {ArrowForwardIcon, Text, View} from 'native-base'
 import type {NativeStackScreenProps} from '@react-navigation/native-stack'
 import LinearGradient from 'react-native-linear-gradient'
 
@@ -9,6 +9,7 @@ import StyledButton from '@/components/Button'
 import {COLORS, FONTS, SIZES} from '@/constants'
 import {RootStackParamList} from '@/Navigation/Root'
 import Brand from '@/components/BrandText'
+import Screen from '@/components/Screen'
 
 type GetStartedScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -20,8 +21,8 @@ const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
   navigation,
 }: GetStartedScreenNavigationProp) => {
   return (
-    <NView style={styles.container}>
-      <NView style={styles.headerContainer}>
+    <Screen>
+      <View style={styles.headerContainer}>
         <ImageBackground
           style={styles.imageBackground}
           resizeMode="contain"
@@ -31,20 +32,26 @@ const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
             end={{x: 0, y: 1}}
             colors={[COLORS.transparent, COLORS.black]}
             style={styles.linearGradient}>
-            <NText style={styles.text}>Connect with</NText>
+            <Text style={styles.text}>Connect with</Text>
             <Brand size="4xl" />
           </LinearGradient>
         </ImageBackground>
-      </NView>
+      </View>
 
-      <NView style={styles.footerContainer}>
-        <NView>
-          <NText style={styles.footerText}>
+      <View
+        flex={1}
+        style={styles.footerContainer}
+        justifyContent="space-between">
+        <View>
+          <Text
+            fontFamily="Lato-Regular"
+            style={styles.footerText}
+            color={COLORS.gray}>
             Connect with your friends and family to see who’s around and what
             they’re up to.
-          </NText>
-        </NView>
-        <NView pb="5">
+          </Text>
+        </View>
+        <View pb="5">
           <StyledButton
             onPress={() => navigation.navigate('Login')}
             icon={<ArrowForwardIcon />}
@@ -53,17 +60,13 @@ const GetStarted: React.FC<GetStartedScreenNavigationProp> = ({
             disabled={false}
             showRing={false}
           />
-        </NView>
-      </NView>
-    </NView>
+        </View>
+      </View>
+    </Screen>
   )
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLORS.black,
-  },
   headerContainer: {
     height: SIZES.height > 700 ? '65%' : '60%',
   },
@@ -84,16 +87,12 @@ const styles = StyleSheet.create({
     fontFamily: 'Lato-Medium',
   },
   footerContainer: {
-    flex: 1,
     paddingHorizontal: SIZES.padding,
-    justifyContent: 'space-between',
   },
   footerText: {
     marginTop: SIZES.radius,
     width: '70%',
-    color: COLORS.gray,
     ...FONTS.body3,
-    fontFamily: 'Lato-Regular',
   },
 })
 
