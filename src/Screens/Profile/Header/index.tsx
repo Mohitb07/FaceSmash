@@ -15,7 +15,7 @@ import {NativeStackNavigationProp} from '@react-navigation/native-stack'
 // import {Redis} from '@upstash/redis'
 import FastImage from 'react-native-fast-image'
 
-import {EditIcon, FilterIcon, GridIcon, ThreeDotsIcon, UserIcon} from '@/SVG'
+import {FilterIcon, GridIcon, ThreeDotsIcon, UserIcon} from '@/SVG'
 import StyledButton from '@/components/Button'
 import {RootStackParamList} from '@/Navigation/Root'
 import {useSetRecoilState} from 'recoil'
@@ -148,6 +148,33 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
     })
   }, [userData.username, setOptions])
 
+  const handleActionButton = async () => {
+    if (authUser !== userId) {
+      const userDocRef = firestore().collection(USERS_COLLECTION).doc(authUser)
+      const followingUserRef = firestore()
+        .collection(USERS_COLLECTION)
+        .doc(userId)
+      try {
+        await userDocRef.set(
+          {
+            followings: firestore.FieldValue.arrayUnion(userId),
+          },
+          {merge: true},
+        )
+        await followingUserRef.set(
+          {
+            followers: firestore.FieldValue.arrayUnion(authUser),
+          },
+          {merge: true},
+        )
+      } catch (err) {
+        console.log('error while following', err)
+      }
+    } else {
+      navigate('UpdateProfile')
+    }
+  }
+
   return (
     <Box my="2" mb="5" paddingX="2">
       <HStack alignItems="center" justifyContent="space-between">
@@ -209,16 +236,16 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
 
       <HStack alignItems="center" space="10">
         <StyledButton
-          onPress={() => {}}
-          text="Follow"
+          onPress={handleActionButton}
+          text={authUser === userId ? 'Edit Profile' : 'Follow'}
           showRing={false}
           bgColor={COLORS.white2}
         />
-        {authUser === userId && (
+        {/* {authUser !== userId && (
           <TouchableOpacity onPress={() => navigate('UpdateProfile')}>
             <EditIcon />
           </TouchableOpacity>
-        )}
+        )} */}
       </HStack>
 
       <HStack
