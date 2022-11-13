@@ -8,53 +8,38 @@ import React, {
 import {TouchableOpacity, StyleSheet} from 'react-native'
 
 import {Box, Flex, HStack, Text, View} from 'native-base'
-import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
-// import {Redis} from '@upstash/redis'
+import {Redis} from '@upstash/redis'
 import FastImage from 'react-native-fast-image'
 
-import {FilterIcon, GridIcon, ThreeDotsIcon, UserIcon} from '@/SVG'
-import StyledButton from '@/components/Button'
+import {FilterIcon, GridIcon, ThreeDotsIcon} from '@/SVG'
 import {RootStackParamList} from '@/Navigation/Root'
 import {useSetRecoilState} from 'recoil'
 import {IBottomSheetState} from '@/interface'
 import {bottomSheetState} from '@/atoms/bottomSheetAtom'
 import {COLORS, USERS_COLLECTION} from '@/constants'
-// import {REDIS_REST_TOKEN, REDIS_REST_URL} from '@/../config'
+import {IUserDetail} from '@/interface'
+import Connection from '@/components/Connection'
+import {REDIS_REST_TOKEN, REDIS_REST_URL} from '@/../config'
 
-// const redis = new Redis({
-//   url: REDIS_REST_URL,
-//   token: REDIS_REST_TOKEN,
-// })
+const redis = new Redis({
+  url: REDIS_REST_URL,
+  token: REDIS_REST_TOKEN,
+})
 
 interface IProfileHeaderProps {
   userId: string
   totalPosts: number
 }
 
-interface IUserData {
-  bio: string
-  createdAt: string
-  email: string
-  followers: Array<string>
-  followings: Array<string>
-  key: string
-  lastSignIn: string
-  profilePic: string
-  qusername: string
-  uid: string
-  username: string
-}
-
-const DEFAULT_USER_DETAILS: IUserData = {
+const DEFAULT_USER_DETAILS: IUserDetail = {
   bio: '',
   createdAt: '',
   email: '',
   followers: [],
   followings: [],
-  key: '',
   lastSignIn: '',
   profilePic: '',
   qusername: '',
@@ -63,10 +48,9 @@ const DEFAULT_USER_DETAILS: IUserData = {
 }
 
 const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
-  const {navigate, setOptions} =
+  const {setOptions} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
-  const [userData, setUserData] = useState<IUserData>(DEFAULT_USER_DETAILS)
-  const authUser = auth().currentUser?.uid
+  const [userData, setUserData] = useState<IUserDetail>(DEFAULT_USER_DETAILS)
   const setBottomSheetStateValue =
     useSetRecoilState<IBottomSheetState>(bottomSheetState)
 
@@ -105,21 +89,24 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
         </Text>
       ),
     })
-    // const userCache = await redis.get(userId)
-    // console.log('user cache', userCache)
-    // if (userCache) {
-    //   isMounted.current && setUserData(userCache)
-    //   return
-    // }
+    const fetchRedis = async () => {
+      const userCache: IUserDetail | null = await redis.get(userId)
+      console.log('user cache', userCache)
+      if (userCache) {
+        setUserData(userCache)
+        return
+      }
+    }
+    fetchRedis()
     const subscriber = firestore()
       .collection(USERS_COLLECTION)
       .doc(userId)
       .onSnapshot(
-        snapshot => {
-          // await redis.set(
-          //   userId,
-          //   JSON.stringify({...snapshot.data(), key: snapshot.id}),
-          // )
+        async snapshot => {
+          await redis.set(
+            userId,
+            JSON.stringify({...snapshot.data(), key: snapshot.id}),
+          )
           setUserData(prev => ({
             ...prev,
             ...snapshot.data(),
@@ -133,48 +120,6 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
     return subscriber
   }, [userId, userData.username, setOptions])
 
-  useEffect(() => {
-    setOptions({
-      headerTitle: () => (
-        <Text
-          fontFamily="Lato-Semibold"
-          maxW={300}
-          numberOfLines={1}
-          ellipsizeMode="tail"
-          fontSize="lg">
-          {userData.username}
-        </Text>
-      ),
-    })
-  }, [userData.username, setOptions])
-
-  const handleActionButton = async () => {
-    if (authUser !== userId) {
-      const userDocRef = firestore().collection(USERS_COLLECTION).doc(authUser)
-      const followingUserRef = firestore()
-        .collection(USERS_COLLECTION)
-        .doc(userId)
-      try {
-        await userDocRef.set(
-          {
-            followings: firestore.FieldValue.arrayUnion(userId),
-          },
-          {merge: true},
-        )
-        await followingUserRef.set(
-          {
-            followers: firestore.FieldValue.arrayUnion(authUser),
-          },
-          {merge: true},
-        )
-      } catch (err) {
-        console.log('error while following', err)
-      }
-    } else {
-      navigate('UpdateProfile')
-    }
-  }
-
   return (
     <Box my="2" mb="5" paddingX="2">
       <HStack alignItems="center" justifyContent="space-between">
@@ -187,24 +132,24 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
           resizeMode={FastImage.resizeMode.cover}
         />
         <HStack alignItems="center" space="8">
-          <View>
-            <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
+          <View alignItems="center">
+            <Text fontSize="lg" fontFamily="Lato-Bold">
               {totalPosts}
             </Text>
             <Text color={COLORS.white2} fontFamily="Lato-Regular">
               Posts
             </Text>
           </View>
-          <View>
-            <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
+          <View alignItems="center">
+            <Text fontSize="lg" fontFamily="Lato-Bold">
               {userData.followers.length}
             </Text>
             <Text color={COLORS.white2} fontFamily="Lato-Regular">
               Followers
             </Text>
           </View>
-          <View>
-            <Text fontSize="lg" fontFamily="Lato-Bold" textAlign="center">
+          <View alignItems="center">
+            <Text fontSize="lg" fontFamily="Lato-Bold">
               {userData.followings.length}
             </Text>
             <Text color={COLORS.white2} fontFamily="Lato-Regular">
@@ -233,21 +178,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
           {userData.email}
         </Text>
       </View>
-
-      <HStack alignItems="center" space="10">
-        <StyledButton
-          onPress={handleActionButton}
-          text={authUser === userId ? 'Edit Profile' : 'Follow'}
-          showRing={false}
-          bgColor={COLORS.white2}
-        />
-        {/* {authUser !== userId && (
-          <TouchableOpacity onPress={() => navigate('UpdateProfile')}>
-            <EditIcon />
-          </TouchableOpacity>
-        )} */}
-      </HStack>
-
+      <Connection userId={userId} userFollowersList={userData.followers} />
       <HStack
         alignItems="center"
         justifyContent="space-between"
@@ -260,7 +191,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
               Activity
             </Text>
           </Flex>
-          <Flex direction="row" align="center">
+          {/* <Flex direction="row" align="center">
             <UserIcon height="23" width="23" />
             <Text
               color={COLORS.gray}
@@ -269,7 +200,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
               fontFamily="Lato-Regular">
               About
             </Text>
-          </Flex>
+          </Flex> */}
         </HStack>
         <TouchableOpacity>
           <FilterIcon />
