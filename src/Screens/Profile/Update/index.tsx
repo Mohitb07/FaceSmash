@@ -19,6 +19,7 @@ import useSelectImage from '@/hooks/useSelectImage'
 import useUserData from '@/hooks/useUserData'
 import useUploadImage from '@/hooks/useUploadImage'
 import {USERS_COLLECTION} from '@/constants'
+import Screen from '@/components/Screen'
 
 type UpdateProfileScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -88,7 +89,7 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
   })
 
   return (
-    <View
+    <Screen
       flex={1}
       justifyContent="flex-end"
       padding={3}
@@ -136,7 +137,7 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
           style={styles.btnContainer}
         />
       </HStack>
-    </View>
+    </Screen>
   )
 }
 
@@ -149,13 +150,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   textFullName: {
-    color: '#E5E5E5',
+    color: COLORS.lightGray,
     ...FONTS.h2,
     marginBottom: 5,
   },
   email: {
     ...FONTS.h4,
-    color: '#747474',
+    color: COLORS.gray,
   },
   customBtnText: {
     color: COLORS.white2,
