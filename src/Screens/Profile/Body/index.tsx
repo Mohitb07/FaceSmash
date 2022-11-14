@@ -1,6 +1,6 @@
 import React, {useEffect, useState, useRef, useCallback} from 'react'
 
-import {Spinner, View} from 'native-base'
+import {Spinner} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 
 import usePagination from '@/hooks/usePagination'
@@ -11,6 +11,7 @@ import ProfileHeader from '../Header'
 import {getLastVisibleDocRef} from '@/utils/getLastVisibleDocRef'
 import {IDefaultUserDataState, IPost} from '@/interface'
 import {FEED_LIMIT, POSTS_COLLECTION} from '@/constants'
+import Screen from '@/components/Screen'
 
 type ProfileFeedProps = {
   userId: string
@@ -106,9 +107,9 @@ const ProfileFeed = ({userId}: ProfileFeedProps) => {
 
   if (initialLoad.current && allUserPosts.loading) {
     return (
-      <View flex={1} justifyContent="center" alignItems="center">
-        <Spinner />
-      </View>
+      <Screen justifyContent="center" alignItems="center">
+        <Spinner size="lg" />
+      </Screen>
     )
   }
   return (
