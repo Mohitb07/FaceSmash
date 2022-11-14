@@ -51,7 +51,7 @@ const Button: React.FC<Props> = ({
         onPress={onPress}>
         {icon && icon}
         {loader ? (
-          <ActivityIndicator color={COLORS.primary} />
+          <ActivityIndicator color={COLORS.white2} />
         ) : (
           <Text
             textAlign="center"
