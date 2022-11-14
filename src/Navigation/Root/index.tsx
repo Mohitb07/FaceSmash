@@ -13,9 +13,10 @@ import Register from '@/Screens/Register'
 import SearchUser from '@/Screens/Search'
 import Verification from '@/Screens/Verification'
 import UpdateProfile from '@/Screens/Profile/Update'
-import Loader from '@/components/Loader'
 import {COLORS} from '@/constants'
 import useAuthUser from '@/hooks/useAuthUser'
+import Screen from '@/components/Screen'
+import {Spinner} from 'native-base'
 
 export type RootStackParamList = {
   Verification: undefined
@@ -45,7 +46,11 @@ const Root = () => {
   const {user, initializing} = useAuthUser()
 
   if (initializing) {
-    return <Loader />
+    return (
+      <Screen justifyContent="center" alignItems="center">
+        <Spinner size="lg" />
+      </Screen>
+    )
   }
 
   return (
