@@ -48,7 +48,7 @@ const DEFAULT_USER_DETAILS: IUserDetail = {
 }
 
 const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
-  const {setOptions} =
+  const {navigate, setOptions} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const [userData, setUserData] = useState<IUserDetail>(DEFAULT_USER_DETAILS)
   const setBottomSheetStateValue =
@@ -148,14 +148,16 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
               Followers
             </Text>
           </View>
-          <View alignItems="center">
-            <Text fontSize="lg" fontFamily="Lato-Bold">
-              {userData.followings.length}
-            </Text>
-            <Text color={COLORS.white2} fontFamily="Lato-Regular">
-              Following
-            </Text>
-          </View>
+          <TouchableOpacity onPress={() => navigate('Connections')}>
+            <View alignItems="center">
+              <Text fontSize="lg" fontFamily="Lato-Bold">
+                {userData.followings.length}
+              </Text>
+              <Text color={COLORS.white2} fontFamily="Lato-Regular">
+                Following
+              </Text>
+            </View>
+          </TouchableOpacity>
         </HStack>
       </HStack>
 
