@@ -16,7 +16,10 @@ type ConnectionProps = {
   userFollowersList: string[]
 }
 
-const Connection: React.FC<ConnectionProps> = ({userId, userFollowersList}) => {
+const Connection: React.FC<ConnectionProps> = ({
+  userId,
+  userFollowersList = [],
+}) => {
   const {navigate} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const authUserId = auth().currentUser?.uid
