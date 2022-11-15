@@ -11,6 +11,7 @@ import {BackIcon, SearchIcon1, UserGroup} from '@/SVG'
 import {IUserDetail} from '@/interface'
 import {COLORS, FONTS} from '@/constants'
 import {RootStackParamList} from '@/Navigation/Root'
+import Screen from '@/components/Screen'
 
 type SearchUserScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -25,7 +26,7 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
   const currentInputValue = useRef('')
 
   return (
-    <View flex={1} backgroundColor={COLORS.black} paddingX={3}>
+    <Screen flex={1} backgroundColor={COLORS.black} paddingX={3}>
       <View position="relative" flexDirection="row" alignItems="center">
         <TouchableOpacity onPress={goBack}>
           <BackIcon />
@@ -138,7 +139,7 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
           </View>
         )}
       </Animated.View>
-    </View>
+    </Screen>
   )
 }
 export default SearchUser

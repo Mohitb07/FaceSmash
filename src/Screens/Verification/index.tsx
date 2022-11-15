@@ -7,6 +7,7 @@ import auth from '@react-native-firebase/auth'
 import {COLORS} from '@/constants'
 import {ReSendIcon, VerifyIcon} from '@/SVG'
 import useAuthUser from '@/hooks/useAuthUser'
+import Screen from '@/components/Screen'
 
 const btnText = {
   color: COLORS.background,
@@ -70,7 +71,7 @@ const Verification = () => {
   }
 
   return (
-    <View flex={1} backgroundColor={COLORS.black} style={styles.container}>
+    <Screen flex={1} backgroundColor={COLORS.black} style={styles.container}>
       <View>
         <View alignItems="center" justifyContent="center">
           <Image
@@ -117,7 +118,7 @@ const Verification = () => {
           Re Send
         </Button>
       </View>
-    </View>
+    </Screen>
   )
 }
 
