@@ -17,7 +17,8 @@ import {COLORS} from '@/constants'
 import useAuthUser from '@/hooks/useAuthUser'
 import Screen from '@/components/Screen'
 import {Spinner} from 'native-base'
-import Connection from '@/Screens/Connections'
+import Followings from '@/Screens/Profile/Followings'
+import Followers from '@/Screens/Profile/Followers'
 
 export type RootStackParamList = {
   Verification: undefined
@@ -37,7 +38,8 @@ export type RootStackParamList = {
     uri: string
   }
   SearchUser: undefined
-  Connections: undefined
+  Followings: undefined
+  Followers: undefined
 }
 
 const RootStack = createNativeStackNavigator<RootStackParamList>()
@@ -79,8 +81,21 @@ const Root = () => {
                 }}
               />
               <RootStack.Screen
-                name="Connections"
-                component={Connection}
+                name="Followings"
+                component={Followings}
+                options={{
+                  headerShown: true,
+                  title: 'Mohitb07',
+                  headerTitleAlign: 'center',
+                  headerTintColor: COLORS.white,
+                  headerStyle: {
+                    backgroundColor: COLORS.black,
+                  },
+                }}
+              />
+              <RootStack.Screen
+                name="Followers"
+                component={Followers}
                 options={{
                   headerShown: true,
                   title: 'Mohitb07',

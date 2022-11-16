@@ -140,15 +140,17 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
               Posts
             </Text>
           </View>
-          <View alignItems="center">
-            <Text fontSize="lg" fontFamily="Lato-Bold">
-              {userData.followers.length}
-            </Text>
-            <Text color={COLORS.white2} fontFamily="Lato-Regular">
-              Followers
-            </Text>
-          </View>
-          <TouchableOpacity onPress={() => navigate('Connections')}>
+          <TouchableOpacity onPress={() => navigate('Followers')}>
+            <View alignItems="center">
+              <Text fontSize="lg" fontFamily="Lato-Bold">
+                {userData.followers.length}
+              </Text>
+              <Text color={COLORS.white2} fontFamily="Lato-Regular">
+                Followers
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => navigate('Followings')}>
             <View alignItems="center">
               <Text fontSize="lg" fontFamily="Lato-Bold">
                 {userData.followings.length}
