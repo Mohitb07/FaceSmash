@@ -140,7 +140,12 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
               Posts
             </Text>
           </View>
-          <TouchableOpacity onPress={() => navigate('Followers')}>
+          <TouchableOpacity
+            onPress={() =>
+              navigate('Followers', {
+                followersList: userData.followers,
+              })
+            }>
             <View alignItems="center">
               <Text fontSize="lg" fontFamily="Lato-Bold">
                 {userData.followers.length}
@@ -150,7 +155,12 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
               </Text>
             </View>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => navigate('Followings')}>
+          <TouchableOpacity
+            onPress={() =>
+              navigate('Followings', {
+                followingsList: userData.followings,
+              })
+            }>
             <View alignItems="center">
               <Text fontSize="lg" fontFamily="Lato-Bold">
                 {userData.followings.length}

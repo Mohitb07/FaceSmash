@@ -38,8 +38,12 @@ export type RootStackParamList = {
     uri: string
   }
   SearchUser: undefined
-  Followings: undefined
-  Followers: undefined
+  Followings: {
+    followingsList: string[]
+  }
+  Followers: {
+    followersList: string[]
+  }
 }
 
 const RootStack = createNativeStackNavigator<RootStackParamList>()
