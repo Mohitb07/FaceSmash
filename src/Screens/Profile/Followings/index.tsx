@@ -1,24 +1,14 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 
 import {FlatList, Text, View} from 'native-base'
+import firestore from '@react-native-firebase/firestore'
 
 import Screen from '@/components/Screen'
 import User from '@/components/User'
-
-const FOLLOWINGS_RESULT = [
-  {
-    uri: 'https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg',
-    username: 'Mohitb07',
-    email: 'bmohit980@gmail.com',
-    userId: 'faldfasdf',
-  },
-  {
-    uri: 'https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg',
-    username: 'Mohitb07',
-    email: 'bmohit980@gmail.com',
-    userId: 'faldfasdf31231',
-  },
-]
+import {USERS_COLLECTION} from '@/constants'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {RootStackParamList} from '@/Navigation/Root'
+import {IUserDetail} from '@/interface'
 
 export interface UserConnectionResult {
   userId: string
@@ -28,12 +18,36 @@ export interface UserConnectionResult {
   followers?: string[]
 }
 
-const Followings: React.FC = () => {
-  const render = ({item}: {item: UserConnectionResult}) => (
+type FollowingsScreenNavigationProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Followings'
+>
+
+const Followings: React.FC<FollowingsScreenNavigationProps> = ({route}) => {
+  const {followingsList} = route.params || null
+  const [followingData, setFollowingData] = useState<IUserDetail[]>([])
+  useEffect(() => {
+    async function getFollowers() {
+      followingsList.map(async userId => {
+        const res = await firestore()
+          .collection(USERS_COLLECTION)
+          .doc(userId)
+          .get()
+        setFollowingData(prev => [...prev, res.data() as IUserDetail])
+      })
+    }
+    getFollowers()
+  }, [followingsList])
+
+  const render = ({
+    item,
+  }: {
+    item: Pick<IUserDetail, 'profilePic' | 'username' | 'uid' | 'email'>
+  }) => (
     <User
-      uri={item.uri}
+      uri={item.profilePic}
       username={item.username}
-      userId={item.userId}
+      userId={item.uid}
       email={item.email}
     />
   )
@@ -45,7 +59,7 @@ const Followings: React.FC = () => {
         </Text>
       </View>
       <View p={3}>
-        <FlatList data={FOLLOWINGS_RESULT} renderItem={render} />
+        <FlatList data={followingData} renderItem={render} />
       </View>
     </Screen>
   )
