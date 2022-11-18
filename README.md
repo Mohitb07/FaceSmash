@@ -15,6 +15,8 @@ It's a social media platform where users can interact with friends or family. It
 - User Profile
 - Edit Profile
 - Search Users
+- Following/Followers
+- General Notification
 - more to come...
 
 ## Environment Variables
