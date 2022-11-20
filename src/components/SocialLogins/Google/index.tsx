@@ -20,8 +20,6 @@ const GoogleLogin: React.FC = () => {
             username: user.user.displayName,
             qusername: user.user.displayName?.toLowerCase(),
             uid: user.user.uid,
-            followers: [],
-            followings: [],
             createdAt: user.user.metadata.creationTime,
             lastSignIn: user.user.metadata.lastSignInTime,
             profilePic: user.user.photoURL,

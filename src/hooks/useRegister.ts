@@ -27,8 +27,6 @@ export function useRegister() {
         username: username,
         qusername: username.toLowerCase(),
         uid: user.user.uid,
-        followers: [],
-        followings: [],
         createdAt: user.user.metadata.creationTime,
         lastSignIn: user.user.metadata.lastSignInTime,
         profilePic: DEFAULT_PROFILE_PIC,

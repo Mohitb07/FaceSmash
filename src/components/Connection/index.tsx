@@ -10,10 +10,16 @@ import StyledButton from '@/components/Button'
 import {RootStackParamList} from '@/Navigation/Root'
 import {COLORS, USERS_COLLECTION} from '@/constants'
 import {EditIcon} from '@/SVG'
+import {IUserDetail} from '@/interface'
 
+type User = IUserDetail & {
+  _data?: {
+    uid: string
+  }
+}
 type ConnectionProps = {
   userId: string
-  userFollowersList: string[]
+  userFollowersList: User[]
 }
 
 const Connection: React.FC<ConnectionProps> = ({
@@ -24,49 +30,38 @@ const Connection: React.FC<ConnectionProps> = ({
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const authUserId = auth().currentUser?.uid
 
-  const isFollowing = authUserId && userFollowersList.includes(authUserId)
+  const isFollowing =
+    authUserId && userFollowersList.map(item => item._data!.uid === authUserId)
   const btnTextValue = isFollowing ? 'Unfollow' : 'Follow'
 
   const handleEditProfile = () => navigate('UpdateProfile')
 
   const handleConnection = async () => {
-    const userDocRef = firestore().collection(USERS_COLLECTION).doc(authUserId)
+    const userDocRef = firestore()
+      .collection(USERS_COLLECTION)
+      .doc(authUserId)
+      .collection('followings')
     const followingUserRef = firestore()
       .collection(USERS_COLLECTION)
       .doc(userId)
+      .collection('followers')
+
     if (!isFollowing) {
       try {
-        await userDocRef.set(
-          {
-            followings: firestore.FieldValue.arrayUnion(userId),
-          },
-          {merge: true},
-        )
-        await followingUserRef.set(
-          {
-            followers: firestore.FieldValue.arrayUnion(authUserId),
-          },
-          {merge: true},
-        )
+        await userDocRef.doc(userId).set({
+          user: userId,
+        })
+        await followingUserRef.doc(authUserId).set({
+          user: authUserId,
+        })
       } catch (err) {
         console.log('error while following', err)
       }
     }
     if (isFollowing) {
-      // remove followers
       try {
-        await userDocRef.set(
-          {
-            followings: firestore.FieldValue.arrayRemove(userId),
-          },
-          {merge: true},
-        )
-        await followingUserRef.set(
-          {
-            followers: firestore.FieldValue.arrayRemove(authUserId),
-          },
-          {merge: true},
-        )
+        await userDocRef.doc(userId).delete()
+        await followingUserRef.doc(authUserId).delete()
       } catch (err) {
         console.log('ERROR while unfollowing', err)
       }
