@@ -39,10 +39,10 @@ export type RootStackParamList = {
   }
   SearchUser: undefined
   Followings: {
-    followingsList: string[]
+    uid: string
   }
   Followers: {
-    followersList: string[]
+    uid: string
   }
 }
 
