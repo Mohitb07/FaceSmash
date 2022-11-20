@@ -38,8 +38,6 @@ const DEFAULT_USER_DETAILS: IUserDetail = {
   bio: '',
   createdAt: '',
   email: '',
-  followers: [],
-  followings: [],
   lastSignIn: '',
   profilePic: '',
   qusername: '',
@@ -51,6 +49,11 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
   const {navigate, setOptions} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const [userData, setUserData] = useState<IUserDetail>(DEFAULT_USER_DETAILS)
+  const [followersList, setFollowerList] = useState<IUserDetail[]>([])
+  const [connectionsCount, setConnectionCount] = useState({
+    followings: 0,
+    followers: 0,
+  })
   const setBottomSheetStateValue =
     useSetRecoilState<IBottomSheetState>(bottomSheetState)
 
@@ -120,6 +123,35 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
     return subscriber
   }, [userId, userData.username, setOptions])
 
+  useEffect(() => {
+    async function getFollowersCount() {
+      const followers = await firestore()
+        .collection(USERS_COLLECTION)
+        .doc(userId)
+        .collection('followers')
+        .get()
+      setConnectionCount(prev => ({
+        ...prev,
+        followers: followers.size,
+      }))
+      const promises = followers.docs.map(item => item.data().user.get())
+      Promise.all(promises).then(result => setFollowerList(result))
+    }
+    async function getFollowingsCount() {
+      const followings = await firestore()
+        .collection(USERS_COLLECTION)
+        .doc(userId)
+        .collection('followings')
+        .get()
+      setConnectionCount(prev => ({
+        ...prev,
+        followings: followings.size,
+      }))
+    }
+    getFollowersCount()
+    getFollowingsCount()
+  }, [userId])
+
   return (
     <Box my="2" mb="5" paddingX="2">
       <HStack alignItems="center" justifyContent="space-between">
@@ -143,12 +175,12 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
           <TouchableOpacity
             onPress={() =>
               navigate('Followers', {
-                followersList: userData.followers,
+                uid: userData.uid,
               })
             }>
             <View alignItems="center">
               <Text fontSize="lg" fontFamily="Lato-Bold">
-                {userData.followers.length}
+                {connectionsCount.followers}
               </Text>
               <Text color={COLORS.white2} fontFamily="Lato-Regular">
                 Followers
@@ -158,12 +190,12 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
           <TouchableOpacity
             onPress={() =>
               navigate('Followings', {
-                followingsList: userData.followings,
+                uid: userData.uid,
               })
             }>
             <View alignItems="center">
               <Text fontSize="lg" fontFamily="Lato-Bold">
-                {userData.followings.length}
+                {connectionsCount.followings}
               </Text>
               <Text color={COLORS.white2} fontFamily="Lato-Regular">
                 Following
@@ -192,7 +224,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
           {userData.email}
         </Text>
       </View>
-      <Connection userId={userId} userFollowersList={userData.followers} />
+      <Connection userId={userId} userFollowersList={followersList} />
       <HStack
         alignItems="center"
         justifyContent="space-between"
