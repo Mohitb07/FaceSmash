@@ -18,8 +18,6 @@ export interface FeedProps {
 export interface IUserDetail {
   createdAt: string
   email: string
-  followers: Array<string>
-  followings: Array<string>
   lastSignIn: string
   profilePic: string
   qusername: string
