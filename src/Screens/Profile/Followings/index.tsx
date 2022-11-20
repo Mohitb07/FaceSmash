@@ -8,14 +8,14 @@ import User from '@/components/User'
 import {USERS_COLLECTION} from '@/constants'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {RootStackParamList} from '@/Navigation/Root'
-import {IUserDetail} from '@/interface'
 
 export interface UserConnectionResult {
-  userId: string
-  username: string
-  email: string
-  uri: string
-  followers?: string[]
+  _data: {
+    uid: string
+    username: string
+    email: string
+    profilePic: string
+  }
 }
 
 type FollowingsScreenNavigationProps = NativeStackScreenProps<
@@ -24,31 +24,28 @@ type FollowingsScreenNavigationProps = NativeStackScreenProps<
 >
 
 const Followings: React.FC<FollowingsScreenNavigationProps> = ({route}) => {
-  const {followingsList} = route.params || null
-  const [followingData, setFollowingData] = useState<IUserDetail[]>([])
+  const {uid} = route.params || null
+  const [followingData, setFollowingData] = useState<UserConnectionResult[]>([])
   useEffect(() => {
     async function getFollowers() {
-      followingsList.map(async userId => {
-        const res = await firestore()
-          .collection(USERS_COLLECTION)
-          .doc(userId)
-          .get()
-        setFollowingData(prev => [...prev, res.data() as IUserDetail])
-      })
+      const res = await firestore()
+        .collection(USERS_COLLECTION)
+        .doc(uid)
+        .collection('followings')
+        .get()
+
+      const promises = res.docs.map(userId => userId.data().user.get())
+      Promise.all(promises).then(result => setFollowingData(result))
     }
     getFollowers()
-  }, [followingsList])
+  }, [uid])
 
-  const render = ({
-    item,
-  }: {
-    item: Pick<IUserDetail, 'profilePic' | 'username' | 'uid' | 'email'>
-  }) => (
+  const render = ({item}: {item: UserConnectionResult}) => (
     <User
-      uri={item.profilePic}
-      username={item.username}
-      userId={item.uid}
-      email={item.email}
+      uri={item._data.profilePic}
+      username={item._data.username}
+      userId={item._data.uid}
+      email={item._data.email}
     />
   )
   return (
