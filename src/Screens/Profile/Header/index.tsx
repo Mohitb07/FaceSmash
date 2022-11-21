@@ -23,6 +23,7 @@ import {COLORS, USERS_COLLECTION} from '@/constants'
 import {IUserDetail} from '@/interface'
 import Connection from '@/components/Connection'
 import {REDIS_REST_TOKEN, REDIS_REST_URL} from '@/../config'
+import {UserConnectionResult} from '../Followers'
 
 const redis = new Redis({
   url: REDIS_REST_URL,
@@ -49,7 +50,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
   const {navigate, setOptions} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const [userData, setUserData] = useState<IUserDetail>(DEFAULT_USER_DETAILS)
-  const [followersList, setFollowerList] = useState<IUserDetail[]>([])
+  const [followersList, setFollowerList] = useState<UserConnectionResult[]>([])
   const [connectionsCount, setConnectionCount] = useState({
     followings: 0,
     followers: 0,
@@ -176,6 +177,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
             onPress={() =>
               navigate('Followers', {
                 uid: userData.uid,
+                followersList: followersList,
               })
             }>
             <View alignItems="center">
