@@ -18,7 +18,7 @@ import useAuthUser from '@/hooks/useAuthUser'
 import Screen from '@/components/Screen'
 import {Spinner} from 'native-base'
 import Followings from '@/Screens/Profile/Followings'
-import Followers from '@/Screens/Profile/Followers'
+import Followers, {UserConnectionResult} from '@/Screens/Profile/Followers'
 
 export type RootStackParamList = {
   Verification: undefined
@@ -43,6 +43,7 @@ export type RootStackParamList = {
   }
   Followers: {
     uid: string
+    followersList: UserConnectionResult[]
   }
 }
 

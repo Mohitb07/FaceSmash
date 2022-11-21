@@ -10,16 +10,16 @@ import StyledButton from '@/components/Button'
 import {RootStackParamList} from '@/Navigation/Root'
 import {COLORS, USERS_COLLECTION} from '@/constants'
 import {EditIcon} from '@/SVG'
-import {IUserDetail} from '@/interface'
+import {UserConnectionResult} from '@/Screens/Profile/Followers'
 
-type User = IUserDetail & {
-  _data?: {
-    uid: string
-  }
-}
+// type User = IUserDetail & {
+//   _data?: {
+//     uid: string
+//   }
+// }
 type ConnectionProps = {
   userId: string
-  userFollowersList: User[]
+  userFollowersList: UserConnectionResult[]
 }
 
 const Connection: React.FC<ConnectionProps> = ({

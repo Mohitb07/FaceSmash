@@ -4,32 +4,31 @@ import {FlatList, Text, View} from 'native-base'
 
 import Screen from '@/components/Screen'
 import User from '@/components/User'
-import {UserConnectionResult} from '../Followings'
+import {NativeStackScreenProps} from '@react-navigation/native-stack'
+import {RootStackParamList} from '@/Navigation/Root'
 
-const FOLLOWERS_RESULT = [
-  {
-    uri: 'https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg',
-    username: 'Mohitb07',
-    email: 'bmohit980@gmail.com',
-    userId: 'faldfasdf',
-    followers: ['fasdf', '2fasdf'],
-  },
-  {
-    uri: 'https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg',
-    username: 'Mohitb07',
-    email: 'bmohit980@gmail.com',
-    userId: 'faldfasdf31231',
-    followers: ['fasdf', '2fasdf', 'myId'],
-  },
-]
-const Followers: React.FC = () => {
-  const render = ({item}: {item: Required<UserConnectionResult>}) => (
+export interface UserConnectionResult {
+  _data: {
+    uid: string
+    username: string
+    email: string
+    profilePic: string
+  }
+}
+
+type FollowersScreenNavigationProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Followers'
+>
+
+const Followers = ({route}: FollowersScreenNavigationProps) => {
+  const {followersList} = route.params || null
+  const render = ({item}: {item: UserConnectionResult}) => (
     <User
-      uri={item.uri}
-      username={item.username}
-      userId={item.userId}
-      email={item.email}
-      hasFollowBtn={!item.followers.includes('myId')}
+      uri={item._data.profilePic}
+      username={item._data.username}
+      userId={item._data.uid}
+      email={item._data.email}
     />
   )
   return (
@@ -40,7 +39,11 @@ const Followers: React.FC = () => {
         </Text>
       </View>
       <View p={3}>
-        <FlatList data={FOLLOWERS_RESULT} renderItem={render} />
+        <FlatList
+          ListEmptyComponent={() => <Text>No Followers Found</Text>}
+          data={followersList}
+          renderItem={render}
+        />
       </View>
     </Screen>
   )
