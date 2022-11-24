@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from 'react'
+import {ActivityIndicator} from 'react-native'
 
 import {FlatList, Text, View} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 
 import Screen from '@/components/Screen'
 import User from '@/components/User'
-import {USERS_COLLECTION} from '@/constants'
+import {COLORS, USERS_COLLECTION} from '@/constants'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {RootStackParamList} from '@/Navigation/Root'
+import {UserGroup} from '@/SVG'
 
 export interface UserConnectionResult {
   _data: {
@@ -26,6 +28,7 @@ type FollowingsScreenNavigationProps = NativeStackScreenProps<
 const Followings: React.FC<FollowingsScreenNavigationProps> = ({route}) => {
   const {uid} = route.params || null
   const [followingData, setFollowingData] = useState<UserConnectionResult[]>([])
+  const [loading, setLoading] = useState(true)
   useEffect(() => {
     async function getFollowers() {
       const res = await firestore()
@@ -35,7 +38,10 @@ const Followings: React.FC<FollowingsScreenNavigationProps> = ({route}) => {
         .get()
 
       const promises = res.docs.map(userId => userId.data().user.get())
-      Promise.all(promises).then(result => setFollowingData(result))
+      Promise.all(promises).then(result => {
+        setLoading(false)
+        setFollowingData(result)
+      })
     }
     getFollowers()
   }, [uid])
@@ -56,7 +62,25 @@ const Followings: React.FC<FollowingsScreenNavigationProps> = ({route}) => {
         </Text>
       </View>
       <View p={3}>
-        <FlatList data={followingData} renderItem={render} />
+        <FlatList
+          data={followingData}
+          renderItem={render}
+          ListEmptyComponent={() =>
+            !loading && followingData.length < 0 ? (
+              <View justifyItems="center" alignItems="center">
+                <UserGroup height="50px" width="50px" />
+                <Text
+                  textAlign="center"
+                  fontFamily="Lato-Regular"
+                  fontSize="md">
+                  You are not following anyone
+                </Text>
+              </View>
+            ) : (
+              <ActivityIndicator size="large" color={COLORS.primary} />
+            )
+          }
+        />
       </View>
     </Screen>
   )

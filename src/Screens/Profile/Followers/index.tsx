@@ -6,6 +6,7 @@ import Screen from '@/components/Screen'
 import User from '@/components/User'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {RootStackParamList} from '@/Navigation/Root'
+import {UserGroup} from '@/SVG'
 
 export interface UserConnectionResult {
   _data: {
@@ -40,7 +41,14 @@ const Followers = ({route}: FollowersScreenNavigationProps) => {
       </View>
       <View p={3}>
         <FlatList
-          ListEmptyComponent={() => <Text>No Followers Found</Text>}
+          ListEmptyComponent={() => (
+            <View justifyItems="center" alignItems="center">
+              <UserGroup height="50px" width="50px" />
+              <Text textAlign="center" fontFamily="Lato-Regular" fontSize="md">
+                You are not followed by anyone
+              </Text>
+            </View>
+          )}
           data={followersList}
           renderItem={render}
         />
