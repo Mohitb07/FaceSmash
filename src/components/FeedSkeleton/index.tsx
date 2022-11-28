@@ -20,7 +20,7 @@ const FeedSkeleton = (props: any) => {
         <Box>
           <HStack alignItems="center" mb="3" justifyContent="space-between">
             <Flex direction="row" align="center">
-              <Skeleton size="10" rounded="lg" />
+              <Skeleton size="10" rounded="full" />
               <VStack ml="4" space="2">
                 <Skeleton.Text size="1" w="16" lines={1} />
                 {/* <Skeleton.Text size="1" w="10" lines={1} /> */}
@@ -30,10 +30,8 @@ const FeedSkeleton = (props: any) => {
           </HStack>
           <Skeleton h="56" mb="3" />
           <HStack alignItems="center" space="2" mb="3">
-            {/* <HStack> */}
             <Skeleton size="5" rounded="full" />
             <Skeleton size="5" rounded="full" ml="2" />
-            {/* </HStack> */}
             {/* <Skeleton h="1" w="4" mr="3" /> */}
           </HStack>
           {/* <Skeleton.Text size="1" w="1/2" lines={1} mb="3" /> */}
