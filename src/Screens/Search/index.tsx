@@ -2,7 +2,7 @@ import React, {useRef, useState, FC} from 'react'
 import {Animated, StyleSheet, TouchableOpacity} from 'react-native'
 
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
-import {Avatar, Button, FlatList, HStack, Text, View} from 'native-base'
+import {Button, FlatList, Text, View} from 'native-base'
 
 import AutoCompleteInput from '@/components/AutoCompleteInput'
 import {DUMMY_STORY_DATA} from '@/constants'
@@ -12,6 +12,7 @@ import {IUserDetail} from '@/interface'
 import {COLORS, FONTS} from '@/constants'
 import {RootStackParamList} from '@/Navigation/Root'
 import Screen from '@/components/Screen'
+import User from '@/components/User'
 
 type SearchUserScreenNavigationProp = NativeStackScreenProps<
   RootStackParamList,
@@ -19,7 +20,7 @@ type SearchUserScreenNavigationProp = NativeStackScreenProps<
 >
 
 const SearchUser: FC<SearchUserScreenNavigationProp> = ({
-  navigation: {navigate, goBack},
+  navigation: {goBack},
 }) => {
   const [marginAnimation] = useState(new Animated.Value(0))
   const [foundUsers, setFoundUsers] = useState<Array<IUserDetail> | null>(null)
@@ -58,12 +59,16 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
                   containerStyle={styles.storyContainerStyle}
                 />
                 <Button
-                  _text={styles.btnText}
-                  borderWidth="1"
                   size="md"
                   mt="2"
                   borderRadius="full"
-                  variant="solid">
+                  variant="solid"
+                  background="white"
+                  _text={{
+                    color: 'black',
+                    fontFamily: 'Lato-Regular',
+                    fontSize: 'xs',
+                  }}>
                   Follow
                 </Button>
               </View>
@@ -86,54 +91,13 @@ const SearchUser: FC<SearchUserScreenNavigationProp> = ({
             <FlatList
               data={foundUsers}
               renderItem={({item}) => (
-                <TouchableOpacity
-                  onPress={() =>
-                    navigate('Profile', {
-                      providedUserId: item.uid,
-                    })
-                  }>
-                  <HStack
-                    marginY="3"
-                    alignItems="center"
-                    justifyContent="space-between">
-                    <View flexDirection="row" alignItems="center" flex={1}>
-                      <Avatar
-                        size="lg"
-                        borderColor={COLORS.primary}
-                        mr="3"
-                        padding="0.5"
-                        bgColor={COLORS.mainBackground}
-                        source={{
-                          uri: item.profilePic,
-                        }}
-                      />
-                      <View flex={1}>
-                        <Text
-                          color="white"
-                          fontWeight={600}
-                          numberOfLines={1}
-                          ellipsizeMode="tail">
-                          {item.username}
-                        </Text>
-                        <Text
-                          numberOfLines={1}
-                          ellipsizeMode="tail"
-                          color="gray.500"
-                          fontWeight={600}>
-                          {item.email}
-                        </Text>
-                      </View>
-                    </View>
-                    <Button
-                      onPress={() => console.log('follow', item.uid)}
-                      size="md"
-                      borderRadius="full"
-                      variant="outline"
-                      fontFamily="Lato-Heavy">
-                      Follow
-                    </Button>
-                  </HStack>
-                </TouchableOpacity>
+                <User
+                  username={item.username}
+                  email={item.email}
+                  uri={item.profilePic}
+                  userId={item.uid}
+                  hasFollowBtn
+                />
               )}
             />
           </View>
@@ -155,10 +119,6 @@ const styles = StyleSheet.create({
   },
   storyContainerStyle: {
     width: 80,
-  },
-  btnText: {
-    color: COLORS.white,
-    ...FONTS.body5,
   },
   storyTextStyle: {
     maxWidth: 50,
