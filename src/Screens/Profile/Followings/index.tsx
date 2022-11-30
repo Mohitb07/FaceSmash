@@ -1,15 +1,15 @@
-import React, {useEffect, useState} from 'react'
+import React from 'react'
 import {ActivityIndicator} from 'react-native'
 
 import {FlatList, Text, View} from 'native-base'
-import firestore from '@react-native-firebase/firestore'
 
 import Screen from '@/components/Screen'
 import User from '@/components/User'
-import {COLORS, USERS_COLLECTION} from '@/constants'
+import {COLORS} from '@/constants'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {RootStackParamList} from '@/Navigation/Root'
 import {UserGroup} from '@/SVG'
+import {useConnections} from '@/hooks/useConnections'
 
 export interface UserConnectionResult {
   _data: {
@@ -27,25 +27,9 @@ type FollowingsScreenNavigationProps = NativeStackScreenProps<
 
 const Followings: React.FC<FollowingsScreenNavigationProps> = ({route}) => {
   const {uid} = route.params || null
-  const [followingData, setFollowingData] = useState<UserConnectionResult[]>([])
-  const [loading, setLoading] = useState(true)
-  useEffect(() => {
-    async function getFollowers() {
-      const res = await firestore()
-        .collection(USERS_COLLECTION)
-        .doc(uid)
-        .collection('followings')
-        .get()
-
-      const promises = res.docs.map(userId => userId.data().user.get())
-      Promise.all(promises).then(result => {
-        setLoading(false)
-        setFollowingData(result)
-      })
-    }
-    getFollowers()
-  }, [uid])
-
+  const {loading, followingsList} = useConnections({
+    userId: uid,
+  })
   const render = ({item}: {item: UserConnectionResult}) => (
     <User
       uri={item._data.profilePic}
@@ -63,10 +47,10 @@ const Followings: React.FC<FollowingsScreenNavigationProps> = ({route}) => {
       </View>
       <View p={3}>
         <FlatList
-          data={followingData}
+          data={followingsList}
           renderItem={render}
           ListEmptyComponent={() =>
-            !loading && followingData.length < 0 ? (
+            !loading && followingsList.length < 0 ? (
               <View justifyItems="center" alignItems="center">
                 <UserGroup height="50px" width="50px" />
                 <Text

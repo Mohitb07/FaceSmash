@@ -23,7 +23,7 @@ import {COLORS, USERS_COLLECTION} from '@/constants'
 import {IUserDetail} from '@/interface'
 import Connection from '@/components/Connection'
 import {REDIS_REST_TOKEN, REDIS_REST_URL} from '@/../config'
-import {UserConnectionResult} from '../Followers'
+import {useConnections} from '@/hooks/useConnections'
 
 const redis = new Redis({
   url: REDIS_REST_URL,
@@ -50,10 +50,8 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
   const {navigate, setOptions} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const [userData, setUserData] = useState<IUserDetail>(DEFAULT_USER_DETAILS)
-  const [followersList, setFollowerList] = useState<UserConnectionResult[]>([])
-  const [connectionsCount, setConnectionCount] = useState({
-    followings: 0,
-    followers: 0,
+  const {connectionsCount, followersList, loading} = useConnections({
+    userId,
   })
   const setBottomSheetStateValue =
     useSetRecoilState<IBottomSheetState>(bottomSheetState)
@@ -124,35 +122,6 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
     return subscriber
   }, [userId, userData.username, setOptions])
 
-  useEffect(() => {
-    async function getFollowersCount() {
-      const followers = await firestore()
-        .collection(USERS_COLLECTION)
-        .doc(userId)
-        .collection('followers')
-        .get()
-      setConnectionCount(prev => ({
-        ...prev,
-        followers: followers.size,
-      }))
-      const promises = followers.docs.map(item => item.data().user.get())
-      Promise.all(promises).then(result => setFollowerList(result))
-    }
-    async function getFollowingsCount() {
-      const followings = await firestore()
-        .collection(USERS_COLLECTION)
-        .doc(userId)
-        .collection('followings')
-        .get()
-      setConnectionCount(prev => ({
-        ...prev,
-        followings: followings.size,
-      }))
-    }
-    getFollowersCount()
-    getFollowingsCount()
-  }, [userId])
-
   return (
     <Box my="2" mb="5" paddingX="2">
       <HStack alignItems="center" justifyContent="space-between">
@@ -182,7 +151,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
             }>
             <View alignItems="center">
               <Text fontSize="lg" fontFamily="Lato-Bold">
-                {connectionsCount.followers}
+                {!loading ? connectionsCount.followers : 0}
               </Text>
               <Text color={COLORS.white2} fontFamily="Lato-Regular">
                 Followers
@@ -197,7 +166,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
             }>
             <View alignItems="center">
               <Text fontSize="lg" fontFamily="Lato-Bold">
-                {connectionsCount.followings}
+                {!loading ? connectionsCount.followings : 0}
               </Text>
               <Text color={COLORS.white2} fontFamily="Lato-Regular">
                 Following
@@ -239,16 +208,6 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
               Activity
             </Text>
           </Flex>
-          {/* <Flex direction="row" align="center">
-            <UserIcon height="23" width="23" />
-            <Text
-              color={COLORS.gray}
-              ml="3"
-              fontSize="sm"
-              fontFamily="Lato-Regular">
-              About
-            </Text>
-          </Flex> */}
         </HStack>
         <TouchableOpacity>
           <FilterIcon />
