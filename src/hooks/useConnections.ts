@@ -1,4 +1,4 @@
-import {useCallback, useEffect, useState} from 'react'
+import {useEffect, useState} from 'react'
 
 import firestore from '@react-native-firebase/firestore'
 
@@ -17,41 +17,62 @@ export const useConnections = ({userId}: {userId: string}) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  const getConnectionCountData = useCallback(
-    async (subCollectionName: 'followers' | 'followings') => {
-      const data = await firestore()
-        .collection(USERS_COLLECTION)
-        .doc(userId)
-        .collection(subCollectionName)
-        .get()
-      setLoading(false)
-      setConnectionCount(prev => ({
-        ...prev,
-        [subCollectionName]: data.size,
-      }))
-      return data
-    },
-    [userId],
-  )
-
   useEffect(() => {
-    try {
-      async function getFollowersCount() {
-        const followers = await getConnectionCountData('followers')
-        const promises = followers.docs.map(item => item.data().user.get())
-        Promise.all(promises).then(result => setFollowerList(result))
+    let unsubscribeFollowingData: () => void
+    let unsubscribeFollowersData: () => void
+    const getData = () => {
+      try {
+        const followersSubColRef = firestore()
+          .collection(USERS_COLLECTION)
+          .doc(userId)
+          .collection('followers')
+
+        unsubscribeFollowersData = followersSubColRef.onSnapshot(
+          async snap => {
+            const promises = snap.docs.map(d => d.data().user.get())
+            const result = await Promise.all(promises)
+            const list = result.map(d => d.data())
+            setFollowerList(list)
+            setConnectionCount(prev => ({
+              ...prev,
+              followers: snap.size,
+            }))
+          },
+          err => {
+            console.log('error while fetching followers', err)
+          },
+        )
+
+        const followingSubColRef = firestore()
+          .collection(USERS_COLLECTION)
+          .doc(userId)
+          .collection('followings')
+
+        unsubscribeFollowingData = followingSubColRef.onSnapshot(
+          async snap => {
+            const promises = snap.docs.map(d => d.data().user.get())
+            const result = await Promise.all(promises)
+            const list = result.map(d => d.data())
+            setFollowingsList(list)
+            setConnectionCount(prev => ({
+              ...prev,
+              followings: snap.size,
+            }))
+            setLoading(false)
+          },
+          err => {
+            console.log('error while fetching followings', err)
+          },
+        )
+      } catch (e) {
+        setError(e as string)
       }
-      async function getFollowingsCount() {
-        const followers = await getConnectionCountData('followings')
-        const promises = followers.docs.map(item => item.data().user.get())
-        Promise.all(promises).then(result => setFollowingsList(result))
-      }
-      getFollowersCount()
-      getFollowingsCount()
-    } catch (e) {
-      setError(e as string)
     }
-  }, [userId, getConnectionCountData])
+    getData()
+    return () => {
+      unsubscribeFollowingData(), unsubscribeFollowersData()
+    }
+  }, [userId])
 
   return {
     connectionsCount,
