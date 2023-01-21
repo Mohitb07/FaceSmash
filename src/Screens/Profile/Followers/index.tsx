@@ -9,12 +9,10 @@ import {RootStackParamList} from '@/Navigation/Root'
 import {UserGroup} from '@/SVG'
 
 export interface UserConnectionResult {
-  _data: {
-    uid: string
-    username: string
-    email: string
-    profilePic: string
-  }
+  uid: string
+  username: string
+  email: string
+  profilePic: string
 }
 
 type FollowersScreenNavigationProps = NativeStackScreenProps<
@@ -26,10 +24,10 @@ const Followers = ({route}: FollowersScreenNavigationProps) => {
   const {followersList} = route.params || null
   const render = ({item}: {item: UserConnectionResult}) => (
     <User
-      uri={item._data.profilePic}
-      username={item._data.username}
-      userId={item._data.uid}
-      email={item._data.email}
+      uri={item.profilePic}
+      username={item.username}
+      userId={item.uid}
+      email={item.email}
     />
   )
   return (

@@ -195,7 +195,11 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
           {userData.email}
         </Text>
       </View>
-      <Connection userId={userId} userFollowersList={followersList} />
+      <Connection
+        userId={userId}
+        userFollowersList={followersList}
+        loading={loading}
+      />
       <HStack
         alignItems="center"
         justifyContent="space-between"
