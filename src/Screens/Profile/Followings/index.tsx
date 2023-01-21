@@ -1,23 +1,19 @@
 import React from 'react'
-import {ActivityIndicator} from 'react-native'
 
 import {FlatList, Text, View} from 'native-base'
 
 import Screen from '@/components/Screen'
 import User from '@/components/User'
-import {COLORS} from '@/constants'
 import {NativeStackScreenProps} from '@react-navigation/native-stack'
 import {RootStackParamList} from '@/Navigation/Root'
 import {UserGroup} from '@/SVG'
 import {useConnections} from '@/hooks/useConnections'
 
 export interface UserConnectionResult {
-  _data: {
-    uid: string
-    username: string
-    email: string
-    profilePic: string
-  }
+  uid: string
+  username: string
+  email: string
+  profilePic: string
 }
 
 type FollowingsScreenNavigationProps = NativeStackScreenProps<
@@ -27,15 +23,16 @@ type FollowingsScreenNavigationProps = NativeStackScreenProps<
 
 const Followings: React.FC<FollowingsScreenNavigationProps> = ({route}) => {
   const {uid} = route.params || null
-  const {loading, followingsList} = useConnections({
+  const {followingsList} = useConnections({
     userId: uid,
   })
+  console.log('followings', followingsList)
   const render = ({item}: {item: UserConnectionResult}) => (
     <User
-      uri={item._data.profilePic}
-      username={item._data.username}
-      userId={item._data.uid}
-      email={item._data.email}
+      uri={item.profilePic}
+      username={item.username}
+      userId={item.uid}
+      email={item.email}
     />
   )
   return (
@@ -49,21 +46,14 @@ const Followings: React.FC<FollowingsScreenNavigationProps> = ({route}) => {
         <FlatList
           data={followingsList}
           renderItem={render}
-          ListEmptyComponent={() =>
-            !loading && followingsList.length < 0 ? (
-              <View justifyItems="center" alignItems="center">
-                <UserGroup height="50px" width="50px" />
-                <Text
-                  textAlign="center"
-                  fontFamily="Lato-Regular"
-                  fontSize="md">
-                  You are not following anyone
-                </Text>
-              </View>
-            ) : (
-              <ActivityIndicator size="large" color={COLORS.primary} />
-            )
-          }
+          ListEmptyComponent={() => (
+            <View justifyItems="center" alignItems="center">
+              <UserGroup height="50px" width="50px" />
+              <Text textAlign="center" fontFamily="Lato-Regular" fontSize="md">
+                You are not following anyone
+              </Text>
+            </View>
+          )}
         />
       </View>
     </Screen>
