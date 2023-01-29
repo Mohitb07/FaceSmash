@@ -36,7 +36,7 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
   const {handleChooseGallary, handleTakePhoto, selectedImage} = useSelectImage()
   const USER_PROFILE_PIC_REFERENCE = `${contextUser?.uid}/profilePic/`
 
-  const disabled = !(!!selectedImage || !!userBio)
+  const disabled = !userBio || (userBio === contextUser?.bio && !selectedImage)
 
   const handleUploadImage = async () => {
     setLoading(true)
@@ -49,7 +49,7 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
         {
           bio: filterdUserBio,
         },
-        {merge: true}, // so that it don't overwrite the existing document data
+        {merge: true}, // so that it doesn't overwrite the existing document data
       )
       !selectedImage && goBack()
     }
@@ -81,7 +81,7 @@ const UpdateProfile: React.FC<UpdateProfileScreenNavigationProp> = ({
           {loading ? (
             <ActivityIndicator color={COLORS.secondary} />
           ) : (
-            <CheckIcon />
+            <CheckIcon fill={disabled ? COLORS.gray3 : COLORS.white} />
           )}
         </TouchableOpacity>
       ),
