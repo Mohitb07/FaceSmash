@@ -47,7 +47,6 @@ const Feed = ({
   hasUserLikedPost = false,
   imageRef,
 }: FeedProps) => {
-  console.log('feed', postTitle)
   const updateUIBasedOnImage = image ? 'column-reverse' : 'column'
   const {navigate} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
@@ -173,7 +172,7 @@ const Feed = ({
         </View>
 
         {/* USER INTERACTIONS */}
-        <VStack space="2" mb="1" ml="1">
+        <VStack space="1" mb="1" ml="1">
           <HStack alignItems="center">
             <TouchableOpacity onPress={handleLikes}>
               {hasUserLikedPost ? (

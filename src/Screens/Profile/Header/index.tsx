@@ -91,6 +91,9 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
         </Text>
       ),
     })
+  }, [setOptions, userData.username])
+
+  useEffect(() => {
     const fetchRedis = async () => {
       const userCache: IUserDetail | null = await redis.get(userId)
       console.log('user cache', userCache)
