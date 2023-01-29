@@ -23,10 +23,9 @@ type FollowingsScreenNavigationProps = NativeStackScreenProps<
 
 const Followings: React.FC<FollowingsScreenNavigationProps> = ({route}) => {
   const {uid} = route.params || null
-  const {followingsList} = useConnections({
+  const {followingsList, loading} = useConnections({
     userId: uid,
   })
-  console.log('followings', followingsList)
   const render = ({item}: {item: UserConnectionResult}) => (
     <User
       uri={item.profilePic}
@@ -46,14 +45,19 @@ const Followings: React.FC<FollowingsScreenNavigationProps> = ({route}) => {
         <FlatList
           data={followingsList}
           renderItem={render}
-          ListEmptyComponent={() => (
-            <View justifyItems="center" alignItems="center">
-              <UserGroup height="50px" width="50px" />
-              <Text textAlign="center" fontFamily="Lato-Regular" fontSize="md">
-                You are not following anyone
-              </Text>
-            </View>
-          )}
+          ListEmptyComponent={() =>
+            !loading ? (
+              <View justifyItems="center" alignItems="center">
+                <UserGroup height="50px" width="50px" />
+                <Text
+                  textAlign="center"
+                  fontFamily="Lato-Regular"
+                  fontSize="md">
+                  You are not following anyone
+                </Text>
+              </View>
+            ) : null
+          }
         />
       </View>
     </Screen>
