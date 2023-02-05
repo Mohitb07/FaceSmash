@@ -70,7 +70,8 @@ export const useConnections = ({userId}: {userId: string}) => {
     }
     getData()
     return () => {
-      unsubscribeFollowingData(), unsubscribeFollowersData()
+      unsubscribeFollowingData()
+      unsubscribeFollowersData()
     }
   }, [userId])
 
