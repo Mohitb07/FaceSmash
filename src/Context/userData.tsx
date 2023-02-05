@@ -4,7 +4,8 @@ import firestore from '@react-native-firebase/firestore'
 
 import useAuthUser from '@/hooks/useAuthUser'
 import {IUserDetail} from '@/interface'
-import {POSTS_COLLECTION, USERS_COLLECTION} from '@/constants'
+import {USERS_COLLECTION} from '@/constants'
+import {Toast} from 'react-native-toast-message/lib/src/Toast'
 
 type UserState = IUserDetail | null
 
@@ -49,35 +50,48 @@ const UserDataProvider = ({children}: {children: ReactNode}) => {
   }, [user?.uid, user?.emailVerified])
 
   const updateUserData = useCallback(async (url: string, userId: string) => {
-    if (userId) {
-      const userRef = firestore().collection(USERS_COLLECTION).doc(userId)
-      await userRef.update({
-        profilePic: url,
+    try {
+      if (userId) {
+        const userRef = firestore().collection(USERS_COLLECTION).doc(userId)
+        await userRef.update({
+          profilePic: url,
+        })
+        // const batch = firestore().batch()
+        // const allPosts = await firestore()
+        //   .collection(POSTS_COLLECTION)
+        //   .where('user', '==', userId)
+        //   .orderBy('createdAt', 'desc')
+        //   .get()
+        // allPosts.docs.forEach(doc => {
+        //   const docRef = firestore().collection(POSTS_COLLECTION).doc(doc.id)
+        //   batch.update(docRef, {
+        //     userProfile: url,
+        //   })
+        // })
+        // batch
+        //   .commit()
+        //   .then(() => {
+        //     setContextUser(prev => ({
+        //       ...(prev as IUserDetail),
+        //       profilePic: url,
+        //     }))
+        //   })
+        //   .catch(err => {
+        //     console.log('error', err)
+        //     throw new Error(err)
+        //   })
+        setContextUser(prev => ({
+          ...(prev as IUserDetail),
+          profilePic: url,
+        }))
+      }
+    } catch (err) {
+      Toast.show({
+        type: 'error',
+        text1: 'Upload Error',
+        text2: 'Error while updating profile pic',
       })
-      const batch = firestore().batch()
-      const allPosts = await firestore()
-        .collection(POSTS_COLLECTION)
-        .where('user', '==', userId)
-        .orderBy('createdAt', 'desc')
-        .get()
-      allPosts.docs.forEach(doc => {
-        const docRef = firestore().collection(POSTS_COLLECTION).doc(doc.id)
-        batch.update(docRef, {
-          userProfile: url,
-        })
-      })
-      batch
-        .commit()
-        .then(() => {
-          setContextUser(prev => ({
-            ...(prev as IUserDetail),
-            profilePic: url,
-          }))
-        })
-        .catch(err => {
-          console.log('error', err)
-          throw new Error(err)
-        })
+      console.log('Error', err)
     }
   }, [])
 

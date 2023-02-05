@@ -48,6 +48,7 @@ export interface IPost {
   userProfile: string
   username: string
   imageRef?: string
+  uid: string
 }
 
 export interface IDefaultUserDataState {

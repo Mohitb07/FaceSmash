@@ -26,10 +26,14 @@ const Home = () => {
       .orderBy('createdAt', 'desc')
       .limit(FEED_LIMIT)
       .onSnapshot(
-        snapshot => {
-          console.log('calling home feed snapshot')
-          const postList: Array<IPost> = snapshot.docs.map(d => ({
+        async snapshot => {
+          const postUserPromises = snapshot.docs.map(d => d.data().user.get())
+          const rawResult = await Promise.all(postUserPromises)
+          const result = rawResult.map(d => d.data())
+          const postList: Array<IPost> = snapshot.docs.map((d, index) => ({
             ...(d.data() as IPost),
+            username: result[index].username,
+            userProfile: result[index].profilePic,
             key: d.id,
           }))
           const lastVisiblePostRef = getLastVisibleDocRef(snapshot)

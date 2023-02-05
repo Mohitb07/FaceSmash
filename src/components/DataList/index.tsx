@@ -36,7 +36,7 @@ const DataList = ({
       image={item?.image}
       description={item.description}
       likes={dataList.find((post: IPost) => post.key === item.key)?.likes ?? 0}
-      userId={item.user}
+      userId={item.uid}
       hasUserLikedPost={Boolean(
         userLikedPosts.find((post: IPostLikes) => post.postId === item.key),
       )}
