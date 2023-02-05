@@ -30,14 +30,19 @@ const ProfileFeed = ({userId}: ProfileFeedProps) => {
   const getPosts = useCallback(() => {
     const query = firestore()
       .collection(POSTS_COLLECTION)
-      .where('user', '==', userId)
+      .where('uid', '==', userId)
       .orderBy('createdAt', 'desc')
       .limit(FEED_LIMIT)
 
     const subscriber = query.onSnapshot(
-      snapshot => {
-        const postList: Array<IPost> = snapshot.docs.map(d => ({
+      async snapshot => {
+        const postUserPromises = snapshot.docs.map(d => d.data().user.get())
+        const rawResult = await Promise.all(postUserPromises)
+        const result = rawResult.map(d => d.data())
+        const postList: Array<IPost> = snapshot.docs.map((d, index) => ({
           ...(d.data() as IPost),
+          username: result[index].username,
+          userProfile: result[index].profilePic,
           key: d.id,
         }))
         const lastVisiblePostRef = getLastVisibleDocRef(snapshot)
@@ -57,7 +62,7 @@ const ProfileFeed = ({userId}: ProfileFeedProps) => {
         }))
       },
     )
-    return subscriber
+    return () => subscriber()
   }, [userId])
 
   useEffect(() => {
@@ -72,7 +77,7 @@ const ProfileFeed = ({userId}: ProfileFeedProps) => {
   useEffect(() => {
     const unsubscribe = firestore()
       .collection(POSTS_COLLECTION)
-      .where('user', '==', userId)
+      .where('uid', '==', userId)
       .onSnapshot(snapshot => setTotalUserPosts(snapshot.docs.length))
     return () => unsubscribe()
   }, [userId])
@@ -86,7 +91,7 @@ const ProfileFeed = ({userId}: ProfileFeedProps) => {
       const {paginatedResult, lastVisibleDocRef} = await queryMoreFilter(
         allUserPosts.lastVisible,
         POSTS_COLLECTION,
-        'user',
+        'uid',
         '==',
         userId,
       )
