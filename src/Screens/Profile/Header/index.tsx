@@ -135,6 +135,7 @@ const ProfileHeader = ({userId, totalPosts = 0}: IProfileHeaderProps) => {
             priority: FastImage.priority.normal,
           }}
           resizeMode={FastImage.resizeMode.cover}
+          accessibilityLabel="profile pic"
         />
         <HStack alignItems="center" space="8">
           <View alignItems="center">

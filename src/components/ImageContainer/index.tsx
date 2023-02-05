@@ -38,6 +38,7 @@ const ImageContainer: React.FC<ImageContainerProps> = ({
           source={{
             uri,
           }}
+          accessibilityLabel={uri}
         />
         <IconButton
           onPress={onPress}

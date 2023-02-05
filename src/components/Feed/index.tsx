@@ -137,6 +137,7 @@ const Feed = ({
               priority: FastImage.priority.normal,
             }}
             resizeMode={FastImage.resizeMode.cover}
+            accessibilityLabel="post image"
           />
         </View>
       )}
