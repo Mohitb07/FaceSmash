@@ -23,10 +23,17 @@ const usePagination = () => {
       .startAfter(lastVisibleDoc)
       .limit(FEED_LIMIT)
       .get()
-    const paginatedResult: Array<IPost> = queryResult.docs.map(doc => ({
-      ...(doc.data() as IPost),
-      key: doc.id,
-    }))
+    const postUserPromises = queryResult.docs.map(d => d.data().user.get())
+    const rawResult = await Promise.all(postUserPromises)
+    const result = rawResult.map(d => d.data())
+    const paginatedResult: Array<IPost> = queryResult.docs.map(
+      (doc, index) => ({
+        ...(doc.data() as IPost),
+        username: result[index].username,
+        userProfile: result[index].profilePic,
+        key: doc.id,
+      }),
+    )
     const lastVisibleDocRef = getLastVisibleDocRef(queryResult)
 
     return {paginatedResult, lastVisibleDocRef}
@@ -52,10 +59,17 @@ const usePagination = () => {
       .startAfter(lastVisibleDoc)
       .limit(FEED_LIMIT)
       .get()
-    const paginatedResult: Array<IPost> = queryResult.docs.map(doc => ({
-      ...(doc.data() as IPost),
-      key: doc.id,
-    }))
+    const postUserPromises = queryResult.docs.map(d => d.data().user.get())
+    const rawResult = await Promise.all(postUserPromises)
+    const result = rawResult.map(d => d.data())
+    const paginatedResult: Array<IPost> = queryResult.docs.map(
+      (doc, index) => ({
+        ...(doc.data() as IPost),
+        username: result[index].username,
+        userProfile: result[index].profilePic,
+        key: doc.id,
+      }),
+    )
     const lastVisibleDocRef = getLastVisibleDocRef(queryResult)
 
     return {paginatedResult, lastVisibleDocRef}
