@@ -13,11 +13,11 @@ import {IDefaultUserDataState, IPost} from '@/interface'
 import {FEED_LIMIT, POSTS_COLLECTION} from '@/constants'
 import Screen from '@/components/Screen'
 
-type ProfileFeedProps = {
+type ProfileContentProps = {
   userId: string
 }
 
-const ProfileFeed = ({userId}: ProfileFeedProps) => {
+const ProfileContent = ({userId}: ProfileContentProps) => {
   const {queryMoreFilter} = usePagination()
   const [totalUserPosts, setTotalUserPosts] = useState(0)
   const [allUserPosts, setAllUserPosts] = useState<IDefaultUserDataState>({
@@ -117,6 +117,7 @@ const ProfileFeed = ({userId}: ProfileFeedProps) => {
       </Screen>
     )
   }
+
   return (
     <DataList
       key={userId}
@@ -134,4 +135,4 @@ const ProfileFeed = ({userId}: ProfileFeedProps) => {
   )
 }
 
-export default React.memo(ProfileFeed)
+export default React.memo(ProfileContent)

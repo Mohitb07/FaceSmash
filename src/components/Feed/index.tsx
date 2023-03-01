@@ -24,7 +24,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 import {HeartFilledIcon, HeartOutlinIcon, LinkIcon} from '@/SVG'
-import {COLORS, FONTS} from '@/constants'
+import {COLORS, FONTS, POSTS_COLLECTION, USERS_COLLECTION} from '@/constants'
 import useAuthUser from '@/hooks/useAuthUser'
 import {FeedProps} from '@/interface'
 import {RootStackParamList} from '@/Navigation/Root'
@@ -56,12 +56,12 @@ const Feed = ({
 
   const handleLikes = () => {
     const postlikesRef = firestore()
-      .collection('Users')
+      .collection(USERS_COLLECTION)
       .doc(user?.uid)
       .collection('postlikes')
       .doc(postId)
 
-    const postRef = firestore().collection('Posts').doc(postId)
+    const postRef = firestore().collection(POSTS_COLLECTION).doc(postId)
     const batch = firestore().batch()
 
     try {
@@ -70,7 +70,6 @@ const Feed = ({
         batch.update(postRef, {
           likes: firestore.FieldValue.increment(-1),
         })
-        console.log('dis liked')
       } else {
         batch.set(postlikesRef, {
           likes: true,
@@ -79,7 +78,6 @@ const Feed = ({
         batch.update(postRef, {
           likes: firestore.FieldValue.increment(1),
         })
-        console.log('liked')
       }
       batch.commit()
     } catch (err) {
@@ -153,8 +151,10 @@ const Feed = ({
                   uri: link,
                 })
               }>
+              <Text mr="1" style={styles.feedTitle}>
+                {postTitle}
+              </Text>
               <LinkIcon height="14" width="14" />
-              <Text style={styles.feedTitle}>{postTitle}</Text>
             </TouchableOpacity>
           ) : (
             <TouchableWithoutFeedback>
@@ -183,7 +183,7 @@ const Feed = ({
               )}
             </TouchableOpacity>
           </HStack>
-          <Text color={COLORS.white} ml={2} fontFamily="Lato-Bold">
+          <Text color={COLORS.white} ml={1} fontFamily="Lato-Bold">
             {likes} likes
           </Text>
         </VStack>
@@ -196,12 +196,7 @@ const Feed = ({
 
       <Actionsheet disableOverlay isOpen={isOpen} onClose={onClose}>
         <Actionsheet.Content style={styles.actionSheetContent}>
-          <React.Suspense
-            fallback={
-              <>
-                <Spinner color="indigo.500" />
-              </>
-            }>
+          <React.Suspense fallback={<Spinner color="indigo.500" />}>
             <FeedMore
               imageRef={imageRef}
               postId={postId}
