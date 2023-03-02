@@ -12,6 +12,11 @@ import {IDefaultPostState, IPost} from '@/interface'
 import {FEED_LIMIT, POSTS_COLLECTION} from '@/constants'
 import Screen from '@/components/Screen'
 
+const query = firestore()
+  .collection(POSTS_COLLECTION)
+  .orderBy('createdAt', 'desc')
+  .limit(FEED_LIMIT)
+
 const Home = () => {
   const [postStateValue, setPostStateValue] = useState<IDefaultPostState>({
     loading: true,
@@ -19,40 +24,37 @@ const Home = () => {
     posts: [],
   })
   const [refreshing, setRefreshing] = useState(false)
-  const {queryMore} = usePagination()
+  const {paginate} = usePagination()
+
   const getPosts = useCallback(() => {
-    const subscriber = firestore()
-      .collection(POSTS_COLLECTION)
-      .orderBy('createdAt', 'desc')
-      .limit(FEED_LIMIT)
-      .onSnapshot(
-        async snapshot => {
-          const postUserPromises = snapshot.docs.map(d => d.data().user.get())
-          const rawResult = await Promise.all(postUserPromises)
-          const result = rawResult.map(d => d.data())
-          const postList: Array<IPost> = snapshot.docs.map((d, index) => ({
-            ...(d.data() as IPost),
-            username: result[index].username,
-            userProfile: result[index].profilePic,
-            key: d.id,
-          }))
-          const lastVisiblePostRef = getLastVisibleDocRef(snapshot)
-          setPostStateValue(prev => ({
-            ...prev,
-            posts: postList,
-            lastVisible: lastVisiblePostRef,
-            loading: false,
-          }))
-          setRefreshing(false)
-        },
-        error => {
-          console.log('snapshot home post fetching error', error)
-          setPostStateValue(prev => ({
-            ...prev,
-            loading: false,
-          }))
-        },
-      )
+    const subscriber = query.onSnapshot(
+      async snapshot => {
+        const postUserPromises = snapshot.docs.map(d => d.data().user.get())
+        const rawResult = await Promise.all(postUserPromises)
+        const result = rawResult.map(d => d.data())
+        const postList: Array<IPost> = snapshot.docs.map((d, index) => ({
+          ...(d.data() as IPost),
+          username: result[index].username,
+          userProfile: result[index].profilePic,
+          key: d.id,
+        }))
+        const lastVisiblePostRef = getLastVisibleDocRef(snapshot)
+        setPostStateValue(prev => ({
+          ...prev,
+          posts: postList,
+          lastVisible: lastVisiblePostRef,
+          loading: false,
+        }))
+        setRefreshing(false)
+      },
+      error => {
+        console.log('snapshot home post fetching error', error)
+        setPostStateValue(prev => ({
+          ...prev,
+          loading: false,
+        }))
+      },
+    )
     return subscriber
   }, [])
 
@@ -78,9 +80,11 @@ const Home = () => {
       loading: true,
     }))
     try {
-      const {paginatedResult, lastVisibleDocRef} = await queryMore(
-        postStateValue.lastVisible,
-        'Posts',
+      if (!postStateValue.lastVisible) {
+        return
+      }
+      const {paginatedResult, lastVisibleDocRef} = await paginate(
+        query.startAfter(postStateValue.lastVisible),
       )
       setPostStateValue(prev => ({
         ...prev,
@@ -104,7 +108,8 @@ const Home = () => {
         Footer={
           <Footer
             dataList={postStateValue.posts}
-            loading={postStateValue.loading}
+            isLoading={postStateValue.loading}
+            hasNext={!!postStateValue.lastVisible}
           />
         }
         Header={<HomeHeader />}
