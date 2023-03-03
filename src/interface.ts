@@ -51,8 +51,8 @@ export interface IPost {
   uid: string
 }
 
-export interface IDefaultUserDataState {
-  posts: IPost[]
+export interface FeedState {
+  data: IPost[]
   loading: boolean
   lastVisible: FirebaseFirestoreTypes.DocumentData | null
 }

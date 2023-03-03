@@ -1,17 +1,15 @@
-import React, {useEffect, useState, useRef, useCallback} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 
 import {Spinner} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 
-import usePagination from '@/hooks/usePagination'
 import DataList from '@/components/DataList'
 import DataListFooter from '@/components/DataList/DataListFooter'
 import EmptyDataList from '@/components/DataList/EmptyDataList'
 import ProfileHeader from '../Header'
-import {getLastVisibleDocRef} from '@/utils/getLastVisibleDocRef'
-import {IDefaultUserDataState, IPost} from '@/interface'
 import {FEED_LIMIT, POSTS_COLLECTION} from '@/constants'
 import Screen from '@/components/Screen'
+import useGetPosts from '@/hooks/useGetPosts'
 
 type ProfileContentProps = {
   userId: string
@@ -27,56 +25,18 @@ const getUserPostQuery = (userId: string) => {
 }
 
 const ProfileContent = ({userId}: ProfileContentProps) => {
-  const {paginate} = usePagination()
   const [totalUserPosts, setTotalUserPosts] = useState(0)
-  const [userPosts, setUserPosts] = useState<IDefaultUserDataState>({
-    posts: [],
-    loading: true,
-    lastVisible: null,
-  })
+  const {getInitialPosts, posts, getMoreData} = useGetPosts()
   const initialLoad = useRef(true)
-
-  const getPosts = useCallback(() => {
-    const query = getUserPostQuery(userId)
-    const subscriber = query.onSnapshot(
-      async snapshot => {
-        const postUserPromises = snapshot.docs.map(d => d.data().user.get())
-        const rawResult = await Promise.all(postUserPromises)
-        const result = rawResult.map(d => d.data())
-        const postList: Array<IPost> = snapshot.docs.map((d, index) => ({
-          ...(d.data() as IPost),
-          username: result[index].username,
-          userProfile: result[index].profilePic,
-          key: d.id,
-        }))
-        const lastVisiblePostRef = getLastVisibleDocRef(snapshot)
-        setUserPosts(prev => ({
-          ...prev,
-          posts: postList,
-          loading: false,
-          lastVisible: lastVisiblePostRef,
-        }))
-      },
-      error => {
-        console.log('fetchUserPosts error: ', error)
-        setUserPosts(prev => ({
-          ...prev,
-          loading: false,
-          lastVisible: null,
-        }))
-      },
-    )
-    return () => subscriber()
-  }, [userId])
 
   useEffect(() => {
     initialLoad.current = false
-    const unsubscribe = getPosts()
+    const unsubscribe = getInitialPosts(getUserPostQuery(userId))
     return () => {
       console.log('unmounting profile screen')
       unsubscribe()
     }
-  }, [getPosts])
+  }, [getInitialPosts, userId])
 
   useEffect(() => {
     const unsubscribe = firestore()
@@ -86,35 +46,7 @@ const ProfileContent = ({userId}: ProfileContentProps) => {
     return () => unsubscribe()
   }, [userId])
 
-  const getMoreData = async () => {
-    setUserPosts(prev => ({
-      ...prev,
-      loading: true,
-    }))
-    try {
-      if (!userPosts.lastVisible) {
-        return
-      }
-      const query = getUserPostQuery(userId)
-      const {paginatedResult, lastVisibleDocRef} = await paginate(
-        query.startAfter(userPosts.lastVisible),
-      )
-      setUserPosts(prev => ({
-        ...prev,
-        posts: [...userPosts.posts, ...paginatedResult],
-        lastVisible: lastVisibleDocRef,
-      }))
-    } catch (error) {
-      console.error('ERROR while fetching paginated posts home screen', error)
-    } finally {
-      setUserPosts(prev => ({
-        ...prev,
-        loading: false,
-      }))
-    }
-  }
-
-  if (initialLoad.current && userPosts.loading) {
+  if (initialLoad.current && posts.loading) {
     return (
       <Screen justifyContent="center" alignItems="center">
         <Spinner size="lg" />
@@ -122,20 +54,22 @@ const ProfileContent = ({userId}: ProfileContentProps) => {
     )
   }
 
+  const retrieveMore = () => getMoreData(getUserPostQuery(userId))
+
   return (
     <DataList
       key={userId}
-      dataList={userPosts.posts}
+      dataList={posts.data}
       Header={<ProfileHeader totalPosts={totalUserPosts} userId={userId} />}
-      EmptyList={<EmptyDataList loading={userPosts.loading} />}
+      EmptyList={<EmptyDataList loading={posts.loading} />}
       Footer={
         <DataListFooter
-          dataList={userPosts.posts}
-          isLoading={userPosts.loading}
-          hasNext={!!userPosts.lastVisible}
+          dataListSize={posts.data.length}
+          isLoading={posts.loading}
+          hasNext={!!posts.lastVisible}
         />
       }
-      retrieveMore={getMoreData}
+      retrieveMore={retrieveMore}
     />
   )
 }

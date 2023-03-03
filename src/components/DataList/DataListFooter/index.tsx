@@ -2,24 +2,23 @@ import React from 'react'
 
 import {Text, View} from 'native-base'
 
-import {IPost} from '@/interface'
 import FeedSkeleton from '@/components/FeedSkeleton'
 
 type DataListFooterProps = {
-  dataList: IPost[]
+  dataListSize: number
   isLoading: boolean
   hasNext: boolean
 }
 
 const DataListFooter = ({
-  dataList = [],
+  dataListSize = 0,
   isLoading = false,
   hasNext,
 }: DataListFooterProps) => {
   let content
-  if (dataList.length > 0 && isLoading) {
+  if (dataListSize > 0 && isLoading) {
     content = <FeedSkeleton />
-  } else if (dataList.length > 0 && !isLoading && !hasNext) {
+  } else if (dataListSize > 0 && !isLoading && !hasNext) {
     content = (
       <Text textAlign="center" color="gray.500">
         No More post
