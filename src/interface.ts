@@ -1,5 +1,12 @@
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore'
 
+export interface FeedPropsCallback {
+  postId: string
+  hasLiked: boolean
+  hasImage: boolean
+  imageRef?: string
+}
+
 export interface FeedProps {
   image?: string
   postTitle: string
@@ -13,6 +20,7 @@ export interface FeedProps {
   link?: string
   hasUserLikedPost: boolean
   imageRef?: string
+  cb: (data: FeedPropsCallback) => void
 }
 
 export interface IUserDetail {

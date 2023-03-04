@@ -27,29 +27,31 @@ const FeedMore = ({
   const {user} = useAuthUser()
   console.log('has imageRef', imageRef)
   const handleDeletePost = async () => {
-    firestore()
-      .collection(POSTS_COLLECTION)
-      .doc(postId)
-      .delete()
-      .then(async () => {
-        onClose()
-        if (hasImage) {
-          await storage()
-            .ref(imageRef)
-            .delete()
-            .then(() => {
-              console.log('storage cleanup complete')
-            })
-        }
-        if (hasLiked) {
-          const postlikesRef = firestore()
-            .collection(USERS_COLLECTION)
-            .doc(user?.uid)
-            .collection('postlikes')
-            .doc(postId)
-          postlikesRef.delete()
-        }
-      })
+    if (postId) {
+      firestore()
+        .collection(POSTS_COLLECTION)
+        .doc(postId)
+        .delete()
+        .then(async () => {
+          onClose()
+          if (hasImage) {
+            await storage()
+              .ref(imageRef)
+              .delete()
+              .then(() => {
+                console.log('storage cleanup complete')
+              })
+          }
+          if (hasLiked) {
+            const postlikesRef = firestore()
+              .collection(USERS_COLLECTION)
+              .doc(user?.uid)
+              .collection('postlikes')
+              .doc(postId)
+            postlikesRef.delete()
+          }
+        })
+    }
   }
 
   return (
