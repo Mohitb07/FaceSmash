@@ -5,17 +5,7 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native'
 
-import {
-  Actionsheet,
-  HStack,
-  Image,
-  Spinner,
-  ThreeDotsIcon,
-  useDisclose,
-  View,
-  VStack,
-  Text,
-} from 'native-base'
+import {HStack, Image, ThreeDotsIcon, View, VStack, Text} from 'native-base'
 import firestore from '@react-native-firebase/firestore'
 import {useNavigation} from '@react-navigation/native'
 import {NativeStackNavigationProp} from '@react-navigation/native-stack'
@@ -28,8 +18,6 @@ import {COLORS, FONTS, POSTS_COLLECTION, USERS_COLLECTION} from '@/constants'
 import useAuthUser from '@/hooks/useAuthUser'
 import {FeedProps} from '@/interface'
 import {RootStackParamList} from '@/Navigation/Root'
-
-const FeedMore = React.lazy(() => import('@/components/BottomSheet/FeedMore'))
 
 dayjs.extend(relativeTime)
 
@@ -46,12 +34,12 @@ const Feed = ({
   link = '',
   hasUserLikedPost = false,
   imageRef,
+  cb,
 }: FeedProps) => {
   const updateUIBasedOnImage = image ? 'column-reverse' : 'column'
   const {navigate} =
     useNavigation<NativeStackNavigationProp<RootStackParamList>>()
   const {user} = useAuthUser()
-  const {onOpen, onClose, isOpen} = useDisclose()
   const [show, setShow] = useState(false)
 
   const handleLikes = () => {
@@ -84,6 +72,15 @@ const Feed = ({
       console.log('handlelikes error', err)
     }
   }
+
+  const handleFeedMore = () => {
+    cb({
+      hasImage: Boolean(image),
+      hasLiked: hasUserLikedPost,
+      postId,
+      imageRef,
+    })
+  }
   return (
     <View
       backgroundColor={COLORS.transparentBlack9}
@@ -113,7 +110,7 @@ const Feed = ({
           </Text>
         </TouchableOpacity>
         {user?.uid === userId && (
-          <TouchableOpacity onPress={onOpen}>
+          <TouchableOpacity onPress={handleFeedMore}>
             <View
               backgroundColor={COLORS.transparentBlack1}
               padding="3"
@@ -193,20 +190,6 @@ const Feed = ({
           {dayjs(createdAt?.toDate()).fromNow()}
         </Text>
       </View>
-
-      <Actionsheet disableOverlay isOpen={isOpen} onClose={onClose}>
-        <Actionsheet.Content style={styles.actionSheetContent}>
-          <React.Suspense fallback={<Spinner color="indigo.500" />}>
-            <FeedMore
-              imageRef={imageRef}
-              postId={postId}
-              hasImage={Boolean(image)}
-              onClose={onClose}
-              hasLiked={hasUserLikedPost}
-            />
-          </React.Suspense>
-        </Actionsheet.Content>
-      </Actionsheet>
     </View>
   )
 }
@@ -245,9 +228,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     color: 'white',
     fontWeight: '600',
-  },
-  actionSheetContent: {
-    backgroundColor: COLORS.mainBackground,
   },
   userContainer: {
     flexDirection: 'row',
