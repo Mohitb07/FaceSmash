@@ -2,7 +2,6 @@ import {FeedState, IPost} from '@/interface'
 import {getLastVisibleDocRef} from '@/utils/getLastVisibleDocRef'
 import {FirebaseFirestoreTypes} from '@react-native-firebase/firestore'
 import {useCallback, useState} from 'react'
-import usePagination from './usePagination'
 
 type QueryProps =
   FirebaseFirestoreTypes.Query<FirebaseFirestoreTypes.DocumentData>
@@ -13,7 +12,6 @@ export default function useGetPosts() {
     loading: true,
     lastVisible: null,
   })
-  const {paginate} = usePagination()
 
   const getInitialPosts = useCallback((query: QueryProps) => {
     const subscriber = query.onSnapshot(
@@ -52,27 +50,41 @@ export default function useGetPosts() {
       ...prev,
       loading: true,
     }))
-    try {
-      if (!posts.lastVisible) {
-        return
-      }
-      const {paginatedResult, lastVisibleDocRef} = await paginate(
-        query.startAfter(posts.lastVisible),
-        posts.lastVisible,
-      )
-      setPosts(prev => ({
-        ...prev,
-        data: [...posts.data, ...paginatedResult],
-        lastVisible: lastVisibleDocRef,
-      }))
-    } catch (error) {
-      console.error('getMoreData error', error)
-    } finally {
-      setPosts(prev => ({
-        ...prev,
-        loading: false,
-      }))
+    if (!posts.lastVisible) {
+      return
     }
+    query.startAfter(posts.lastVisible).onSnapshot(
+      async queryResult => {
+        try {
+          const userData = await Promise.all([
+            ...queryResult.docs.map(d => d.data().user.get()),
+          ])
+          const result = userData.map(d => d.data())
+          const paginatedResult = queryResult.docs.map((doc, index) => ({
+            ...(doc.data() as IPost),
+            username: result[index].username,
+            userProfile: result[index].profilePic,
+            key: doc.id,
+          }))
+          const lastVisibleDocRef = getLastVisibleDocRef(queryResult)
+          setPosts(prev => ({
+            ...prev,
+            data: [...posts.data, ...paginatedResult],
+            lastVisible: lastVisibleDocRef,
+          }))
+        } catch (error) {
+          console.log('Error', error)
+        } finally {
+          setPosts(prev => ({
+            ...prev,
+            loading: false,
+          }))
+        }
+      },
+      err => {
+        console.log('error while paginating', query, err)
+      },
+    )
   }
 
   return {getInitialPosts, posts, getMoreData}
