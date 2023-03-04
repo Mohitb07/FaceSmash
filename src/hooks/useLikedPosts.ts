@@ -4,6 +4,7 @@ import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 
 import {IPostLikes} from '@/interface'
+import {USERS_COLLECTION} from '@/constants'
 
 const useLikedPosts = () => {
   const [userLikedPosts, setUserLikedPosts] = useState<IPostLikes[]>([])
@@ -14,7 +15,7 @@ const useLikedPosts = () => {
     let unsub: () => void
     try {
       unsub = firestore()
-        .collection('Users')
+        .collection(USERS_COLLECTION)
         .doc(authUserId)
         .collection('postlikes')
         .onSnapshot(
